@@ -48,7 +48,7 @@ trait HasApprovalActions
                 ->modalDescription('This will submit the record for review.')
                 ->visible(fn (Model $record) => 
                     $record->isDraft() &&
-                    in_array(auth()->user()->role, ['supervisor', 'manager', 'admin'])
+                    auth()->user()->role === 'supervisor'
                 )
                 ->action(function (Model $record) {
                     $msg = $record->markAsPrepared(auth()->user());
@@ -65,7 +65,7 @@ trait HasApprovalActions
                 ->modalDescription('This will confirm the record has been reviewed.')
                 ->visible(fn (Model $record) => 
                     $record->isPrepared() &&
-                    in_array(auth()->user()->role, ['manager', 'admin'])
+                    auth()->user()->role === 'manager'
                 )
                 ->action(function (Model $record) {
                     $result = $record->markAsReviewed(auth()->user());
@@ -89,7 +89,7 @@ trait HasApprovalActions
                 ->modalDescription('This will officially note the record.')
                 ->visible(fn (Model $record) => 
                     $record->isReviewed() &&
-                    auth()->user()->role === 'admin'
+                    in_array(auth()->user()->role, ['admin', 'superadmin'])
                 )
                 ->action(function (Model $record) {
                     $result = $record->markAsNoted(auth()->user());
@@ -111,12 +111,17 @@ trait HasApprovalActions
                 ->requiresConfirmation()
                 ->modalHeading('Return to Draft?')
                 ->modalDescription('This will reset all signatories and return the record to draft status.')
-                ->visible(fn (Model $record) => 
-                    !$record->isDraft() &&
-                    in_array(auth()->user()->role, ['manager', 'admin'])
-                )
+                ->visible(function (Model $record) {
+                    if ($record->isDraft()) return false;
+                    
+                    $role = auth()->user()->role;
+                    if (in_array($role, ['admin', 'superadmin'])) return true;
+                    if ($role === 'manager' && !$record->isNoted()) return true;
+                    
+                    return false;
+                })
                 ->action(function (Model $record) {
-                    $msg = $record->returnToDraft();
+                    $msg = $record->returnToDraft(auth()->user());
                     Notification::make()->success()->title($msg)->send();
                 }),
         ];

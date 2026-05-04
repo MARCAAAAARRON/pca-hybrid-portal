@@ -15,8 +15,16 @@ trait NotifiesOnRecordCreation
                 return;
             }
 
-            // Exclude superadmin from the receiver list
-            $users = User::where('role', '!=', 'superadmin')->get();
+            $siteId = $model->field_site_id;
+            
+            // Targeted recipients: Global Admins and the specific site's Manager
+            $users = User::whereIn('role', ['admin', 'superadmin'])
+                ->orWhere(function ($query) use ($siteId) {
+                    $query->where('role', 'manager')
+                          ->where('field_site_id', $siteId);
+                })
+                ->get();
+
             $creator = auth()->user()?->name ?? 'System';
             $modelName = class_basename($model);
             

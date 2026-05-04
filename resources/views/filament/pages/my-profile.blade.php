@@ -2,8 +2,11 @@
     <div class="flex flex-col md:flex-row gap-6 items-start">
         <!-- Profile Info Card (Left) -->
         <div class="w-full md:w-1/3 lg:w-1/4 sticky top-6">
-            <x-filament::section class="text-center">
-                <div class="flex flex-col items-center py-6">
+            <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm text-center">
+                {{-- Accent gradient strip --}}
+                <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+                
+                <div class="flex flex-col items-center p-6">
                     <div class="relative mb-4">
                         @if(auth()->user()->avatar_url)
                             <img src="{{ Storage::url(auth()->user()->avatar_url) }}" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-primary-50">
@@ -69,29 +72,37 @@
                         </div>
                     </div>
                 </div>
-            </x-filament::section>
+            </div>
         </div>
 
         <!-- Edit Profile Card (Right) -->
         <div class="w-full md:w-2/3 lg:w-3/4">
-            <x-filament::section>
-                <x-slot name="heading">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-m-user-circle class="w-5 h-5 text-primary-600" />
-                        <span>Edit Profile</span>
+            <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
+                {{-- Accent gradient strip --}}
+                <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+                
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-xl" style="background: linear-gradient(135deg, #0B9E4F, #10B981);">
+                            <x-heroicon-m-user-circle class="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Edit Profile</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Update your account information and settings</p>
+                        </div>
                     </div>
-                </x-slot>
 
-                <form wire:submit="submit" class="space-y-6">
-                    {{ $this->form }}
+                    <form wire:submit="submit" class="space-y-6">
+                        {{ $this->form }}
 
-                    <div class="flex justify-end">
-                        <x-filament::button type="submit" icon="heroicon-m-check" color="success">
-                            Save Changes
-                        </x-filament::button>
-                    </div>
-                </form>
-            </x-filament::section>
+                        <div class="flex justify-end mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
+                            <x-filament::button type="submit" icon="heroicon-m-check" color="success">
+                                Save Changes
+                            </x-filament::button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </x-filament-panels::page>

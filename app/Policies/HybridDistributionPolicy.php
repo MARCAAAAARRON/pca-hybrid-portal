@@ -39,6 +39,9 @@ class HybridDistributionPolicy
      */
     public function update(User $user, HybridDistribution $hybridDistribution): bool
     {
+        if (!$hybridDistribution->isDraft()) {
+            return false;
+        }
         return $user->can('update_hybrid::distribution');
     }
 
@@ -47,6 +50,9 @@ class HybridDistributionPolicy
      */
     public function delete(User $user, HybridDistribution $hybridDistribution): bool
     {
+        if (!$hybridDistribution->isDraft()) {
+            return false;
+        }
         return $user->can('delete_hybrid::distribution');
     }
 

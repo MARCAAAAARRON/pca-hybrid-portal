@@ -16,6 +16,12 @@ class MonthlyHarvest extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new FieldSiteScope);
+
+        static::saving(function ($model) {
+            if (auth()->check() && auth()->user()->isSupervisor()) {
+                $model->field_site_id = auth()->user()->field_site_id;
+            }
+        });
     }
     protected $fillable = [
         'field_site_id',

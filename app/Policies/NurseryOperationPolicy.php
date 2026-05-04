@@ -39,6 +39,9 @@ class NurseryOperationPolicy
      */
     public function update(User $user, NurseryOperation $nurseryOperation): bool
     {
+        if (!$nurseryOperation->isDraft()) {
+            return false;
+        }
         return $user->can('update_terminal');
     }
 
@@ -47,6 +50,9 @@ class NurseryOperationPolicy
      */
     public function delete(User $user, NurseryOperation $nurseryOperation): bool
     {
+        if (!$nurseryOperation->isDraft()) {
+            return false;
+        }
         return $user->can('delete_terminal');
     }
 

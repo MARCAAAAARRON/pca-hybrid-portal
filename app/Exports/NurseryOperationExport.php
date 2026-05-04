@@ -17,8 +17,11 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class NurseryOperationExport
 {
     protected array $records;
+    protected ?int $year;
+    protected ?int $month;
+    protected bool $isCumulative;
 
-    public function __construct(iterable $records)
+    public function __construct(iterable $records, ?int $year = null, ?int $month = null, bool $isCumulative = false)
     {
         // Ensure we have batches and varieties loaded
         if ($records instanceof \Illuminate\Database\Eloquent\Builder) {
@@ -26,6 +29,9 @@ class NurseryOperationExport
         } else {
             $this->records = is_array($records) ? $records : $records->all();
         }
+        $this->year = $year;
+        $this->month = $month;
+        $this->isCumulative = $isCumulative;
     }
 
     public function export()
@@ -70,9 +76,13 @@ class NurseryOperationExport
 
     protected function buildSheet(Worksheet $sheet, array $records, $site)
     {
-        $asOfDate = count($records) > 0 && $records[0]->report_month
-            ? Carbon::parse($records[0]->report_month)
-            : now();
+        if ($this->year && $this->month) {
+            $asOfDate = Carbon::create($this->year, $this->month, 1);
+        } else {
+            $asOfDate = count($records) > 0 && $records[0]->report_month
+                ? Carbon::parse($records[0]->report_month)
+                : now();
+        }
             
         $siteName = $site?->name ?? 'Unknown Site';
 
@@ -121,7 +131,13 @@ class NurseryOperationExport
         $sheet->getStyle('A3')->getFont()->setSize(10);
         $sheet->getStyle('A3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-        $asOfStr = 'as of ' . $asOfDate->endOfMonth()->format('F d, Y');
+        if ($this->year && !$this->month) {
+            $asOfStr = 'as of end of ' . $this->year;
+        } elseif ($this->year && $this->month && $this->isCumulative) {
+            $asOfStr = 'Cumulative as of ' . $asOfDate->endOfMonth()->format('F d, Y');
+        } else {
+            $asOfStr = 'as of ' . $asOfDate->endOfMonth()->format('F d, Y');
+        }
         $sheet->mergeCells("A4:{$mergeEnd}4");
         $sheet->setCellValue('A4', $asOfStr);
         $sheet->getStyle('A4')->getFont()->setSize(10)->setUnderline(true);

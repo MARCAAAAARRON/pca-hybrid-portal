@@ -39,6 +39,9 @@ class MonthlyHarvestPolicy
      */
     public function update(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
+        if (!$monthlyHarvest->isDraft()) {
+            return false;
+        }
         return $user->can('update_monthly::harvest');
     }
 
@@ -47,6 +50,9 @@ class MonthlyHarvestPolicy
      */
     public function delete(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
+        if (!$monthlyHarvest->isDraft()) {
+            return false;
+        }
         return $user->can('delete_monthly::harvest');
     }
 

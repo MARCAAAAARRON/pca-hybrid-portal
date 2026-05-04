@@ -35,7 +35,7 @@
 
         /* Light Mode */
         .welcome-text-title {
-            color: #2d62a2;
+            color: #0b9e4f;
         }
 
         .welcome-text-desc {
@@ -56,7 +56,7 @@
 
         .welcome-avatar-border {
             border: 2px solid white;
-            box-shadow: 0 0 0 2px #a7f3d0, inset 0 1px 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 2px #34d399, inset 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .welcome-banner-gradient {
@@ -68,13 +68,13 @@
         }
 
         .welcome-calendar-bg {
-            background-color: rgba(219, 234, 254, 0.9);
-            border: 1px solid #bfdbfe;
+            background-color: rgba(209, 250, 229, 0.9);
+            border: 1px solid #6ee7b7;
         }
 
         /* Dark Mode */
         .dark .welcome-text-title {
-            color: #60a5fa;
+            color: #34d399;
         }
 
         .dark .welcome-text-desc {
@@ -104,12 +104,12 @@
 
         .dark .welcome-banner-text {
             text-shadow: 2px 2px 0px #18181b, -1px -1px 0px #18181b, 1px -1px 0px #18181b, -1px 1px 0px #18181b;
-            color: #3b82f6 !important;
+            color: #10b981 !important;
         }
 
         .dark .welcome-calendar-bg {
-            background-color: rgba(30, 58, 138, 0.8);
-            border: 1px solid #1e3a8a;
+            background-color: rgba(2, 44, 34, 0.8);
+            border: 1px solid #064e3b;
         }
 
         .dark .welcome-subtitle {
@@ -147,7 +147,10 @@
         }
     </style>
 
-    <x-filament::section class="!shadow-sm !rounded-xl overflow-hidden relative" style="padding: 0;">
+    <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
+        {{-- Accent gradient strip --}}
+        <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+
         <div class="welcome-card-wrapper">
             <!-- Left Side Data -->
             <div class="welcome-left">
@@ -193,7 +196,6 @@
             <div class="welcome-right">
                 <div
                     style="position: absolute; inset: 0; overflow: hidden; border-top-left-radius: 40px; border-bottom-left-radius: 40px; background-color: rgba(0,0,0,0.05);">
-                    <!-- Assuming you saved the new image as pca_main_banner.png. If you used a different name, change it here! -->
                     <img src="{{ asset('images/pca_main_banner1.png') }}" alt="PCA Hybridization Program"
                         style="position: absolute; inset: 0; object-fit: cover; object-position: right top; width: 100%; height: 100%; opacity: 0.9;"
                         onerror="this.style.display='none'" />
@@ -207,8 +209,8 @@
                             style="font-size: 0.75rem; font-weight: bold; color: #0b9e4f; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem;">Welcome
                             to the</span>
                         <h3 class="welcome-banner-text"
-                            style="font-size: 1.6rem; font-weight: 900; color: #1e3a8a; line-height: 1.15; margin: 0;">
-                            PCA HYBRIDIZATION<br />PROGRAM <span style="color: #0ea5e9;">↗</span></h3>
+                            style="font-size: 1.6rem; font-weight: 900; color: #064e3b; line-height: 1.15; margin: 0;">
+                            PCA HYBRIDIZATION<br />PROGRAM <span style="color: #10b981;">↗</span></h3>
                         <p class="welcome-hashtag"
                             style="font-size: 0.70rem; color: #4b5563; font-weight: 600; font-style: italic; margin-top: 0.5rem;">
                             #SecuringTheFutureOfCoconut</p>
@@ -216,5 +218,5 @@
                 </div>
             </div>
         </div>
-    </x-filament::section>
+    </div>
 </x-filament-widgets::widget>

@@ -39,6 +39,9 @@ class PollenProductionPolicy
      */
     public function update(User $user, PollenProduction $pollenProduction): bool
     {
+        if (!$pollenProduction->isDraft()) {
+            return false;
+        }
         return $user->can('update_pollen::production');
     }
 
@@ -47,6 +50,9 @@ class PollenProductionPolicy
      */
     public function delete(User $user, PollenProduction $pollenProduction): bool
     {
+        if (!$pollenProduction->isDraft()) {
+            return false;
+        }
         return $user->can('delete_pollen::production');
     }
 

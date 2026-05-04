@@ -71,6 +71,10 @@ trait HasApprovalWorkflow
         $this->date_prepared = now();
         $this->save();
 
+        $tableTitle = class_basename($this);
+        $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
+        $this->notifyUsers(['manager'], "Record Prepared", "A {$tableTitle} record for {$siteName} is waiting for your review.", $actingUser);
+
         return "Record prepared (attributed to {$sigUser->name}).";
     }
 
@@ -103,6 +107,10 @@ trait HasApprovalWorkflow
         $this->date_reviewed = now();
         $this->save();
 
+        $tableTitle = class_basename($this);
+        $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
+        $this->notifyUsers(['admin', 'superadmin'], "Record Reviewed", "A {$tableTitle} record for {$siteName} has been reviewed and requires noting.", $actingUser);
+
         return "Record reviewed (attributed to {$sigUser->name}).";
     }
 
@@ -122,13 +130,17 @@ trait HasApprovalWorkflow
         $this->date_noted = now();
         $this->save();
 
+        $tableTitle = class_basename($this);
+        $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
+        $this->notifyUsers(['supervisor'], "Record Noted", "Your {$tableTitle} record for {$siteName} has been officially noted.", $actingUser);
+
         return 'Record officially noted.';
     }
 
     /**
-     * Return to Draft. Resets all signatories.
+     * Return to Draft. Resets all signatories and notifies relevant personnel.
      */
-    public function returnToDraft(): string
+    public function returnToDraft(User $actingUser): string
     {
         $this->status = 'draft';
         $this->prepared_by = null;
@@ -139,6 +151,75 @@ trait HasApprovalWorkflow
         $this->date_noted = null;
         $this->save();
 
-        return 'Record returned to draft.';
+        $tableTitle = class_basename($this);
+        $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
+        $this->notifyUsers(['supervisor', 'manager'], "Record Returned to Draft", "A {$tableTitle} record for {$siteName} has been returned to draft by {$actingUser->name}.", $actingUser);
+
+        return 'Record returned to draft and personnel notified.';
+    }
+    protected function getReportUrl(): string
+    {
+        $category = match(class_basename($this)) {
+            'MonthlyHarvest' => 'monthly_harvest',
+            'PollenProduction' => 'pollen_production',
+            'NurseryOperation' => $this->report_type === 'terminal' ? 'terminal_report' : 'nursery_operation',
+            'HybridDistribution' => 'hybrid_distribution',
+            'HybridizationRecord' => 'hybridization_record',
+            default => '',
+        };
+
+        $year = null;
+        $month = null;
+        if (isset($this->report_month)) {
+            $parsed = \Carbon\Carbon::parse($this->report_month);
+            $year = $parsed->year;
+            $month = $parsed->month;
+        }
+
+        return \App\Filament\Pages\ReportsDashboard::getUrl() . '?' . http_build_query(array_filter([
+            'category' => $category,
+            'year' => $year,
+            'month' => $month,
+            'field_site_id' => $this->field_site_id,
+        ]));
+    }
+
+    protected function notifyUsers($roleOrRoles, $title, $body, $actingUser = null)
+    {
+        $roles = (array) $roleOrRoles;
+        $siteId = $this->field_site_id;
+
+        $users = User::whereIn('role', $roles)->get()->filter(function ($user) use ($siteId) {
+            if (in_array($user->role, ['admin', 'superadmin'])) return true;
+            if ($siteId && $user->field_site_id != $siteId) return false;
+            return true;
+        });
+
+        if ($actingUser) {
+            $users = $users->reject(fn($user) => $user->id === $actingUser->id);
+        }
+
+        foreach ($users as $user) {
+            $notification = \Filament\Notifications\Notification::make()
+                ->title($title)
+                ->body($body)
+                ->info()
+                ->actions([
+                    \Filament\Notifications\Actions\Action::make('view_report')
+                        ->label('View in Reports Dashboard')
+                        ->button()
+                        ->url($this->getReportUrl())
+                        ->markAsRead(),
+                ]);
+            
+            // Convert 'warning' to actual warning if it's draft
+            if ($title === "Record Returned to Draft") {
+                $notification->warning();
+            } else if ($title === "Record Noted") {
+                $notification->success();
+            }
+
+            $notification->sendToDatabase($user);
+        }
     }
 }

@@ -85,16 +85,22 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ->description('Enter hybrid seedling distribution data')
                     ->schema([
                         Forms\Components\Group::make([
+                            Forms\Components\TextInput::make('field_site_display')
+                                ->label('Field Site')
+                                ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->visible(fn () => auth()->user()?->isSupervisor())
+                                ->columnSpanFull(),
+
                             Forms\Components\Select::make('field_site_id')
                                 ->label('Field Site')
                                 ->relationship('fieldSite', 'name')
-                                ->required()
+                                ->required(fn () => !auth()->user()?->isSupervisor())
                                 ->searchable()
                                 ->preload()
                                 ->native(false)
-                                ->default(fn () => auth()->user()->field_site_id)
-                                ->disabled(fn () => auth()->user()?->isSupervisor())
-                                ->dehydrated()
+                                ->visible(fn () => !auth()->user()?->isSupervisor())
                                 ->columnSpanFull(),
 
                             Forms\Components\Actions::make([
@@ -270,7 +276,17 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                                 7 => 'July', 8 => 'August', 9 => 'September',
                                 10 => 'October', 11 => 'November', 12 => 'December',
                             ])
-                            ->nullable(),
+                            ->nullable()
+                            ->live(),
+                        Forms\Components\Radio::make('export_range')
+                            ->label('Export Coverage')
+                            ->options([
+                                'single' => 'Selected Month Only',
+                                'cumulative' => 'Cumulative (Jan to Selected Month)',
+                            ])
+                            ->default('single')
+                            ->inline()
+                            ->visible(fn (Forms\Get $get) => filled($get('month'))),
                         Forms\Components\Select::make('field_site_id')
                             ->label('Field Site')
                             ->relationship('fieldSite', 'name')
@@ -286,7 +302,11 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                         $query->whereYear('report_month', $data['year']);
                         
                         if ($data['month']) {
-                            $query->whereMonth('report_month', $data['month']);
+                            if (($data['export_range'] ?? 'single') === 'cumulative') {
+                                $query->whereMonth('report_month', '<=', $data['month']);
+                            } else {
+                                $query->whereMonth('report_month', $data['month']);
+                            }
                         }
                         
                         if (auth()->user()?->isSupervisor()) {
@@ -305,7 +325,8 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                             return;
                         }
 
-                        return (new \App\Exports\HybridDistributionExport($records))->export();
+                        $isCumulative = ($data['export_range'] ?? 'single') === 'cumulative';
+                        return (new \App\Exports\HybridDistributionExport($records, $data['year'], $data['month'], $isCumulative))->export();
                     }),
             ]);
     }

@@ -137,12 +137,13 @@ class AdminPanelProvider extends PanelProvider
         .fi-sidebar-collapse-button svg { display: none !important; }
     }
 
-    /* Dashboard Stat Cards (Django-inspired Gradients) */
-    .stat-gradient-1 { background: linear-gradient(135deg, #f3e5f5, #e1bee7) !important; border: none !important; box-shadow: 0 4px 12px rgba(106, 27, 154, 0.1) !important; }
-    .stat-gradient-2 { background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important; border: none !important; box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1) !important; }
-    .stat-gradient-3 { background: linear-gradient(135deg, #e3f2fd, #bbdefb) !important; border: none !important; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1) !important; }
-    .stat-gradient-4 { background: linear-gradient(135deg, #fff7ed, #fed7aa) !important; border: none !important; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1) !important; }
-    .stat-gradient-5 { background: linear-gradient(135deg, #fff8e1, #ffecb3) !important; border: none !important; box-shadow: 0 4px 12px rgba(245, 127, 23, 0.1) !important; }
+    /* Dashboard Stat Cards (PCA Green Unified Gradients) */
+    .stat-gradient-1 { background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important; border: 1px solid #bbf7d0 !important; box-shadow: 0 4px 12px rgba(11, 158, 79, 0.05) !important; }
+    .stat-gradient-2 { background: linear-gradient(135deg, #ecfdf5, #d1fae5) !important; border: 1px solid #a7f3d0 !important; box-shadow: 0 4px 12px rgba(11, 158, 79, 0.05) !important; }
+    .stat-gradient-3 { background: linear-gradient(135deg, #f0fdfa, #ccfbf1) !important; border: 1px solid #99f6e4 !important; box-shadow: 0 4px 12px rgba(11, 158, 79, 0.05) !important; }
+    .stat-gradient-4 { background: linear-gradient(135deg, #eff6ff, #dbeafe) !important; border: 1px solid #bfdbfe !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05) !important; }
+    .stat-gradient-5 { background: linear-gradient(135deg, #fdf4ff, #fae8ff) !important; border: 1px solid #f5d0fe !important; box-shadow: 0 4px 12px rgba(192, 38, 211, 0.05) !important; }
+    .stat-gradient-6 { background: linear-gradient(135deg, #fef2f2, #fee2e2) !important; border: 1px solid #fecaca !important; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.05) !important; }
 
     /* Table Headers */
     .fi-ta-header-cell { background-color: #0b9e4f !important; border-bottom: 2px solid #098a44 !important; }
@@ -163,11 +164,12 @@ class AdminPanelProvider extends PanelProvider
     .dark .fi-logo { color: #ffffff !important; }
     
     /* Dashboard Stat Cards (Dark Mode tinted) */
-    .dark .stat-gradient-1 { background: linear-gradient(135deg, rgba(106,27,154,0.4), rgba(69,18,100,0.4)) !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-    .dark .stat-gradient-2 { background: linear-gradient(135deg, rgba(6,78,59,0.4), rgba(2,44,34,0.4)) !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-    .dark .stat-gradient-3 { background: linear-gradient(135deg, rgba(30,58,138,0.4), rgba(23,37,84,0.4)) !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-    .dark .stat-gradient-4 { background: linear-gradient(135deg, rgba(146,64,14,0.4), rgba(69,26,3,0.4)) !important; border: 1px solid rgba(255,255,255,0.05) !important; }
-    .dark .stat-gradient-5 { background: linear-gradient(135deg, rgba(127,29,29,0.4), rgba(69,10,10,0.4)) !important; border: 1px solid rgba(255,255,255,0.05) !important; }
+    .dark .stat-gradient-1, .dark .stat-gradient-2, .dark .stat-gradient-3, .dark .stat-gradient-4, .dark .stat-gradient-5, .dark .stat-gradient-6 {
+        background: linear-gradient(135deg, rgba(6,78,59,0.4), rgba(2,44,34,0.4)) !important; border: 1px solid rgba(11, 158, 79, 0.2) !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    }
+    .dark .stat-gradient-6 {
+        background: linear-gradient(135deg, rgba(127,29,29,0.4), rgba(69,10,10,0.4)) !important; border: 1px solid rgba(220, 38, 38, 0.2) !important;
+    }
 
     /* Table Headers */
     .dark .fi-ta-header-cell { background-color: #064e3b !important; border-bottom: 2px solid #022c22 !important; }
