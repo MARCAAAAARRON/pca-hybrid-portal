@@ -260,6 +260,7 @@ class ReportsDashboard extends Page implements HasForms
                     ->placeholder('stakeholder@pca.gov.ph'),
             ])
             ->action(function (array $data) {
+                set_time_limit(120);
                 $formData = $this->form->getState();
                 if (!$this->rawReportData || $this->rawReportData->isEmpty()) {
                     \Filament\Notifications\Notification::make()->danger()->title('No data to export.')->send();
@@ -328,12 +329,13 @@ class ReportsDashboard extends Page implements HasForms
                             \Illuminate\Support\Facades\Mail::to($data['email'])
                                 ->send(new \App\Mail\FieldDataReportMail($fileToAttach, $filename));
                                 
-                            \Filament\Notifications\Notification::make()
+                            $notification = \Filament\Notifications\Notification::make()
                                 ->success()
                                 ->title('Report Shared via Email')
-                                ->body('The report has been successfully emailed to ' . $data['email'])
-                                ->send()
-                                ->sendToDatabase(auth()->user());
+                                ->body('The report has been successfully emailed to ' . $data['email']);
+                                
+                            $notification->send();
+                            $notification->sendToDatabase(auth()->user());
                         }
                         
                     } catch (\Exception $e) {

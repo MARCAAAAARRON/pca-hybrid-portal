@@ -363,7 +363,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ App\Filament\Pages\GenerateReport::getUrl() }}" class="quicklinks-item"
+                    <a href="{{ App\Filament\Pages\ReportsDashboard::getUrl() }}" class="quicklinks-item"
                         style="display: flex; align-items: center; gap: 1rem; text-decoration: none; transition: color 0.2s;">
                         <div class="quicklinks-item-bg"
                             style="padding: 0.625rem; border-radius: 0.5rem; border-width: 1px; border-style: solid; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; background-color: #22c55e; border-color: #16a34a;">
