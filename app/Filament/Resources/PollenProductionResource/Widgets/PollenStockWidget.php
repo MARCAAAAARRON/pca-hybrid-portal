@@ -17,18 +17,19 @@ class PollenStockWidget extends BaseWidget
     {
         $user = auth()->user();
 
-        $query = PollenProduction::query()
-            ->with('fieldSite')
-            ->where('ending_balance', '>', 0)
-            ->orderByRaw("COALESCE(date_received, report_month) ASC"); // Oldest first
-
-        // Supervisors only see their site
-        if ($user?->isSupervisor() && $user->field_site_id) {
-            $query->where('field_site_id', $user->field_site_id);
-        }
-
         return $table
-            ->query($query)
+            ->query(function () use ($user) {
+                $query = PollenProduction::query()
+                    ->with('fieldSite')
+                    ->where('ending_balance', '>', 0);
+
+                // Supervisors only see their site
+                if ($user?->isSupervisor() && $user->field_site_id) {
+                    $query->where('field_site_id', $user->field_site_id);
+                }
+
+                return $query->orderByRaw("COALESCE(date_received, report_month) ASC"); // Oldest first
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('fieldSite.name')
                     ->label('Site')
