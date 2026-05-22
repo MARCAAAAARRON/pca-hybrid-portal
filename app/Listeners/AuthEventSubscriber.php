@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Models\AuditLog;
+use App\Models\User;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Events\Dispatcher;
@@ -54,6 +56,24 @@ class AuthEventSubscriber
     }
 
     /**
+     * Handle failed login attempts for security auditing.
+     */
+    public function handleFailedLogin(Failed $event): void
+    {
+        AuditLog::create([
+            'user_id' => $event->user?->id,
+            'action' => 'login_failed',
+            'model_name' => User::class,
+            'object_id' => $event->user?->id,
+            'details' => [
+                'credentials' => array_keys($event->credentials), // Log only keys, NEVER passwords
+                'msg' => 'Failed login attempt.',
+            ],
+            'ip_address' => request()->ip(),
+        ]);
+    }
+
+    /**
      * Register the listeners for the subscriber.
      */
     public function subscribe(Dispatcher $events): array
@@ -61,6 +81,7 @@ class AuthEventSubscriber
         return [
             Login::class => 'handleUserLogin',
             Logout::class => 'handleUserLogout',
+            Failed::class => 'handleFailedLogin',
         ];
     }
 }

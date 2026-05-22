@@ -80,7 +80,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
 
     public function fieldSite(): BelongsTo
     {
-        return $this->belongsTo(FieldSite::class);
+        return $this->belongsTo(FieldSite::class)->withTrashed();
     }
 
     public function hybridizationRecords(): HasMany
@@ -166,6 +166,27 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
                 // Remove old roles and assign the new one from the 'role' column
                 // This ensures Spatie roles match the simple 'role' attribute
                 $user->syncRoles([$user->role]);
+            }
+        });
+
+        // Fix #2: Prevent unique constraint collisions on soft delete
+        // Suffix unique fields so the original email/username can be reused
+        static::deleting(function (User $user) {
+            if (!$user->isForceDeleting()) {
+                $suffix = '.deleted.' . time();
+                $user->email = $user->email . $suffix;
+                if ($user->username) {
+                    $user->username = $user->username . $suffix;
+                }
+                $user->saveQuietly();
+            }
+        });
+
+        // On restore, strip the '.deleted.XXXXX' suffix to recover original values
+        static::restoring(function (User $user) {
+            $user->email = preg_replace('/\.deleted\.\d+$/', '', $user->email);
+            if ($user->username) {
+                $user->username = preg_replace('/\.deleted\.\d+$/', '', $user->username);
             }
         });
     }

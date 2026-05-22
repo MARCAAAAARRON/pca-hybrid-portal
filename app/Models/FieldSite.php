@@ -58,4 +58,32 @@ class FieldSite extends Model
     {
         return $this->hasMany(ExcelUpload::class);
     }
+
+    protected static function booted(): void
+    {
+        // Fix #2: Prevent unique constraint collision on the 'name' column
+        static::deleting(function (FieldSite $site) {
+            if (!$site->isForceDeleting()) {
+                $site->name = $site->name . '.deleted.' . time();
+                $site->saveQuietly();
+
+                // Fix #4: Cascade soft-delete to associated users
+                $site->users()->each(function ($user) {
+                    $user->delete();
+                });
+            }
+        });
+
+        // On restore, clean up the name suffix and restore associated users
+        static::restoring(function (FieldSite $site) {
+            $site->name = preg_replace('/\.deleted\.\d+$/', '', $site->name);
+        });
+
+        static::restored(function (FieldSite $site) {
+            // Restore users that were cascade-deleted with this site
+            $site->users()->onlyTrashed()->each(function ($user) {
+                $user->restore();
+            });
+        });
+    }
 }

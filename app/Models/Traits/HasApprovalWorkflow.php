@@ -11,17 +11,17 @@ trait HasApprovalWorkflow
 
     public function preparedByUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'prepared_by');
+        return $this->belongsTo(User::class, 'prepared_by')->withTrashed();
     }
 
     public function reviewedByUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'reviewed_by');
+        return $this->belongsTo(User::class, 'reviewed_by')->withTrashed();
     }
 
     public function notedByUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'noted_by');
+        return $this->belongsTo(User::class, 'noted_by')->withTrashed();
     }
 
     // ───── Status Helpers ─────
