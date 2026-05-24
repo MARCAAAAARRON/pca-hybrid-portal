@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Models\AuditLog;
@@ -16,16 +18,21 @@ class AuthEventSubscriber
      */
     public function handleUserLogin(Login $event): void
     {
+        if (!$event->user instanceof User) {
+            return;
+        }
+
         $user = $event->user;
+        $userId = (int) $user->getKey();
 
         AuditLog::create([
-            'user_id' => $user->id,
+            'user_id' => $userId,
             'action' => 'login',
             'model_name' => get_class($user),
-            'object_id' => $user->id,
+            'object_id' => $userId,
             'details' => [
-                'email' => $user->email,
-                'name' => $user->name,
+                'email' => (string) $user->getAttribute('email'),
+                'name' => (string) $user->getAttribute('name'),
                 'msg' => 'User logged in successfully.',
             ],
             'ip_address' => request()->ip(),
@@ -37,17 +44,19 @@ class AuthEventSubscriber
      */
     public function handleUserLogout(Logout $event): void
     {
-        $user = $event->user;
+        $user = $event->user instanceof User ? $event->user : null;
 
         if ($user) {
+            $userId = (int) $user->getKey();
+
             AuditLog::create([
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'action' => 'logout',
                 'model_name' => get_class($user),
-                'object_id' => $user->id,
+                'object_id' => $userId,
                 'details' => [
-                    'email' => $user->email,
-                    'name' => $user->name,
+                    'email' => (string) $user->getAttribute('email'),
+                    'name' => (string) $user->getAttribute('name'),
                     'msg' => 'User logged out successfully.',
                 ],
                 'ip_address' => request()->ip(),
@@ -60,11 +69,14 @@ class AuthEventSubscriber
      */
     public function handleFailedLogin(Failed $event): void
     {
+        $user = $event->user instanceof User ? $event->user : null;
+        $userId = $user instanceof User ? (int) $user->getKey() : null;
+
         AuditLog::create([
-            'user_id' => $event->user?->id,
+            'user_id' => $userId,
             'action' => 'login_failed',
             'model_name' => User::class,
-            'object_id' => $event->user?->id,
+            'object_id' => $userId,
             'details' => [
                 'credentials' => array_keys($event->credentials), // Log only keys, NEVER passwords
                 'msg' => 'Failed login attempt.',
