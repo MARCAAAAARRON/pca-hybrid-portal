@@ -7,10 +7,12 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libpq-dev \
+    libzip-dev \
+    libicu-dev \
     zip \
     unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_pgsql pgsql
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql zip intl bcmath exif
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
