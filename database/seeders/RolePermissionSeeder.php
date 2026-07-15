@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Artisan;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -26,7 +27,10 @@ class RolePermissionSeeder extends Seeder
         $managerRole->syncPermissions([]);
         $supervisorRole->syncPermissions([]);
 
-        // 2. Superadmin gets EVERYTHING unconditionally
+        // 2. Generate permissions via Filament Shield FIRST
+        Artisan::call('shield:generate', ['--all' => true]);
+
+        // 3. Superadmin gets EVERYTHING unconditionally
         $allPermissions = Permission::all();
         $superadminRole->syncPermissions($allPermissions);
 
