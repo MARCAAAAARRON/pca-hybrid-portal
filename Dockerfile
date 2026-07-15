@@ -1,5 +1,5 @@
 # Use the official PHP image with Apache
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Install required system packages and PHP extensions for Laravel and PostgreSQL
 RUN apt-get update && apt-get install -y \
