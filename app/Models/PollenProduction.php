@@ -90,17 +90,17 @@ class PollenProduction extends Model
 
     public function scopeFresh(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->whereRaw("COALESCE(julianday('now') - julianday(date_received), julianday('now') - julianday(report_month)) <= 30");
+        return $query->whereRaw("CURRENT_DATE - COALESCE(date_received, report_month) <= 30");
     }
 
     public function scopeAtRisk(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->whereRaw("COALESCE(julianday('now') - julianday(date_received), julianday('now') - julianday(report_month)) BETWEEN 31 AND 60");
+        return $query->whereRaw("CURRENT_DATE - COALESCE(date_received, report_month) BETWEEN 31 AND 60");
     }
 
     public function scopeExpired(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->whereRaw("COALESCE(julianday('now') - julianday(date_received), julianday('now') - julianday(report_month)) > 60");
+        return $query->whereRaw("CURRENT_DATE - COALESCE(date_received, report_month) > 60");
     }
 
     public function scopeHasBalance(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder

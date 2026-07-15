@@ -120,11 +120,10 @@ class HybridizationRecord extends Model implements HasMedia
     public function scopeReadyForHarvest(Builder $query): Builder
     {
         $cutoff = now()->addDays(7)->toDateString();
-        $months = '+' . self::HARVEST_LEAD_MONTHS . ' months';
         return $query
             ->where('growth_status', '!=', 'harvested')
             ->whereNotNull('date_planted')
-            ->whereRaw("date(date_planted, ?) <= ?", [$months, $cutoff]);
+            ->whereRaw("date_planted + INTERVAL '" . self::HARVEST_LEAD_MONTHS . " months' <= ?", [$cutoff]);
     }
 
     /**
@@ -134,11 +133,10 @@ class HybridizationRecord extends Model implements HasMedia
     {
         $from = now()->toDateString();
         $to   = now()->addDays(30)->toDateString();
-        $months = '+' . self::HARVEST_LEAD_MONTHS . ' months';
         return $query
             ->where('growth_status', '!=', 'harvested')
             ->whereNotNull('date_planted')
-            ->whereRaw("date(date_planted, ?) BETWEEN ? AND ?", [$months, $from, $to]);
+            ->whereRaw("date_planted + INTERVAL '" . self::HARVEST_LEAD_MONTHS . " months' BETWEEN ? AND ?", [$from, $to]);
     }
 
     /**
