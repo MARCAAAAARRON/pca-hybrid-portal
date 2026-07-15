@@ -13,16 +13,16 @@ Route::get('/', function () {
             'pollen'        => \App\Models\PollenProduction::where('field_site_id', $site->id)->whereYear('report_month', $year)->count(),
             'nursery'       => \App\Models\NurseryOperation::where('field_site_id', $site->id)->where('report_type', 'operation')->whereYear('report_month', $year)->count(),
             'distribution'  => \App\Models\HybridDistribution::where('field_site_id', $site->id)->whereYear('report_month', $year)->count(),
-            'seednuts'      => \App\Models\HarvestVariety::whereHas('monthlyHarvest', fn($q) => $q->withoutGlobalScopes()->where('field_site_id', $site->id)->whereYear('report_month', $year))->sum('seednuts_count'),
-            'seedlings'     => \App\Models\HybridDistribution::where('field_site_id', $site->id)->whereYear('report_month', $year)->sum('seedlings_planted'),
+            'seednuts'      => (int) \App\Models\HarvestVariety::whereHas('monthlyHarvest', fn($q) => $q->withoutGlobalScopes()->where('field_site_id', $site->id)->whereYear('report_month', $year))->sum('seednuts_count'),
+            'seedlings'     => (int) \App\Models\HybridDistribution::where('field_site_id', $site->id)->whereYear('report_month', $year)->sum('seedlings_planted'),
         ];
     });
 
-    $totalHarvests      = $sites->sum('harvests');
-    $totalPollen        = $sites->sum('pollen');
-    $totalDistribution  = $sites->sum('distribution');
-    $totalSeednuts      = $sites->sum('seednuts');
-    $totalSeedlings     = $sites->sum('seedlings');
+    $totalHarvests      = (int) $sites->sum('harvests');
+    $totalPollen        = (int) $sites->sum('pollen');
+    $totalDistribution  = (int) $sites->sum('distribution');
+    $totalSeednuts      = (int) $sites->sum('seednuts');
+    $totalSeedlings     = (int) $sites->sum('seedlings');
     $siteCount          = FieldSite::count();
 
     return view('welcome', compact(

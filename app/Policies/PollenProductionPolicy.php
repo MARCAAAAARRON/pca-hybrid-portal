@@ -10,88 +10,99 @@ class PollenProductionPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * Determine whether the user can view any models.
+     */
     public function viewAny(User $user): bool
     {
         return $user->can('view_any_pollen::production');
     }
 
+    /**
+     * Determine whether the user can view the model.
+     */
     public function view(User $user, PollenProduction $pollenProduction): bool
     {
         return $user->can('view_pollen::production');
     }
 
+    /**
+     * Determine whether the user can create models.
+     */
     public function create(User $user): bool
     {
         return $user->can('create_pollen::production');
     }
 
+    /**
+     * Determine whether the user can update the model.
+     */
     public function update(User $user, PollenProduction $pollenProduction): bool
     {
-        if (!$user->can('update_pollen::production')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $pollenProduction);
+        return $user->can('update_pollen::production');
     }
 
+    /**
+     * Determine whether the user can delete the model.
+     */
     public function delete(User $user, PollenProduction $pollenProduction): bool
     {
-        if (!$user->can('delete_pollen::production')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $pollenProduction);
+        return $user->can('delete_pollen::production');
     }
 
+    /**
+     * Determine whether the user can bulk delete.
+     */
     public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_pollen::production');
     }
 
+    /**
+     * Determine whether the user can permanently delete.
+     */
     public function forceDelete(User $user, PollenProduction $pollenProduction): bool
     {
-        return false;
+        return $user->can('{{ ForceDelete }}');
     }
 
+    /**
+     * Determine whether the user can permanently bulk delete.
+     */
     public function forceDeleteAny(User $user): bool
     {
-        return false;
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
+    /**
+     * Determine whether the user can restore.
+     */
     public function restore(User $user, PollenProduction $pollenProduction): bool
     {
-        return false;
+        return $user->can('{{ Restore }}');
     }
 
+    /**
+     * Determine whether the user can bulk restore.
+     */
     public function restoreAny(User $user): bool
     {
-        return false;
+        return $user->can('{{ RestoreAny }}');
     }
 
+    /**
+     * Determine whether the user can replicate.
+     */
     public function replicate(User $user, PollenProduction $pollenProduction): bool
     {
-        return false;
+        return $user->can('{{ Replicate }}');
     }
 
+    /**
+     * Determine whether the user can reorder.
+     */
     public function reorder(User $user): bool
     {
-        return false;
-    }
-
-    protected function canEditRecord(User $user, PollenProduction $record): bool
-    {
-        if ($user->role === 'superadmin') {
-            return true;
-        }
-
-        if (!$record->isDraft()) {
-            return false;
-        }
-
-        if ($user->role === 'supervisor') {
-            return $user->field_site_id === $record->field_site_id;
-        }
-
-        return false;
+        return $user->can('{{ Reorder }}');
     }
 }

@@ -721,7 +721,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             background: var(--green-700);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .about-visual img {
@@ -1468,7 +1468,7 @@
                 <div class="hero-badge">PCA<br>Bohol</div>
     -->
 
-                <div class="hero-badge"><img src="{{ asset('images/DA-Logo.png') }}" alt="DA"
+                <div class="hero-badge"><img src="{{ asset('images/DA_Logo.png') }}" alt="DA"
                         style="width:75px;height:75px;object-fit:contain"></div>
                 <div class="hero-badge"><img src="{{ asset('images/PCA_Logo.png') }}" alt="PCA"
                         style="width:75px;height:75px;object-fit:contain"></div>
@@ -1527,7 +1527,8 @@
                 <div>
                     <div class="section-tag reveal">✦ Live Program Data</div>
                     <h2 class="section-title font-bold reveal">Farm Activity<br>per Field Site</h2>
-                    <p class="section-desc reveal">Real-time operational data from all PCA Bohol hybridization field sites — open for public transparency.</p>
+                    <p class="section-desc reveal">Real-time operational data from all PCA Bohol hybridization field
+                        sites — open for public transparency.</p>
                 </div>
                 <div class="year-select-pill reveal">
                     📅
@@ -1542,37 +1543,37 @@
 
             <div class="farm-grid">
                 @foreach($sites as $site)
-                <div class="farm-card reveal">
-                    <div class="farm-card-header">
-                        <div class="farm-card-icon">🌴</div>
-                        <div>
-                            <h3>{{ $site['name'] }}</h3>
-                            <span>{{ $year }} Data</span>
+                    <div class="farm-card reveal">
+                        <div class="farm-card-header">
+                            <div class="farm-card-icon">🌴</div>
+                            <div>
+                                <h3>{{ $site['name'] }}</h3>
+                                <span>{{ $year }} Data</span>
+                            </div>
+                        </div>
+                        <div class="farm-stats-row">
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['harvests'] }}</div>
+                                <div class="label">Harvest Reports</div>
+                            </div>
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['pollen'] }}</div>
+                                <div class="label">Pollen Records</div>
+                            </div>
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['nursery'] }}</div>
+                                <div class="label">Nursery Ops</div>
+                            </div>
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['distribution'] }}</div>
+                                <div class="label">Distributions</div>
+                            </div>
+                        </div>
+                        <div class="farm-card-footer">
+                            <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
+                            <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
                         </div>
                     </div>
-                    <div class="farm-stats-row">
-                        <div class="farm-stat-item">
-                            <div class="num">{{ $site['harvests'] }}</div>
-                            <div class="label">Harvest Reports</div>
-                        </div>
-                        <div class="farm-stat-item">
-                            <div class="num">{{ $site['pollen'] }}</div>
-                            <div class="label">Pollen Records</div>
-                        </div>
-                        <div class="farm-stat-item">
-                            <div class="num">{{ $site['nursery'] }}</div>
-                            <div class="label">Nursery Ops</div>
-                        </div>
-                        <div class="farm-stat-item">
-                            <div class="num">{{ $site['distribution'] }}</div>
-                            <div class="label">Distributions</div>
-                        </div>
-                    </div>
-                    <div class="farm-card-footer">
-                        <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
-                        <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
-                    </div>
-                </div>
                 @endforeach
             </div>
         </div>
@@ -1779,7 +1780,8 @@
                             <div class="org-avatar">👤</div>
                             <h4>Maria Santos</h4>
                             <div class="org-role">Section Head – Hybridization</div>
-                            <div class="org-desc">Leads the hybridization research and seednut production programs.</div>
+                            <div class="org-desc">Leads the hybridization research and seednut production programs.
+                            </div>
                             <div class="org-placeholder-badge">📷 Photo placeholder</div>
                         </div>
                     </div>
@@ -1790,7 +1792,8 @@
                             <div class="org-avatar">👤</div>
                             <h4>Pedro Reyes</h4>
                             <div class="org-role">Section Head – Operations</div>
-                            <div class="org-desc">Manages nursery operations, pollen production, and distribution logistics.</div>
+                            <div class="org-desc">Manages nursery operations, pollen production, and distribution
+                                logistics.</div>
                             <div class="org-placeholder-badge">📷 Photo placeholder</div>
                         </div>
                     </div>

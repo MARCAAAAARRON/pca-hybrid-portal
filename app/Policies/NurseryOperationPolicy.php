@@ -10,88 +10,99 @@ class NurseryOperationPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * Determine whether the user can view any models.
+     */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_nursery::operation');
+        return $user->can('view_any_terminal');
     }
 
+    /**
+     * Determine whether the user can view the model.
+     */
     public function view(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('view_nursery::operation');
+        return $user->can('view_terminal');
     }
 
+    /**
+     * Determine whether the user can create models.
+     */
     public function create(User $user): bool
     {
-        return $user->can('create_nursery::operation');
+        return $user->can('create_terminal');
     }
 
+    /**
+     * Determine whether the user can update the model.
+     */
     public function update(User $user, NurseryOperation $nurseryOperation): bool
     {
-        if (!$user->can('update_nursery::operation')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $nurseryOperation);
+        return $user->can('update_terminal');
     }
 
+    /**
+     * Determine whether the user can delete the model.
+     */
     public function delete(User $user, NurseryOperation $nurseryOperation): bool
     {
-        if (!$user->can('delete_nursery::operation')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $nurseryOperation);
+        return $user->can('delete_terminal');
     }
 
+    /**
+     * Determine whether the user can bulk delete.
+     */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_nursery::operation');
+        return $user->can('delete_any_terminal');
     }
 
+    /**
+     * Determine whether the user can permanently delete.
+     */
     public function forceDelete(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return false;
+        return $user->can('{{ ForceDelete }}');
     }
 
+    /**
+     * Determine whether the user can permanently bulk delete.
+     */
     public function forceDeleteAny(User $user): bool
     {
-        return false;
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
+    /**
+     * Determine whether the user can restore.
+     */
     public function restore(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return false;
+        return $user->can('{{ Restore }}');
     }
 
+    /**
+     * Determine whether the user can bulk restore.
+     */
     public function restoreAny(User $user): bool
     {
-        return false;
+        return $user->can('{{ RestoreAny }}');
     }
 
+    /**
+     * Determine whether the user can replicate.
+     */
     public function replicate(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return false;
+        return $user->can('{{ Replicate }}');
     }
 
+    /**
+     * Determine whether the user can reorder.
+     */
     public function reorder(User $user): bool
     {
-        return false;
-    }
-
-    protected function canEditRecord(User $user, NurseryOperation $record): bool
-    {
-        if ($user->role === 'superadmin') {
-            return true;
-        }
-
-        if (!$record->isDraft()) {
-            return false;
-        }
-
-        if ($user->role === 'supervisor') {
-            return $user->field_site_id === $record->field_site_id;
-        }
-
-        return false;
+        return $user->can('{{ Reorder }}');
     }
 }

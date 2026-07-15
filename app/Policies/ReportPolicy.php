@@ -36,28 +36,18 @@ class ReportPolicy
 
     /**
      * Determine whether the user can update the model.
-     * Supervisors can only update reports they personally generated.
      */
     public function update(User $user, Report $report): bool
     {
-        if (!$user->can('update_report')) {
-            return false;
-        }
-
-        return $this->ownsReport($user, $report);
+        return $user->can('update_report');
     }
 
     /**
      * Determine whether the user can delete the model.
-     * Supervisors can only delete reports they personally generated.
      */
     public function delete(User $user, Report $report): bool
     {
-        if (!$user->can('delete_report')) {
-            return false;
-        }
-
-        return $this->ownsReport($user, $report);
+        return $user->can('delete_report');
     }
 
     /**
@@ -73,7 +63,7 @@ class ReportPolicy
      */
     public function forceDelete(User $user, Report $report): bool
     {
-        return false;
+        return $user->can('force_delete_report');
     }
 
     /**
@@ -81,7 +71,7 @@ class ReportPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return false;
+        return $user->can('force_delete_any_report');
     }
 
     /**
@@ -105,7 +95,7 @@ class ReportPolicy
      */
     public function replicate(User $user, Report $report): bool
     {
-        return false;
+        return $user->can('replicate_report');
     }
 
     /**
@@ -113,25 +103,6 @@ class ReportPolicy
      */
     public function reorder(User $user): bool
     {
-        return false;
-    }
-
-    /**
-     * Superadmin bypasses ownership entirely.
-     * Supervisors can only act on reports they personally generated.
-     * Admin/manager never reach this check since they don't get
-     * update/delete permissions on reports in the first place.
-     */
-    protected function ownsReport(User $user, Report $report): bool
-    {
-        if ($user->role === 'superadmin') {
-            return true;
-        }
-
-        if ($user->role === 'supervisor') {
-            return $user->id === $report->generated_by;
-        }
-
-        return false;
+        return $user->can('reorder_report');
     }
 }

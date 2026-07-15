@@ -10,93 +10,99 @@ class HybridizationRecordPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * Determine whether the user can view any models.
+     */
     public function viewAny(User $user): bool
     {
         return $user->can('view_any_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can view the model.
+     */
     public function view(User $user, HybridizationRecord $hybridizationRecord): bool
     {
         return $user->can('view_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can create models.
+     */
     public function create(User $user): bool
     {
         return $user->can('create_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can update the model.
+     */
     public function update(User $user, HybridizationRecord $hybridizationRecord): bool
     {
-        if (!$user->can('update_hybridization::record')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $hybridizationRecord);
+        return $user->can('update_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can delete the model.
+     */
     public function delete(User $user, HybridizationRecord $hybridizationRecord): bool
     {
-        if (!$user->can('delete_hybridization::record')) {
-            return false;
-        }
-
-        return $this->canEditRecord($user, $hybridizationRecord);
+        return $user->can('delete_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can bulk delete.
+     */
     public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_hybridization::record');
     }
 
+    /**
+     * Determine whether the user can permanently delete.
+     */
     public function forceDelete(User $user, HybridizationRecord $hybridizationRecord): bool
     {
-        return false;
-    }
-
-    public function forceDeleteAny(User $user): bool
-    {
-        return false;
-    }
-
-    public function restore(User $user, HybridizationRecord $hybridizationRecord): bool
-    {
-        return false;
-    }
-
-    public function restoreAny(User $user): bool
-    {
-        return false;
-    }
-
-    public function replicate(User $user, HybridizationRecord $hybridizationRecord): bool
-    {
-        return false;
-    }
-
-    public function reorder(User $user): bool
-    {
-        return false;
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
-     * Stricter than the other 4 field-data policies: this table has
-     * an individual created_by column, so ownership is per-user,
-     * not per-field-site.
+     * Determine whether the user can permanently bulk delete.
      */
-    protected function canEditRecord(User $user, HybridizationRecord $record): bool
+    public function forceDeleteAny(User $user): bool
     {
-        if ($user->role === 'superadmin') {
-            return true;
-        }
+        return $user->can('{{ ForceDeleteAny }}');
+    }
 
-        if (!$record->isDraft()) {
-            return false;
-        }
+    /**
+     * Determine whether the user can restore.
+     */
+    public function restore(User $user, HybridizationRecord $hybridizationRecord): bool
+    {
+        return $user->can('{{ Restore }}');
+    }
 
-        if ($user->role === 'supervisor') {
-            return $user->id === $record->created_by;
-        }
+    /**
+     * Determine whether the user can bulk restore.
+     */
+    public function restoreAny(User $user): bool
+    {
+        return $user->can('{{ RestoreAny }}');
+    }
 
-        return false;
+    /**
+     * Determine whether the user can replicate.
+     */
+    public function replicate(User $user, HybridizationRecord $hybridizationRecord): bool
+    {
+        return $user->can('{{ Replicate }}');
+    }
+
+    /**
+     * Determine whether the user can reorder.
+     */
+    public function reorder(User $user): bool
+    {
+        return $user->can('{{ Reorder }}');
     }
 }

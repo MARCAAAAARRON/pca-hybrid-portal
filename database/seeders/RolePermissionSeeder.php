@@ -28,7 +28,7 @@ class RolePermissionSeeder extends Seeder
         $supervisorRole->syncPermissions([]);
 
         // 2. Generate permissions via Filament Shield FIRST
-        Artisan::call('shield:generate', ['--all' => true]);
+        Artisan::call('shield:generate', ['--all' => true, '--panel' => 'admin']);
 
         // 3. Superadmin gets EVERYTHING unconditionally
         $allPermissions = Permission::all();
