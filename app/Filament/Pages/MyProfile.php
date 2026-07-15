@@ -154,7 +154,7 @@ class MyProfile extends BreezyProfilePage
         }
 
         if (!empty($data['new_password'])) {
-            $updateData['password'] = Hash::make($data['new_password']);
+            $updateData['password'] = $data['new_password'];
         }
 
         $user->update($updateData);

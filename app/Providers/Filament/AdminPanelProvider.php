@@ -59,10 +59,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('portal')
-            ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(Login::class))
+            ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(\App\Filament\Pages\Auth\CustomLogin::class))
             ->when($this->settings->registration_enabled ?? false, fn($panel) => $panel->registration())
             ->when($this->settings->password_reset_enabled ?? true, fn($panel) => $panel->passwordReset())
-            ->emailVerification()
             ->brandLogo(fn() => new \Illuminate\Support\HtmlString('
                 <div class="flex items-center gap-2">
                     <img src="' . asset('images/PCA_Logo.png') . '" class="h-8 w-auto shrink-0" alt="PCA Logo" />

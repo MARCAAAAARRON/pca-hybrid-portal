@@ -496,11 +496,38 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             ->visible(fn() => in_array(auth()->user()?->role, ['manager', 'admin']))
             ->color('success')
             ->form([
-                \Filament\Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->label('Recipient Email')
-                    ->placeholder('stakeholder@pca.gov.ph'),
+                \Filament\Forms\Components\Section::make('Email Details')
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required()
+                            ->label('Recipient Email')
+                            ->placeholder('stakeholder@pca.gov.ph'),
+                    ]),
+                \Filament\Forms\Components\Section::make('PDF Settings')
+                    ->description('Customize the layout of the attached PDF report.')
+                    ->schema([
+                        \Filament\Forms\Components\Radio::make('orientation')
+                            ->label('Page Orientation')
+                            ->options([
+                                'landscape' => 'Landscape',
+                                'portrait' => 'Portrait',
+                            ])
+                            ->default('landscape')
+                            ->inline()
+                            ->required(),
+                        \Filament\Forms\Components\Select::make('paper_size')
+                            ->label('Paper Size')
+                            ->options([
+                                'legal' => 'Legal (8.5" × 14")',
+                                'a4' => 'A4 (210 × 297 mm)',
+                                'letter' => 'Letter (8.5" × 11")',
+                                'folio' => 'Folio (8.5" × 13")',
+                            ])
+                            ->default('legal')
+                            ->required()
+                            ->native(false),
+                    ]),
             ])
             ->action(function (array $data) {
                 set_time_limit(120);
@@ -583,16 +610,26 @@ class ReportsDashboard extends Page implements HasForms, HasActions
 
                 if ($exporter) {
                     try {
+                        // Generate Excel
                         $response = $exporter->export();
-                        $fileToAttach = $response->getFile()->getPathname();
+                        $excelFile = $response->getFile()->getPathname();
+                        
+                        // Generate PDF
+                        $pdfInfo = $this->generatePdfReport($data['orientation'], $data['paper_size'], $formData);
+                        $pdfFile = $pdfInfo['path'];
+                        $pdfName = $pdfInfo['filename'];
+
+                        // Attach Both
+                        $filesToAttach = [$excelFile, $pdfFile];
+                        $fileNames = [$filename, $pdfName];
 
                         \Illuminate\Support\Facades\Mail::to($data['email'])
-                            ->send(new \App\Mail\FieldDataReportMail($fileToAttach, $filename));
+                            ->send(new \App\Mail\FieldDataReportMail($filesToAttach, $fileNames));
 
                         $notification = \Filament\Notifications\Notification::make()
                             ->success()
                             ->title('Report Shared via Email')
-                            ->body('The report has been successfully emailed to ' . $data['email']);
+                            ->body('The PDF and Excel reports have been successfully emailed to ' . $data['email']);
 
                         $notification->send();
                         $notification->sendToDatabase(auth()->user());
@@ -689,134 +726,20 @@ class ReportsDashboard extends Page implements HasForms, HasActions
 
                 try {
                     $formData = $this->form->getState();
-                $orientation = $data['orientation'];
-                $paperSize = $data['paper_size'];
-                $isCumulative = ($formData['export_range'] ?? 'single') === 'cumulative';
+                    
+                    $pdfInfo = $this->generatePdfReport($data['orientation'], $data['paper_size'], $formData);
 
-                // Build the period string (same logic as the Blade view)
-                $asOfDate = \Carbon\Carbon::create($formData['year'], $formData['month'] ?: 1, 1);
-                $activeCat = $this->activeCategory;
+                    \Filament\Notifications\Notification::make()
+                        ->success()
+                        ->title('PDF Generated Successfully')
+                        ->body("Report saved and download started.")
+                        ->send();
 
-                if ($formData['year'] && empty($formData['month'])) {
-                    $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
-                        ? 'as of end of ' . $formData['year']
-                        : 'For the year ' . $formData['year'];
-                } elseif ($isCumulative) {
-                    $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
-                        ? 'Cumulative as of ' . $asOfDate->endOfMonth()->format('F d, Y')
-                        : 'For the months of January to ' . $asOfDate->format('F Y');
-                } else {
-                    $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
-                        ? 'as of ' . $asOfDate->endOfMonth()->format('F d, Y')
-                        : 'For the month of ' . $asOfDate->format('F Y');
-                }
-
-                // Collect all pages to render in the PDF
-                $pages = [];
-
-                if ($this->fullPackageMode) {
-                    // Multi-category mode: iterate each selected category and its sites
-                    foreach ($this->selectedCategories as $cat) {
-                        $catData = $this->fullPackageData[$cat] ?? [];
-                        foreach ($catData as $siteId => $siteData) {
-                            $pages[] = [
-                                'category' => $cat,
-                                'records'  => $siteData['records'],
-                                'farms'    => $siteData['farms'] ?? null,
-                            ];
-                        }
-                    }
-                } else {
-                    // Single category mode: iterate each site in reportData
-                    if (!empty($this->reportData)) {
-                        foreach ($this->reportData as $siteId => $siteData) {
-                            $pages[] = [
-                                'category' => $activeCat,
-                                'records'  => $siteData['records'],
-                                'farms'    => $siteData['farms'] ?? null,
-                            ];
-                        }
-                    }
-                }
-
-                if (empty($pages)) {
-                    \Filament\Notifications\Notification::make()->danger()->title('No data available for PDF export.')->send();
-                    return;
-                }
-
-                // Build a descriptive title
-                $categoryLabels = [
-                    'monthly_harvest'     => 'Monthly Harvest',
-                    'pollen_production'   => 'Pollen Production',
-                    'hybrid_distribution' => 'Hybrid Distribution',
-                    'nursery_operation'   => 'Nursery Operation',
-                    'terminal_report'     => 'Terminal Report',
-                ];
-
-                if ($this->fullPackageMode) {
-                    $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
-                    $reportTitle = "Report Package ({$catNames})";
-                } else {
-                    $reportTitle = $categoryLabels[$activeCat] ?? $activeCat;
-                }
-
-                $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
-                $period = $formData['month']
-                    ? $asOfDate->format('F_Y')
-                    : $formData['year'];
-                $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
-
-                // Render the PDF via dompdf
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report-dashboard', [
-                    'pages'       => $pages,
-                    'periodStr'   => $periodStr,
-                    'title'       => $pdfTitle,
-                    'filterMonth' => $formData['month'] ?? null,
-                    'filterYear'  => $formData['year'] ?? null,
-                ])->setPaper($paperSize, $orientation);
-
-                $pdfContent = $pdf->output();
-
-                // Generate filename
-                $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
-                $safeCatName = $this->fullPackageMode ? 'Full_Package' : preg_replace('/[^A-Za-z0-9_\-]/', '_', $categoryLabels[$activeCat] ?? $activeCat);
-                $timestamp = now()->format('Ymd_His');
-                $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
-
-                // Save to storage
-                $storagePath = "reports/{$filename}";
-                \Illuminate\Support\Facades\Storage::disk('public')->put($storagePath, $pdfContent);
-
-                // Determine field_site_id for the Report record
-                $fieldSiteId = null;
-                if (!$this->fullPackageMode && count($this->reportData) === 1) {
-                    $fieldSiteId = array_key_first($this->reportData);
-                } elseif (auth()->user()?->isSupervisor()) {
-                    $fieldSiteId = auth()->user()->field_site_id;
-                }
-
-                // Create Report record
-                \App\Models\Report::create([
-                    'generated_by'  => auth()->id(),
-                    'report_type'   => 'pdf',
-                    'field_site_id' => $fieldSiteId,
-                    'title'         => $pdfTitle,
-                    'file'          => $storagePath,
-                ]);
-
-                \Filament\Notifications\Notification::make()
-                    ->success()
-                    ->title('PDF Generated Successfully')
-                    ->body("Report saved and download started.")
-                    ->send();
-
-                // Trigger browser download
-                return response()->streamDownload(
-                    fn () => print($pdfContent),
-                    $filename,
-                    ['Content-Type' => 'application/pdf']
-                );
-
+                    return response()->streamDownload(
+                        fn () => print($pdfInfo['content']),
+                        $pdfInfo['filename'],
+                        ['Content-Type' => 'application/pdf']
+                    );
                 } catch (\Throwable $e) {
                     \Illuminate\Support\Facades\Log::error('PDF Export Error: ' . $e->getMessage(), [
                         'trace' => $e->getTraceAsString(),
@@ -830,5 +753,115 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                         ->send();
                 }
             });
+    }
+    protected function generatePdfReport($orientation, $paperSize, $formData)
+    {
+        $isCumulative = ($formData['export_range'] ?? 'single') === 'cumulative';
+
+        $asOfDate = \Carbon\Carbon::create($formData['year'], $formData['month'] ?: 1, 1);
+        $activeCat = $this->activeCategory;
+
+        if ($formData['year'] && empty($formData['month'])) {
+            $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
+                ? 'as of end of ' . $formData['year']
+                : 'For the year ' . $formData['year'];
+        } elseif ($isCumulative) {
+            $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
+                ? 'Cumulative as of ' . $asOfDate->endOfMonth()->format('F d, Y')
+                : 'For the months of January to ' . $asOfDate->format('F Y');
+        } else {
+            $periodStr = in_array($activeCat, ['hybrid_distribution', 'nursery_operation', 'terminal_report'])
+                ? 'as of ' . $asOfDate->endOfMonth()->format('F d, Y')
+                : 'For the month of ' . $asOfDate->format('F Y');
+        }
+
+        $pages = [];
+
+        if ($this->fullPackageMode) {
+            foreach ($this->selectedCategories as $cat) {
+                $catData = $this->fullPackageData[$cat] ?? [];
+                foreach ($catData as $siteId => $siteData) {
+                    $pages[] = [
+                        'category' => $cat,
+                        'records'  => $siteData['records'],
+                        'farms'    => $siteData['farms'] ?? null,
+                    ];
+                }
+            }
+        } else {
+            if (!empty($this->reportData)) {
+                foreach ($this->reportData as $siteId => $siteData) {
+                    $pages[] = [
+                        'category' => $activeCat,
+                        'records'  => $siteData['records'],
+                        'farms'    => $siteData['farms'] ?? null,
+                    ];
+                }
+            }
+        }
+
+        if (empty($pages)) {
+            throw new \Exception('No data available for PDF export.');
+        }
+
+        $categoryLabels = [
+            'monthly_harvest'     => 'Monthly Harvest',
+            'pollen_production'   => 'Pollen Production',
+            'hybrid_distribution' => 'Hybrid Distribution',
+            'nursery_operation'   => 'Nursery Operation',
+            'terminal_report'     => 'Terminal Report',
+        ];
+
+        if ($this->fullPackageMode) {
+            $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
+            $reportTitle = "Report Package ({$catNames})";
+        } else {
+            $reportTitle = $categoryLabels[$activeCat] ?? $activeCat;
+        }
+
+        $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
+        $period = $formData['month']
+            ? $asOfDate->format('F_Y')
+            : $formData['year'];
+        $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report-dashboard', [
+            'pages'       => $pages,
+            'periodStr'   => $periodStr,
+            'title'       => $pdfTitle,
+            'filterMonth' => $formData['month'] ?? null,
+            'filterYear'  => $formData['year'] ?? null,
+        ])->setPaper($paperSize, $orientation);
+
+        $pdfContent = $pdf->output();
+
+        $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
+        $safeCatName = $this->fullPackageMode ? 'Full_Package' : preg_replace('/[^A-Za-z0-9_\-]/', '_', $categoryLabels[$activeCat] ?? $activeCat);
+        $timestamp = now()->format('Ymd_His');
+        $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
+
+        $storagePath = "reports/{$filename}";
+        \Illuminate\Support\Facades\Storage::disk('public')->put($storagePath, $pdfContent);
+
+        $fieldSiteId = null;
+        if (!$this->fullPackageMode && count($this->reportData) === 1) {
+            $fieldSiteId = array_key_first($this->reportData);
+        } elseif (auth()->user()?->isSupervisor()) {
+            $fieldSiteId = auth()->user()->field_site_id;
+        }
+
+        \App\Models\Report::create([
+            'generated_by'  => auth()->id(),
+            'report_type'   => 'pdf',
+            'field_site_id' => $fieldSiteId,
+            'title'         => $pdfTitle,
+            'file'          => $storagePath,
+        ]);
+
+        return [
+            'content'  => $pdfContent,
+            'filename' => $filename,
+            'path'     => \Illuminate\Support\Facades\Storage::disk('public')->path($storagePath),
+        ];
     }
 }

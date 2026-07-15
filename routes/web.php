@@ -58,3 +58,8 @@ Route::any('/admin/{any?}', function ($any = null) {
     }
     return redirect()->to($target, 301);
 })->where('any', '.*');
+
+// Pending Approval Page
+Route::get('/pending-approval', function () {
+    return view('pending-approval');
+})->name('pending.approval');

@@ -16,16 +16,16 @@ class FieldDataReportMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public string $filePath;
-    public string $fileName;
+    public array $filePaths;
+    public array $fileNames;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $filePath, string $fileName)
+    public function __construct(array $filePaths, array $fileNames)
     {
-        $this->filePath = $filePath;
-        $this->fileName = $fileName;
+        $this->filePaths = $filePaths;
+        $this->fileNames = $fileNames;
     }
 
     /**
@@ -34,7 +34,7 @@ class FieldDataReportMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'PCA Field Data Report: ' . str_replace('_', ' ', explode('.', $this->fileName)[0]),
+            subject: 'PCA Field Data Report',
         );
     }
 
@@ -55,10 +55,24 @@ class FieldDataReportMail extends Mailable
      */
     public function attachments(): array
     {
-        return [
-            \Illuminate\Mail\Mailables\Attachment::fromPath($this->filePath)
-                ->as($this->fileName)
-                ->withMime('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-        ];
+        $attachments = [];
+        
+        foreach ($this->filePaths as $index => $path) {
+            $name = $this->fileNames[$index] ?? basename($path);
+            
+            // Determine Mime Type
+            $mime = 'application/octet-stream';
+            if (str_ends_with(strtolower($name), '.pdf')) {
+                $mime = 'application/pdf';
+            } elseif (str_ends_with(strtolower($name), '.xlsx')) {
+                $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            }
+
+            $attachments[] = \Illuminate\Mail\Mailables\Attachment::fromPath($path)
+                ->as($name)
+                ->withMime($mime);
+        }
+
+        return $attachments;
     }
 }

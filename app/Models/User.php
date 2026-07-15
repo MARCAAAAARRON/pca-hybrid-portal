@@ -7,7 +7,7 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, SoftDeletes;
@@ -50,6 +50,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'role',
         'field_site_id',
         'signature_updated_at',
+        'is_approved',
     ];
 
     /**
@@ -73,6 +74,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'signature_updated_at' => 'datetime',
+            'is_approved' => 'boolean',
         ];
     }
 
@@ -199,6 +201,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
     public function canAccessPanel(Panel $panel): bool
     {
         // Only allow users with a valid PCA role to access the admin panel
-        return in_array($this->role, array_keys(self::ROLE_CHOICES));
+        return in_array($this->role, array_keys(self::ROLE_CHOICES)) 
+            && $this->is_approved;
     }
 }

@@ -51,6 +51,7 @@ class UserResource extends Resource
                     TextInput::make('password')
                         ->password()
                         ->required(fn($livewire) => $livewire instanceof Pages\CreateUser)
+                        ->dehydrateStateUsing(fn ($state) => \Illuminate\Support\Facades\Hash::make($state))
                         ->dehydrated(fn($state) => filled($state))
                         ->rule(Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised())
                         ->revealable()
@@ -71,6 +72,10 @@ class UserResource extends Resource
                         ->validationMessages([
                             'required' => 'A field site is required for supervisors.',
                         ]),
+                    \Filament\Forms\Components\Toggle::make('is_approved')
+                        ->label('Approved for Access')
+                        ->default(false)
+                        ->inline(false),
                 ])->columns(2),
             ]);
     }
@@ -121,7 +126,10 @@ class UserResource extends Resource
                             ->icon('heroicon-m-envelope')
                             ->searchable()
                             ->grow(false),
-                    ])->alignStart()->visibleFrom('lg')->space(1)
+                    ])->alignStart()->visibleFrom('lg')->space(1),
+                    Tables\Columns\ToggleColumn::make('is_approved')
+                        ->label('Approved')
+                        ->grow(false),
                 ]),
             ])
             ->filters([
