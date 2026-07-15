@@ -27,6 +27,14 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
+# Install Node.js (for Vite asset building)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Build Vite assets
+RUN npm install \
+    && npm run build
+
 # Change ownership of the storage folder so Laravel can write to it
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
