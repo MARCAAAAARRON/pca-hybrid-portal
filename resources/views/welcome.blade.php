@@ -1468,7 +1468,7 @@
                 <div class="hero-badge">PCA<br>Bohol</div>
     -->
 
-                <div class="hero-badge"><img src="{{ asset('images/DA_Logo.png') }}" alt="DA"
+                <div class="hero-badge"><img src="{{ asset('images/DA_logo.png') }}" alt="DA"
                         style="width:75px;height:75px;object-fit:contain"></div>
                 <div class="hero-badge"><img src="{{ asset('images/PCA_Logo.png') }}" alt="PCA"
                         style="width:75px;height:75px;object-fit:contain"></div>
