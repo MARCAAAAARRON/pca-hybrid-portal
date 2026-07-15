@@ -128,19 +128,6 @@ Spatie\Permission\Models\Permission::count();
 // Superadmin should hold ALL permissions
 App\Models\User::where('role', 'superadmin')->first()->getAllPermissions()->count();
 ```
-
-### Default Seeded Accounts
-
-| Role | Email | Password |
-|---|---|---|
-| System Administrator | superadmin@pca.gov.ph | PCA@gov.ph |
-| Division Chief I (Admin) | admin@pca.gov.ph | PCA@gov.ph |
-| Senior Agriculturist (Manager) | manager@pca.gov.ph | PCA@gov.ph |
-| Loay Supervisor | loay@pca.gov.ph | PCA@gov.ph |
-| Balilihan Supervisor | balilihan@pca.gov.ph | PCA@gov.ph |
-
-> ⚠️ Change these credentials before deploying to any shared or production environment.
-
 ---
 
 ## 🩺 Troubleshooting
