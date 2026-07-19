@@ -42,7 +42,7 @@ class EfficiencyStatsWidget extends BaseWidget
     {
         $year = $this->year ?? (int) now()->year;
 
-        $totalPollen = PollenProduction::withoutGlobalScopes()->whereYear('report_month', $year)->sum('total_utilization');
+        $totalPollen = PollenProduction::withoutGlobalScopes()->whereYear('report_month', $year)->sum(\DB::raw('CAST("total_utilization" AS NUMERIC)'));
         $totalSeednuts = HarvestVariety::whereHas('monthlyHarvest', function ($q) use ($year) {
             $q->withoutGlobalScopes()->whereYear('report_month', $year);
         })->sum('seednuts_count');

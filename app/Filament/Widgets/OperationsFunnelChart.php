@@ -43,7 +43,7 @@ class OperationsFunnelChart extends ChartWidget
     {
         $year = $this->year ?? (int) now()->year;
 
-        $pollenUtilized = PollenProduction::withoutGlobalScopes()->whereYear('report_month', $year)->sum('total_utilization');
+        $pollenUtilized = PollenProduction::withoutGlobalScopes()->whereYear('report_month', $year)->sum(\DB::raw('CAST("total_utilization" AS NUMERIC)'));
         $seednutsHarvested = HarvestVariety::whereHas('monthlyHarvest', function ($q) use ($year) {
             $q->withoutGlobalScopes()->whereYear('report_month', $year);
         })->sum('seednuts_count');
