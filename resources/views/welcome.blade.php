@@ -139,6 +139,8 @@
 
         /* Mobile hamburger */
         .hamburger {
+            background: var(--yellow);
+            border-radius: 6px; 
             display: none;
             flex-direction: column;
             gap: 5px;
@@ -150,7 +152,7 @@
             display: block;
             width: 24px;
             height: 2px;
-            background: var(--white);
+            background: var(--green-900);
             border-radius: 2px;
             transition: all .3s
         }
