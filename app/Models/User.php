@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PostgresBoolean;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Models\Contracts\FilamentUser;
@@ -74,7 +75,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'signature_updated_at' => 'datetime',
-            'is_approved' => 'boolean',
+            'is_approved' => PostgresBoolean::class,
         ];
     }
 

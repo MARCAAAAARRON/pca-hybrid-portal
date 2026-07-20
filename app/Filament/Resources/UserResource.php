@@ -127,8 +127,18 @@ class UserResource extends Resource
                             ->searchable()
                             ->grow(false),
                     ])->alignStart()->visibleFrom('lg')->space(1),
-                    Tables\Columns\ToggleColumn::make('is_approved')
+                    Tables\Columns\IconColumn::make('is_approved')
                         ->label('Approved')
+                        ->boolean()
+                        ->action(
+                            Tables\Actions\Action::make('toggleApproved')
+                                ->label(fn ($record) => $record->is_approved ? 'Revoke Approval' : 'Approve')
+                                ->requiresConfirmation()
+                                ->action(function ($record) {
+                                    $record->is_approved = ! $record->is_approved;
+                                    $record->save();
+                                })
+                        )
                         ->grow(false),
                 ]),
             ])
