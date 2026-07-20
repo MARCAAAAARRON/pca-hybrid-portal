@@ -45,6 +45,9 @@ class FieldDataReportMail extends Mailable
     {
         return new Content(
             view: 'emails.field-data-report',
+            with: [
+                'fileName' => $this->fileNames[0] ?? 'Report',
+            ],
         );
     }
 
