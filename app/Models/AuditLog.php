@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditLog extends Model
 {
+    use MassPrunable;
+
     protected $fillable = [
         'user_id',
         'action',
@@ -68,5 +72,14 @@ class AuditLog extends Model
         }
 
         return implode(' | ', $items);
+    }
+
+    /**
+     * Get the prunable model query.
+     * Prune logs older than 30 days to prevent the database from getting full.
+     */
+    public function prunable(): Builder
+    {
+        return static::where('created_at', '<=', now()->subDays(30));
     }
 }
