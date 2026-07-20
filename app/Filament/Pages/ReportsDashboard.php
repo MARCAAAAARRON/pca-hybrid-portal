@@ -693,7 +693,6 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             ->icon('heroicon-o-document-arrow-down')
             ->color('danger')
             ->size('sm')
-            ->authorize('create', \App\Models\Report::class)
             ->form([
                 \Filament\Forms\Components\Radio::make('orientation')
                     ->label('Page Orientation')

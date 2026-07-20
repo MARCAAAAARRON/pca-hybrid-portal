@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
                 'field_site_id' => null,
                 'email_verified_at' => now(),
+                'is_approved' => true,
             ]
         );
 
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'manager',
                 'field_site_id' => null,
                 'email_verified_at' => now(),
+                'is_approved' => true,
             ]
         );
 
@@ -58,6 +60,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'supervisor',
                 'field_site_id' => $loay?->id,
                 'email_verified_at' => now(),
+                'is_approved' => true,
             ]
         );
 
@@ -69,6 +72,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'supervisor',
                 'field_site_id' => $balilihan?->id,
                 'email_verified_at' => now(),
+                'is_approved' => true,
             ]
         );
 
@@ -81,6 +85,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'superadmin',
                 'field_site_id' => null,
                 'email_verified_at' => now(),
+                'is_approved' => true,
             ]
         );
     }
