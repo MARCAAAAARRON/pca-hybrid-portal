@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\AvatarProviders\PcaAvatarProvider;
 use App\Filament\Pages\Login;
 use App\Models\User;
 use App\Settings\KaidoSetting;
@@ -74,11 +75,19 @@ class AdminPanelProvider extends PanelProvider
                 'success' => Color::hex('#028c42'), // PCA Dark Green
             ])
             ->font('Sora', 'https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap')
+            ->defaultAvatarProvider(PcaAvatarProvider::class)
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 function (): string {
                     $html = <<<HTML
 <style>
+    /* --- Brand Logo Text (prevent wrapping on mobile) --- */
+    .pca-logo-text {
+        white-space: nowrap;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    
     /* --- Global Primary Color Override (PCA Green) --- */
     :root {
         --primary-50: 236, 253, 245 !important;
