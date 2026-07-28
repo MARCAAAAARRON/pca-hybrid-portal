@@ -45,3 +45,10 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 # Expose port 80
 EXPOSE 80
+
+# Copy the start script and make it executable
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Run the start script instead of directly starting Apache
+CMD ["/usr/local/bin/start.sh"]
