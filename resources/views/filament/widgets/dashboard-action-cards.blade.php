@@ -280,6 +280,81 @@
     </style>
 
     <div class="action-cards-grid">
+        @php
+            $isSubSupervisor = auth()->user()?->role === 'sub_supervisor';
+        @endphp
+
+        @if($isSubSupervisor)
+            <!-- Card 1 (Sub-Supervisor): Distribution -->
+            <div class="action-card w-full">
+                <div class="action-card-header">
+                    <x-filament::icon icon="heroicon-o-truck" style="height: 1.25rem; width: 1.25rem;" />
+                    <span class="action-card-title">Hybrid Distribution</span>
+                </div>
+                <div class="action-card-body">
+                    <div class="action-img-container">
+                        <img src="{{ asset('images/coconut-palm.jpg') }}" class="action-img" alt="Distribution" />
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 class="action-count">{{ App\Models\HybridDistribution::whereYear('report_month', $year)->count() }}</h4>
+                            <p class="action-subtext">Distributions in {{ $year }}</p>
+                        </div>
+                        <a href="{{ App\Filament\Resources\HybridDistributionResource::getUrl('index') }}" class="btn-primary"
+                            style="padding: 0.625rem 1.25rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; text-decoration: none;">View Log</a>
+                    </div>
+                    <div class="action-info-box info-harvest">
+                        <x-filament::icon icon="heroicon-o-information-circle" style="width: 1.25rem; height: 1.25rem; flex-shrink: 0;" />
+                        <span style="line-height: 1.375;">Monitor external seedling distributions and track farmer allocations.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 (Sub-Supervisor): Nursery Operations -->
+            <div class="action-card w-full">
+                <div class="action-card-header">
+                    <x-filament::icon icon="heroicon-o-sun" style="height: 1.25rem; width: 1.25rem;" />
+                    <span class="action-card-title">Nursery Operations</span>
+                </div>
+                <div class="action-card-body">
+                    <div class="action-img-container">
+                        <img src="{{ asset('images/card_nursery.png') }}" class="action-img" alt="Nursery" />
+                        <div class="badge-new badge-light">+ New Event</div>
+                    </div>
+                    <div class="action-info-box info-nursery" style="margin-bottom: 1.5rem; min-height: 4.5rem;">
+                        <x-filament::icon icon="heroicon-o-information-circle" style="width: 1.25rem; height: 1.25rem; flex-shrink: 0;" />
+                        <span style="line-height: 1.375;">Track sowing, germination and seedling development phases in real-time.</span>
+                    </div>
+                    <a href="{{ App\Filament\Resources\NurseryOperationResource::getUrl('create') }}" class="btn-secondary"
+                        style="display: block; width: 100%; text-align: center; padding: 0.625rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 600; text-decoration: none;">Start Operation &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Card 3 (Sub-Supervisor): Terminal Reports -->
+            <div class="action-card w-full">
+                <div class="action-card-header">
+                    <x-filament::icon icon="heroicon-o-clipboard-document-check" style="height: 1.25rem; width: 1.25rem;" />
+                    <span class="action-card-title">Terminal Reports</span>
+                </div>
+                <div class="action-card-body">
+                    <div class="action-img-container">
+                        <img src="{{ asset('images/card_harvest.png') }}" class="action-img" alt="Terminal" />
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 class="action-count">{{ App\Models\NurseryOperation::where('report_type', 'terminal')->whereYear('report_month', $year)->count() }}</h4>
+                            <p class="action-subtext">Reports in {{ $year }}</p>
+                        </div>
+                        <a href="{{ App\Filament\Resources\TerminalResource::getUrl('index') ?? '#' }}" class="btn-primary"
+                            style="padding: 0.625rem 1.25rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; text-decoration: none;">View Reports</a>
+                    </div>
+                    <div class="action-info-box info-pollen">
+                        <x-filament::icon icon="heroicon-o-information-circle" style="width: 1.25rem; height: 1.25rem; flex-shrink: 0;" />
+                        <span style="line-height: 1.375;">Manage terminal nursery operations and finalize crop cycles.</span>
+                    </div>
+                </div>
+            </div>
+        @else
         <!-- Card 1 -->
         <div class="action-card w-full">
             <div class="action-card-header">
@@ -361,5 +436,6 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 </x-filament-widgets::widget>

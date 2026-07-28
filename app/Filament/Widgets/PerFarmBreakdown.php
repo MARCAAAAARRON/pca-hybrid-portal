@@ -34,6 +34,7 @@ class PerFarmBreakdown extends BaseWidget
 
     public static function canView(): bool
     {
+        if (auth()->user()?->role === \'sub_supervisor\') return false;
         return auth()->user()?->isManager() || auth()->user()?->isAdmin();
     }
 

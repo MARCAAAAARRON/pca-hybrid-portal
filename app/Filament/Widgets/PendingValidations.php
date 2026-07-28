@@ -15,6 +15,7 @@ class PendingValidations extends BaseWidget
 
     public static function canView(): bool
     {
+        if (auth()->user()?->role === \'sub_supervisor\') return false;
         return false; // Removed from dashboard per admin request
     }
 

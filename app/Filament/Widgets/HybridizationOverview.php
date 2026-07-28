@@ -50,4 +50,9 @@ class HybridizationOverview extends BaseWidget
                 ->color('success'),
         ];
     }
+
+    public static function canView(): bool
+    {
+        return auth()->user()?->role !== \'sub_supervisor\';
+    }
 }
