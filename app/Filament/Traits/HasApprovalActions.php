@@ -111,6 +111,12 @@ trait HasApprovalActions
                 ->requiresConfirmation()
                 ->modalHeading('Return to Draft?')
                 ->modalDescription('This will reset all signatories and return the record to draft status.')
+                ->form([
+                    \Filament\Forms\Components\Textarea::make('return_remarks')
+                        ->label('Discrepancy Remarks')
+                        ->placeholder('Detail what is lacking or inaccurate...')
+                        ->required(),
+                ])
                 ->visible(function (Model $record) {
                     if ($record->isDraft()) return false;
                     
@@ -120,8 +126,8 @@ trait HasApprovalActions
                     
                     return false;
                 })
-                ->action(function (Model $record) {
-                    $msg = $record->returnToDraft(auth()->user());
+                ->action(function (Model $record, array $data) {
+                    $msg = $record->returnToDraft(auth()->user(), $data['return_remarks'] ?? null);
                     Notification::make()->success()->title($msg)->send();
                 }),
         ];

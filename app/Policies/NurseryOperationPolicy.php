@@ -39,6 +39,10 @@ class NurseryOperationPolicy
      */
     public function update(User $user, NurseryOperation $nurseryOperation): bool
     {
+        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+            return true;
+        }
+        
         return $user->can('update_terminal');
     }
 

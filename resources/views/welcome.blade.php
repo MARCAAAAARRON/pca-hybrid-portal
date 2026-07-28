@@ -1729,10 +1729,18 @@
                         increasing coconut productivity across all municipalities of Bohol. Through innovation and
                         dedicated field support, we empower every local coconut farmer.
                     </p>
-                    <p class="reveal" style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-top:1rem">
-                        Our hybridization portal digitizes the entire program — from farmer enrollment to seedling
-                        monitoring — ensuring transparency, accuracy, and accessibility for all stakeholders.
-                    </p>
+                    <div class="reveal" style="margin-top: 1.5rem;">
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">Our Vision</h4>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                            A modernized, globally competitive, and resilient Philippine coconut industry empowering prosperous farmers and stakeholders.
+                        </p>
+                    </div>
+                    <div class="reveal" style="margin-top: 1.5rem;">
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">Our Mission</h4>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                            To develop the coconut and other palm oil industry to its full potential, ensuring sustainable growth and providing equitable benefits for farmers.
+                        </p>
+                    </div>
                     <div class="about-tags reveal">
                         <span class="tag">🥥 Dwarf Variety</span>
                         <span class="tag">🌴 Tall Variety</span>
@@ -1847,6 +1855,33 @@
 
 
     <!-- ═══════════════════════════════════════
+     ACADEMIC TRANSPARENCY
+════════════════════════════════════════ -->
+    <section class="hiw" id="academic-transparency" style="background: var(--surface)">
+        <div class="inner">
+            <div class="section-tag reveal">✦ Academic Transparency</div>
+            <h2 class="section-title reveal">Research & Academic Contributions</h2>
+            <p class="section-subtitle reveal">Discover agricultural research, theses, and papers related to PCA Bohol's hybridization programs and operations.</p>
+            
+            <div class="farm-grid" style="margin-top: 3rem;">
+                <div class="farm-card reveal">
+                    <div class="farm-card-header">
+                        <div class="farm-card-icon">📚</div>
+                        <div>
+                            <h3>PCA Hybridization Portal Process Specifications</h3>
+                            <span>Capstone Project / Undergraduate Thesis</span>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                        This system was conceptualized and developed as part of an undergraduate capstone project to digitize and streamline the tracking of hybrid coconut data across Bohol's agricultural sites.
+                    </p>
+                    <a href="#" class="btn-primary" style="display: inline-block; padding: 0.5rem 1rem; font-size: 0.85rem;">View Document</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
      CTA
 ════════════════════════════════════════ -->
     <section class="cta-section" id="login">
@@ -1862,9 +1897,13 @@
                     Register →</a>
             </div>
             <div class="cta-contact-cards">
-                <a href="mailto:bohol@pca.gov.ph" class="contact-card reveal">
+                <a href="mailto:PCAbohol@gmail.com" class="contact-card reveal">
                     <div class="contact-card-icon">✉️</div>
-                    <div><strong>bohol@pca.gov.ph</strong><span>Email Support</span></div>
+                    <div><strong>PCAbohol@gmail.com</strong><span>Email Support</span></div>
+                </a>
+                <a href="https://facebook.com/PCABohol" target="_blank" class="contact-card reveal">
+                    <div class="contact-card-icon">📘</div>
+                    <div><strong>PCA Bohol</strong><span>Facebook Page</span></div>
                 </a>
                 <a href="tel:0384111234" class="contact-card reveal">
                     <div class="contact-card-icon">📞</div>

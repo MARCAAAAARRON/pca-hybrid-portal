@@ -23,3 +23,10 @@ yarn-error.log
 /.zed
 /.devbox
 devbox*
+
+# Temporary Files
+.cude/
+CHANGELOG_*.md
+*.pdf
+_pdf_*.txt
+generate_pdf.py

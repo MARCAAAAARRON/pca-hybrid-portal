@@ -39,6 +39,10 @@ class PollenProductionPolicy
      */
     public function update(User $user, PollenProduction $pollenProduction): bool
     {
+        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+            return true;
+        }
+        
         return $user->can('update_pollen::production');
     }
 

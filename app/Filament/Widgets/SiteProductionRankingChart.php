@@ -42,48 +42,49 @@ class SiteProductionRankingChart extends ChartWidget
     protected function getData(): array
     {
         $year = $this->year ?? (int) now()->year;
+        $prevYear = $year - 1;
         $sites = FieldSite::all();
-
-        $palette = [
-            ['bg' => 'rgba(22, 163, 74, 0.7)', 'border' => '#16a34a'],
-            ['bg' => 'rgba(37, 99, 235, 0.7)', 'border' => '#2563eb'],
-            ['bg' => 'rgba(234, 88, 12, 0.7)', 'border' => '#ea580c'],
-            ['bg' => 'rgba(147, 51, 234, 0.7)', 'border' => '#9333ea'],
-            ['bg' => 'rgba(220, 38, 38, 0.7)', 'border' => '#dc2626'],
-            ['bg' => 'rgba(14, 165, 233, 0.7)', 'border' => '#0ea5e9'],
-            ['bg' => 'rgba(245, 158, 11, 0.7)', 'border' => '#f59e0b'],
-        ];
 
         $siteData = [];
         foreach ($sites as $site) {
-            $total = HarvestVariety::whereHas('monthlyHarvest', function ($q) use ($site, $year) {
+            $totalCurrent = HarvestVariety::whereHas('monthlyHarvest', function ($q) use ($site, $year) {
                 $q->withoutGlobalScopes()->where('field_site_id', $site->id)->whereYear('report_month', $year);
             })->sum('seednuts_count');
 
-            $siteData[] = ['name' => $site->name, 'total' => $total];
+            $totalPrev = HarvestVariety::whereHas('monthlyHarvest', function ($q) use ($site, $prevYear) {
+                $q->withoutGlobalScopes()->where('field_site_id', $site->id)->whereYear('report_month', $prevYear);
+            })->sum('seednuts_count');
+
+            $siteData[] = ['name' => $site->name, 'total_current' => $totalCurrent, 'total_prev' => $totalPrev];
         }
 
-        usort($siteData, fn($a, $b) => $b['total'] - $a['total']);
+        usort($siteData, fn($a, $b) => $b['total_current'] - $a['total_current']);
 
         $labels = [];
-        $data = [];
-        $bgColors = [];
-        $borderColors = [];
+        $dataCurrent = [];
+        $dataPrev = [];
+
         foreach ($siteData as $i => $s) {
             $labels[] = $s['name'];
-            $data[] = $s['total'];
-            $p = $palette[$i % count($palette)];
-            $bgColors[] = $p['bg'];
-            $borderColors[] = $p['border'];
+            $dataCurrent[] = $s['total_current'];
+            $dataPrev[] = $s['total_prev'];
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Total Seednuts',
-                    'data' => $data,
-                    'backgroundColor' => $bgColors,
-                    'borderColor' => $borderColors,
+                    'label' => "{$year} (Current)",
+                    'data' => $dataCurrent,
+                    'backgroundColor' => 'rgba(22, 163, 74, 0.7)',
+                    'borderColor' => '#16a34a',
+                    'borderWidth' => 2,
+                    'borderRadius' => 6,
+                ],
+                [
+                    'label' => "{$prevYear} (Previous)",
+                    'data' => $dataPrev,
+                    'backgroundColor' => 'rgba(147, 51, 234, 0.7)',
+                    'borderColor' => '#9333ea',
                     'borderWidth' => 2,
                     'borderRadius' => 6,
                 ],

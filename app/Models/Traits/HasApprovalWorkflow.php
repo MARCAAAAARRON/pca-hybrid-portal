@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Schema;
 
 trait HasApprovalWorkflow
 {
@@ -140,7 +141,7 @@ trait HasApprovalWorkflow
     /**
      * Return to Draft. Resets all signatories and notifies relevant personnel.
      */
-    public function returnToDraft(User $actingUser): string
+    public function returnToDraft(User $actingUser, ?string $remarks = null): string
     {
         $this->status = 'draft';
         $this->prepared_by = null;
@@ -149,6 +150,9 @@ trait HasApprovalWorkflow
         $this->date_reviewed = null;
         $this->noted_by = null;
         $this->date_noted = null;
+        if (in_array('return_remarks', $this->getFillable()) || Schema::hasColumn($this->getTable(), 'return_remarks')) {
+            $this->return_remarks = $remarks;
+        }
         $this->save();
 
         $tableTitle = class_basename($this);

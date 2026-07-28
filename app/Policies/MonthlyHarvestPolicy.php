@@ -39,6 +39,10 @@ class MonthlyHarvestPolicy
      */
     public function update(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
+        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+            return true;
+        }
+        
         return $user->can('update_monthly::harvest');
     }
 

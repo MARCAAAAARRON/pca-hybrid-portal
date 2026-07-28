@@ -41,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Google\Provider::class);
         });
+
+        \App\Models\EventDocumentation::observe(\App\Observers\EventDocumentationObserver::class);
     }
 }

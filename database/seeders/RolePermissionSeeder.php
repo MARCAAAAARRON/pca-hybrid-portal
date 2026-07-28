@@ -86,11 +86,11 @@ class RolePermissionSeeder extends Seeder
             // D. Reports - manager/admin view-only, supervisor full CRUD
             // (supervisor ownership enforced in ReportPolicy via generated_by)
             if (str_ends_with($name, '_report')) {
-                if (in_array($name, ['view_report', 'view_any_report'])) {
+                if (in_array($name, ['view_report', 'view_any_report', 'create_report'])) {
                     $adminRole->givePermissionTo($permission);
                     $managerRole->givePermissionTo($permission);
                     $supervisorRole->givePermissionTo($permission);
-                } elseif (in_array($name, ['create_report', 'update_report', 'delete_report', 'delete_any_report'])) {
+                } elseif (in_array($name, ['update_report', 'delete_report', 'delete_any_report'])) {
                     $supervisorRole->givePermissionTo($permission);
                 }
             }

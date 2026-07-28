@@ -36,6 +36,17 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Discrepancy Remarks')
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->schema([
+                        Forms\Components\Placeholder::make('return_remarks')
+                            ->label('Reviewer Feedback')
+                            ->content(fn ($record) => $record?->return_remarks)
+                    ])
+                    ->visible(fn ($record) => $record && $record->isDraft() && !empty($record->return_remarks))
+                    ->collapsible()
+                    ->columnSpanFull(),
+
                 Forms\Components\Section::make('Pollen Details')
                     ->icon('heroicon-o-beaker')
                     ->schema([
@@ -343,6 +354,12 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
         return [
             // \App\Filament\Resources\PollenProductionResource\Widgets\PollenStockWidget::class,
         ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            ];
     }
 
     public static function getPages(): array

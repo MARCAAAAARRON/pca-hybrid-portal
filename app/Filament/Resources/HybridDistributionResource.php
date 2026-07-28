@@ -81,6 +81,17 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Discrepancy Remarks')
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->schema([
+                        Forms\Components\Placeholder::make('return_remarks')
+                            ->label('Reviewer Feedback')
+                            ->content(fn ($record) => $record?->return_remarks)
+                    ])
+                    ->visible(fn ($record) => $record && $record->isDraft() && !empty($record->return_remarks))
+                    ->collapsible()
+                    ->columnSpanFull(),
+
                 Forms\Components\Section::make('Distribution Details')
                     ->icon('heroicon-o-truck')
                     ->description('Enter hybrid seedling distribution data')
@@ -310,6 +321,12 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
         }
 
         return $query;
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            ];
     }
 
     public static function getPages(): array

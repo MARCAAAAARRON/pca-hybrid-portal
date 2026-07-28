@@ -27,6 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public const ROLE_CHOICES = [
         'supervisor' => 'COS / Agriculturist',
+        'sub_supervisor' => 'Sub-Supervisor',
         'manager' => 'Senior Agriculturist',
         'admin' => 'PCDM / Division Chief I',
         'superadmin' => 'System Administrator',
