@@ -240,7 +240,19 @@ class UserResource extends Resource
                 InfolistSection::make('User Information')->schema([
                     TextEntry::make('name'),
                     TextEntry::make('email'),
-                ]),
+                    TextEntry::make('role_display')
+                        ->label('Role')
+                        ->badge()
+                        ->color(fn(string $state): string => match ($state) {
+                            'PCDM / Division Chief I' => 'danger',
+                            'Senior Agriculturist' => 'warning',
+                            'COS / Agriculturist' => 'success',
+                            default => 'gray',
+                        }),
+                    TextEntry::make('fieldSite.name')
+                        ->label('Assigned Field Site')
+                        ->placeholder('No Site Assigned'),
+                ])->columns(2),
             ]);
     }
 }
