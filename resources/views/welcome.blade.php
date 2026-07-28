@@ -1582,7 +1582,11 @@
                                 <span>{{ $year }} Data</span>
                             </div>
                         </div>
+                        @php
+                            $isSubSupervisor = auth()->check() && auth()->user()->role === 'sub_supervisor';
+                        @endphp
                         <div class="farm-stats-row">
+                            @if(!$isSubSupervisor)
                             <div class="farm-stat-item">
                                 <div class="num">{{ $site['harvests'] }}</div>
                                 <div class="label">Harvest Reports</div>
@@ -1591,6 +1595,7 @@
                                 <div class="num">{{ $site['pollen'] }}</div>
                                 <div class="label">Pollen Records</div>
                             </div>
+                            @endif
                             <div class="farm-stat-item">
                                 <div class="num">{{ $site['nursery'] }}</div>
                                 <div class="label">Nursery Ops</div>
@@ -1601,7 +1606,9 @@
                             </div>
                         </div>
                         <div class="farm-card-footer">
+                            @if(!$isSubSupervisor)
                             <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
+                            @endif
                             <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
                         </div>
                     </div>
