@@ -144,14 +144,14 @@
             border-radius: 6px; 
             display: none;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
             cursor: pointer;
-            padding: .25rem
+            padding: 0.4rem;
         }
 
         .hamburger span {
             display: block;
-            width: 24px;
+            width: 20px;
             height: 2px;
             background: var(--green-900);
             border-radius: 2px;
@@ -1367,6 +1367,21 @@
                 display: flex
             }
 
+            .cta-contact-cards {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+                max-width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .contact-card {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.5rem
@@ -1376,9 +1391,22 @@
                 grid-template-columns: 1fr
             }
 
-            .hiw-grid,
-            .about-grid {
+            .hiw-grid {
                 grid-template-columns: 1fr
+            }
+
+            .about-grid {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .about-visual {
+                order: 2;
+                margin-top: 1.5rem;
+            }
+
+            .about-text-content {
+                order: 1;
             }
 
             .footer-grid {
@@ -1721,26 +1749,44 @@
                 </div>
 
                 <!-- Right: Text -->
-                <div>
+                <div class="about-text-content">
                     <div class="section-tag reveal">✦ About the Program</div>
                     <h2 class="section-title font-bold reveal">Securing the future<br>of Bohol's coconut industry</h2>
-                    <p class="reveal" style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                        The Philippine Coconut Authority (PCA) Bohol oversees the hybridization program aimed at
-                        increasing coconut productivity across all municipalities of Bohol. Through innovation and
-                        dedicated field support, we empower every local coconut farmer.
-                    </p>
+                    
                     <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">Our Vision</h4>
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">VISION</h4>
                         <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                            A modernized, globally competitive, and resilient Philippine coconut industry empowering prosperous farmers and stakeholders.
+                            A modernized authority empowering coconut farmers and other stakeholders through sustainable, resilient, and inclusive development programs towards a globally competitive coconut and other palm oil industries by 2030.
                         </p>
                     </div>
+                    
                     <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">Our Mission</h4>
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">MISSION</h4>
                         <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                            To develop the coconut and other palm oil industry to its full potential, ensuring sustainable growth and providing equitable benefits for farmers.
+                            To develop and implement sustainable programs utilizing relevant and appropriate technologies and policies that foster growth, modernization and inclusivity across the entire coconut and other palm oil value chains with utmost degree of excellence and professionalism.
                         </p>
                     </div>
+
+                    <div class="reveal" style="margin-top: 1.5rem;">
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">CORE VALUES</h4>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                            Professionalism, Integrity, Transparency and Excellence.
+                        </p>
+                    </div>
+
+                    <div class="reveal" style="margin-top: 1.5rem;">
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">QUALITY POLICY STATEMENT</h4>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem;">
+                            The Philippine Coconut Authority is committed to becoming a globally recognized leader championing a thriving, market-driven coconut and other palm oil industry. We achieve this by delivering exceptional programs and services with unwavering transparency and accountability.
+                        </p>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem;">
+                            We are dedicated to upholding the highest standards of professionalism, integrity, transparency, excellence and compliance with all relevant regulations and laws. Our unwavering commitment to continuous improvement drives us to constantly enhance our research, extension, and administrative operations.
+                        </p>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                            Ultimately, these efforts ensure the sustainable development and growth of all stakeholders and communities within the coconut industry.
+                        </p>
+                    </div>
+
                     <div class="about-tags reveal">
                         <span class="tag">🥥 Dwarf Variety</span>
                         <span class="tag">🌴 Tall Variety</span>
@@ -1964,8 +2010,8 @@
                 <!-- For Laravel Blade: replace 2026 with {{ date('Y') }} -->
                 <span>© 2026 Philippine Coconut Authority – Bohol. All Rights Reserved.</span>
                 <div class="footer-bottom-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="{{ route('privacy') }}">Privacy Policy</a>
+                    <a href="{{ route('terms') }}">Terms of Service</a>
                 </div>
             </div>
         </div>

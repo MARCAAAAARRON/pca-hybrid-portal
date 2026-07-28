@@ -63,3 +63,7 @@ Route::any('/admin/{any?}', function ($any = null) {
 Route::get('/pending-approval', function () {
     return view('pending-approval');
 })->name('pending.approval');
+
+// Legal Pages
+Route::view('/privacy-policy', 'privacy')->name('privacy');
+Route::view('/terms-of-service', 'terms')->name('terms');
