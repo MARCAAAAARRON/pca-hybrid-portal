@@ -13,7 +13,7 @@ class ListPollenProductions extends ListRecords
                 ->icon('heroicon-o-document-chart-bar')
                 ->color('info')
                 ->url(fn () => \App\Filament\Pages\ReportsDashboard::getUrl(['category' => 'pollen_production'])),
-            \Filament\Actions\CreateAction::make(),
+            \Filament\Actions\CreateAction::make()->label('New Pollen Production'),
         ];
     }
 

@@ -13,7 +13,7 @@ class ListNurseryOperations extends ListRecords
                 ->icon('heroicon-o-document-chart-bar')
                 ->color('info')
                 ->url(fn () => \App\Filament\Pages\ReportsDashboard::getUrl(['category' => 'nursery_operation'])),
-            \Filament\Actions\CreateAction::make(),
+            \Filament\Actions\CreateAction::make()->label('New Nursery Operation'),
         ];
     }
 }

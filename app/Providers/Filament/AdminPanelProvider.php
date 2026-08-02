@@ -419,6 +419,10 @@ HTML;
             ThemesPlugin::make(),
             FilamentShieldPlugin::make(),
             ApiServicePlugin::make(),
+            \Saade\FilamentFullCalendar\FilamentFullCalendarPlugin::make()
+                ->selectable()
+                ->editable()
+                ->timezone(config('app.timezone')),
             BreezyCore::make()
                 ->myProfile(
                     shouldRegisterUserMenu: true, // Sets the 'account' link in the panel User Menu (default = true)

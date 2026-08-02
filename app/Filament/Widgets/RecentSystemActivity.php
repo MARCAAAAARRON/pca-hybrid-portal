@@ -15,8 +15,7 @@ class RecentSystemActivity extends BaseWidget
 
     public static function canView(): bool
     {
-        if (auth()->user()?->role === 'sub_supervisor') return false;
-        return auth()->user()?->isManager() || auth()->user()?->isAdmin();
+        return (bool) auth()->user()?->isSuperAdmin();
     }
 
     public function table(Table $table): Table
@@ -26,14 +25,6 @@ class RecentSystemActivity extends BaseWidget
                 AuditLog::query()
                     ->with('user')
                     ->latest()
-                    ->whereHas('user', function ($query) {
-                        $user = auth()->user();
-                        if ($user->isSuperAdmin() || $user->isAdmin() || $user->isManager()) {
-                            // High-level roles see everything
-                            return $query->whereIn('role', ['admin', 'manager', 'supervisor', 'superadmin']);
-                        }
-                        return $query->where('id', $user->id);
-                    })
                     ->limit(5)
             )
             ->columns([

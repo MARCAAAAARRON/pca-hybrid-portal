@@ -13,7 +13,7 @@ class ListMonthlyHarvests extends ListRecords
                 ->icon('heroicon-o-document-chart-bar')
                 ->color('info')
                 ->url(fn () => \App\Filament\Pages\ReportsDashboard::getUrl(['category' => 'monthly_harvest'])),
-            \Filament\Actions\CreateAction::make(),
+            \Filament\Actions\CreateAction::make()->label('New Monthly Harvest'),
         ];
     }
 

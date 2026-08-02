@@ -204,7 +204,12 @@
         .hero-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, var(--green-900) 0%, var(--green-700) 45%, var(--green-600) 100%);
+            background: linear-gradient(135deg, rgba(2, 140, 66, 0.9) 0%, rgba(2, 140, 66, 0.85) 45%, rgba(16, 185, 129, 0.8) 100%),
+                        url('{{ asset("images/coconut_coverpage.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .hero-pattern {
@@ -712,36 +717,58 @@
         }
 
         .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: center
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .about-header .section-title {
+            text-align: center;
         }
 
         .about-visual {
             border-radius: 28px;
             overflow: hidden;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: var(--green-700);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            min-height: 400px;
         }
 
         .about-visual img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: 1;
+            opacity: 0.8;
         }
 
         .about-visual-content {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: var(--white);
-            padding: 2rem;
-            background: var(--green-700);
+            padding: 3rem;
+            background: rgba(10, 46, 18, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+        }
+        
+        .about-text-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
         }
 
         .about-visual-content .num {
@@ -1228,12 +1255,30 @@
         }
 
         .farm-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            display: flex;
             gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .farm-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+        .farm-grid::-webkit-scrollbar-track {
+            background: rgba(10, 46, 18, .05);
+            border-radius: 4px;
+        }
+        .farm-grid::-webkit-scrollbar-thumb {
+            background: rgba(10, 46, 18, .2);
+            border-radius: 4px;
         }
 
         .farm-card {
+            flex: 0 0 320px;
+            scroll-snap-align: start;
             background: var(--surface);
             border: 1.5px solid rgba(10, 46, 18, .08);
             border-radius: 20px;
@@ -1351,10 +1396,6 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-
-            .farm-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         /* ── RESPONSIVE ── */
@@ -1395,18 +1436,8 @@
                 grid-template-columns: 1fr
             }
 
-            .about-grid {
-                display: flex;
-                flex-direction: column;
-            }
-
             .about-visual {
-                order: 2;
-                margin-top: 1.5rem;
-            }
-
-            .about-text-content {
-                order: 1;
+                min-height: 250px;
             }
 
             .footer-grid {
@@ -1744,7 +1775,11 @@
     <section class="about" id="about">
         <div class="section-inner">
             <div class="about-grid">
-                <!-- Left: Visual -->
+                <div class="about-header reveal">
+                    <div class="section-tag" style="margin: 0 auto 1rem auto; width: max-content;">✦ About the Program</div>
+                    <h2 class="section-title font-bold text-center">Securing the future<br>of Bohol's coconut industry</h2>
+                </div>
+
                 <div class="about-visual reveal">
                     <!-- Replace with a real photo: -->
                     <img src="{{ asset('images/pca_main_banner1.png') }}" alt="PCA Bohol">
@@ -1755,46 +1790,44 @@
                     </div>
                 </div>
 
-                <!-- Right: Text -->
                 <div class="about-text-content">
-                    <div class="section-tag reveal">✦ About the Program</div>
-                    <h2 class="section-title font-bold reveal">Securing the future<br>of Bohol's coconut industry</h2>
-                    
-                    <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">VISION</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                            A modernized authority empowering coconut farmers and other stakeholders through sustainable, resilient, and inclusive development programs towards a globally competitive coconut and other palm oil industries by 2030.
-                        </p>
-                    </div>
-                    
-                    <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">MISSION</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                            To develop and implement sustainable programs utilizing relevant and appropriate technologies and policies that foster growth, modernization and inclusivity across the entire coconut and other palm oil value chains with utmost degree of excellence and professionalism.
-                        </p>
+                    <div class="about-text-grid">
+                        <div class="reveal">
+                            <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">VISION</h4>
+                            <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                                A modernized authority empowering coconut farmers and other stakeholders through sustainable, resilient, and inclusive development programs towards a globally competitive coconut and other palm oil industries by 2030.
+                            </p>
+                        </div>
+                        
+                        <div class="reveal">
+                            <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">MISSION</h4>
+                            <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                                To develop and implement sustainable programs utilizing relevant and appropriate technologies and policies that foster growth, modernization and inclusivity across the entire coconut and other palm oil value chains with utmost degree of excellence and professionalism.
+                            </p>
+                        </div>
+
+                        <div class="reveal">
+                            <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">CORE VALUES</h4>
+                            <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                                Professionalism, Integrity, Transparency and Excellence.
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">CORE VALUES</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                            Professionalism, Integrity, Transparency and Excellence.
-                        </p>
-                    </div>
-
-                    <div class="reveal" style="margin-top: 1.5rem;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">QUALITY POLICY STATEMENT</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem;">
+                    <div class="reveal" style="margin-top: 2.5rem; background: var(--surface); border: 1.5px solid rgba(10, 46, 18, .08); padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:1rem; text-align: center; font-size: 1.25rem;">QUALITY POLICY STATEMENT</h4>
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: justify;">
                             The Philippine Coconut Authority is committed to becoming a globally recognized leader championing a thriving, market-driven coconut and other palm oil industry. We achieve this by delivering exceptional programs and services with unwavering transparency and accountability.
                         </p>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem;">
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: justify;">
                             We are dedicated to upholding the highest standards of professionalism, integrity, transparency, excellence and compliance with all relevant regulations and laws. Our unwavering commitment to continuous improvement drives us to constantly enhance our research, extension, and administrative operations.
                         </p>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem; text-align: justify;">
                             Ultimately, these efforts ensure the sustainable development and growth of all stakeholders and communities within the coconut industry.
                         </p>
                     </div>
 
-                    <div class="about-tags reveal">
+                    <div class="about-tags reveal" style="margin-top: 3rem; justify-content: center;">
                         <span class="tag">🥥 Dwarf Variety</span>
                         <span class="tag">🌴 Tall Variety</span>
                         <span class="tag">🔬 Makapuno Hybrid</span>

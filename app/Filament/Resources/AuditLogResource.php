@@ -28,14 +28,12 @@ class AuditLogResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return auth()->user()?->isManager() ||
-            auth()->user()?->isAdmin() ||
-            auth()->user()?->isSuperAdmin();
+        return (bool) auth()->user()?->isSuperAdmin();
     }
 
     public static function getEloquentQuery(): Builder
     {
-        // Managers, Admins, and Superadmins all see full system logs
+        // Only Superadmins see full system logs
         return parent::getEloquentQuery()->with('user');
     }
 

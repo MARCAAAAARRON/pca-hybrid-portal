@@ -84,7 +84,7 @@ class NurseryBatchesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('seedlings_dispatched')->label('Dispatched')->numeric(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('New Batch'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

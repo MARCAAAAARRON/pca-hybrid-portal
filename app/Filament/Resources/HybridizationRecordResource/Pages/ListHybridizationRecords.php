@@ -15,6 +15,6 @@ class ListHybridizationRecords extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [\Filament\Actions\CreateAction::make()];
+        return [\Filament\Actions\CreateAction::make()->label('New Hybridization Record')];
     }
 }

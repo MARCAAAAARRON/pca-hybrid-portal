@@ -493,8 +493,8 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             ->label('Share via Email')
             ->icon('heroicon-o-envelope')
             ->color('success')
+            ->size('sm')
             ->visible(fn() => in_array(auth()->user()?->role, ['manager', 'admin']))
-            ->color('success')
             ->form([
                 \Filament\Forms\Components\Section::make('Email Details')
                     ->schema([
@@ -647,6 +647,7 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             ->label('Export to Excel')
             ->icon('heroicon-o-arrow-down-tray')
             ->color('success')
+            ->size('sm')
             ->action(function () {
                 $data = $this->form->getState();
                 $isCumulative = ($data['export_range'] ?? 'single') === 'cumulative';

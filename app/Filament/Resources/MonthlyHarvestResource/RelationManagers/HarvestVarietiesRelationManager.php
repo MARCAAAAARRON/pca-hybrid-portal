@@ -58,7 +58,7 @@ class HarvestVarietiesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('remarks'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('New Variety'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

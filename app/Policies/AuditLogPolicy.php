@@ -15,7 +15,7 @@ class AuditLogPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_audit::log');
+        return (bool) $user->isSuperAdmin();
     }
 
     /**
@@ -23,7 +23,7 @@ class AuditLogPolicy
      */
     public function view(User $user, AuditLog $auditLog): bool
     {
-        return $user->can('view_audit::log');
+        return (bool) $user->isSuperAdmin();
     }
 
     /**

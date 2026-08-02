@@ -30,6 +30,7 @@
         "pxlrbt/filament-excel": "^2.3",
         "resend/resend-laravel": "^0.16.1",
         "rupadana/filament-api-service": "^3.4.4",
+        "saade/filament-fullcalendar": "^3.2",
         "socialiteproviders/google": "^4.1",
         "stechstudio/filament-impersonate": "^3.15"
     },
@@ -97,6 +98,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "block-insecure": false
         }
     },
     "minimum-stability": "stable",

@@ -13,7 +13,7 @@ class ListHybridDistributions extends ListRecords
                 ->icon('heroicon-o-document-chart-bar')
                 ->color('info')
                 ->url(fn () => \App\Filament\Pages\ReportsDashboard::getUrl(['category' => 'hybrid_distribution'])),
-            \Filament\Actions\CreateAction::make(),
+            \Filament\Actions\CreateAction::make()->label('New Hybrid Distribution'),
         ];
     }
 }
