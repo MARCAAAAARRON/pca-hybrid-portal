@@ -11,6 +11,12 @@ use App\Models\NurseryOperation;
 
 class OrganizationCalendarWidget extends FullCalendarWidget
 {
+    public static function canView(): bool
+    {
+        if (auth()->user()?->role === 'sub_supervisor') return false;
+        return ! auth()->user()?->isSuperAdmin();
+    }
+
     public function fetchEvents(array $fetchInfo): array
     {
         $events = [];
