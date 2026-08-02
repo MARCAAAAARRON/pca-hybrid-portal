@@ -116,22 +116,27 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function isSupervisor(): bool
     {
-        return $this->role === 'supervisor';
+        return $this->hasRole('supervisor');
+    }
+
+    public function isSubSupervisor(): bool
+    {
+        return $this->hasRole('sub_supervisor');
     }
 
     public function isManager(): bool
     {
-        return $this->role === 'manager';
+        return $this->hasRole('manager');
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin');
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === 'superadmin';
+        return $this->hasRole('superadmin');
     }
 
     public function canUpdateSignature(): bool

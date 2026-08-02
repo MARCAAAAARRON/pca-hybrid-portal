@@ -281,7 +281,7 @@
 
     <div class="action-cards-grid">
         @php
-            $isSubSupervisor = auth()->user()?->role === 'sub_supervisor';
+            $isSubSupervisor = auth()->user()?->isSubSupervisor();
         @endphp
 
         @if($isSubSupervisor)

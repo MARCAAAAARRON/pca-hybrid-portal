@@ -1614,7 +1614,7 @@
                             </div>
                         </div>
                         @php
-                            $isSubSupervisor = auth()->check() && auth()->user()->role === 'sub_supervisor';
+                            $isSubSupervisor = auth()->check() && auth()->user()?->isSubSupervisor();
                         @endphp
                         <div class="farm-stats-row">
                             @if(!$isSubSupervisor)

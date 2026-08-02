@@ -17,7 +17,7 @@ class RecentActivityWidget extends Widget
 
     public static function canView(): bool
     {
-        if (auth()->user()?->role === 'sub_supervisor') return false;
+        if (auth()->user()?->isSubSupervisor()) return false;
         return auth()->user()?->isSupervisor();
     }
 
