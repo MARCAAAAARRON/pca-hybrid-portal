@@ -25,7 +25,8 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'event_' . $event->id,
                 'title' => 'Event: ' . $event->title,
                 'start' => $event->event_date->toDateString(),
-                'url' => \App\Filament\Resources\EventDocumentationResource::getUrl('view', ['record' => $event]),
+                // Resource has no 'view' page, link to 'edit' instead
+                'url' => \App\Filament\Resources\EventDocumentationResource::getUrl('edit', ['record' => $event]),
                 'backgroundColor' => '#3b82f6', // blue
             ];
         }
@@ -60,32 +61,32 @@ class OrganizationCalendarWidget extends FullCalendarWidget
             ];
         }
         
-        // 4. Monthly Harvests
+        // 4. Monthly Harvests — uses 'report_month' (not 'harvest_date')
         $harvests = MonthlyHarvest::query()
-            ->whereBetween('harvest_date', [$fetchInfo['start'], $fetchInfo['end']])
+            ->whereBetween('report_month', [$fetchInfo['start'], $fetchInfo['end']])
             ->get();
             
         foreach ($harvests as $harvest) {
             $events[] = [
                 'id' => 'harvest_' . $harvest->id,
                 'title' => 'Harvest: ' . ($harvest->fieldSite->name ?? 'Site'),
-                'start' => $harvest->harvest_date->toDateString(),
+                'start' => $harvest->report_month->toDateString(),
                 'url' => \App\Filament\Resources\MonthlyHarvestResource::getUrl('view', ['record' => $harvest]),
                 'backgroundColor' => '#22c55e', // green
             ];
         }
 
-        // 5. Nursery Operations (Sown)
+        // 5. Nursery Operations — uses 'nursery_start_date' (not 'date_sown' which is on batches, not operations)
         $nurseryOps = NurseryOperation::query()
-            ->whereNotNull('date_sown')
-            ->whereBetween('date_sown', [$fetchInfo['start'], $fetchInfo['end']])
+            ->whereNotNull('nursery_start_date')
+            ->whereBetween('nursery_start_date', [$fetchInfo['start'], $fetchInfo['end']])
             ->get();
             
         foreach ($nurseryOps as $op) {
             $events[] = [
                 'id' => 'nursery_' . $op->id,
-                'title' => 'Nursery Sown: ' . ($op->batch->batch_number ?? 'Unknown'),
-                'start' => $op->date_sown->toDateString(),
+                'title' => 'Nursery: ' . ($op->proponent_entity ?? 'Operation'),
+                'start' => $op->nursery_start_date->toDateString(),
                 'url' => \App\Filament\Resources\NurseryOperationResource::getUrl('view', ['record' => $op]),
                 'backgroundColor' => '#a16207', // brown
             ];
@@ -108,8 +109,6 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'title' => ($reminder->type === 'organizational' ? 'Org Reminder: ' : 'Personal: ') . $reminder->title,
                 'start' => $reminder->reminder_date->toDateString(),
                 'backgroundColor' => $reminder->type === 'organizational' ? '#ef4444' : '#64748b', // red vs slate
-                // Note: clicking these doesn't redirect to a resource view because they don't have one, 
-                // but we could set up a modal or just let them display.
             ];
         }
 
