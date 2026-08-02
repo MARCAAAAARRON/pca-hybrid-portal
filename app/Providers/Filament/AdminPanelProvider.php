@@ -401,6 +401,10 @@ HTML;
                 DispatchServingFilamentEvent::class,
             ])
             ->sidebarCollapsibleOnDesktop(true)
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'global-year-filter\')')
+            )
             ->authMiddleware([
                 Authenticate::class,
             ])

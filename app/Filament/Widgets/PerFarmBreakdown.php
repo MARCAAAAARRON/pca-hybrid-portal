@@ -22,7 +22,7 @@ class PerFarmBreakdown extends BaseWidget
 
     public function mount(): void
     {
-        $this->year = (int) now()->year;
+        $this->year = (int) \Illuminate\Support\Facades\Session::get('global_dashboard_year', now()->year);
     }
 
     #[On('dashboard-year-changed')]

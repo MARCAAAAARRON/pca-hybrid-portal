@@ -146,52 +146,7 @@
             }
         }
 
-        /* Year Filter Styles */
-        .year-filter-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.375rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background-color: rgba(16, 185, 129, 0.1);
-            border: 1.5px solid #34d399;
-            color: #065f46;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
 
-        .year-filter-pill:hover {
-            background-color: rgba(16, 185, 129, 0.2);
-        }
-
-        .year-filter-pill select {
-            appearance: none;
-            -webkit-appearance: none;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: inherit;
-            cursor: pointer;
-            padding-right: 0.75rem;
-        }
-
-        .dark .year-filter-pill {
-            background-color: rgba(16, 185, 129, 0.15);
-            border-color: #059669;
-            color: #6ee7b7;
-        }
-
-        .dark .year-filter-pill:hover {
-            background-color: rgba(16, 185, 129, 0.25);
-        }
-
-        .dark .year-filter-pill select {
-            color: #6ee7b7;
-        }
     </style>
 
     <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
@@ -203,16 +158,6 @@
             <div class="welcome-left">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
                     <h2 class="welcome-text-title" style="margin-bottom: 0;">Mabuting araw!</h2>
-                    {{-- Year Filter Pill --}}
-                    <div class="year-filter-pill" title="Filter dashboard data by year">
-                        <x-heroicon-m-calendar-days style="width: 1rem; height: 1rem; flex-shrink: 0;" />
-                        <select wire:model.live="year">
-                            @foreach($yearOptions as $val => $label)
-                                <option value="{{ $val }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                        <x-heroicon-m-chevron-down style="width: 0.75rem; height: 0.75rem; flex-shrink: 0; margin-left: -0.5rem;" />
-                    </div>
                 </div>
                 <p class="welcome-text-desc max-w-lg">
                     We're thrilled to present our improved Field Portal designed with you in mind.
