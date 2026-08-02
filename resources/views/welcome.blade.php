@@ -1792,21 +1792,21 @@
 
                 <div class="about-text-content">
                     <div class="about-text-grid">
-                        <div class="reveal">
+                        <div class="reveal" style="text-align: center;">
                             <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">VISION</h4>
                             <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
                                 A modernized authority empowering coconut farmers and other stakeholders through sustainable, resilient, and inclusive development programs towards a globally competitive coconut and other palm oil industries by 2030.
                             </p>
                         </div>
                         
-                        <div class="reveal">
+                        <div class="reveal" style="text-align: center;">
                             <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">MISSION</h4>
                             <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
                                 To develop and implement sustainable programs utilizing relevant and appropriate technologies and policies that foster growth, modernization and inclusivity across the entire coconut and other palm oil value chains with utmost degree of excellence and professionalism.
                             </p>
                         </div>
 
-                        <div class="reveal">
+                        <div class="reveal" style="text-align: center;">
                             <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">CORE VALUES</h4>
                             <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
                                 Professionalism, Integrity, Transparency and Excellence.
