@@ -110,36 +110,53 @@ class FieldSiteComparisonWidget extends Widget
             $sites = FieldSite::all();
         }
 
-        $rows = [];
-        $totalsA = ['harvest' => 0, 'nursery' => 0, 'pollen' => 0, 'distribution' => 0, 'terminal' => 0, 'total' => 0];
-        $totalsB = ['harvest' => 0, 'nursery' => 0, 'pollen' => 0, 'distribution' => 0, 'terminal' => 0, 'total' => 0];
+        $categories = ['harvest', 'nursery', 'pollen', 'distribution', 'terminal'];
+        $categoryLabels = [
+            'harvest'      => 'Harvest',
+            'nursery'      => 'Nursery',
+            'pollen'       => 'Pollen',
+            'distribution' => 'Distribution',
+            'terminal'     => 'Terminal',
+        ];
+
+        // ── Per-Site Chart Data (grouped bar: Period A vs B totals per site) ──
+        $siteLabels = [];
+        $siteDataA  = [];
+        $siteDataB  = [];
 
         foreach ($sites as $site) {
             $periodA = $this->buildPeriodData($monthA, $yearA, $site->id);
             $periodB = $this->buildPeriodData($monthB, $yearB, $site->id);
-
-            $change = [];
-            foreach (array_keys($periodA) as $key) {
-                $change[$key] = $periodB[$key] - $periodA[$key];
-            }
-
-            // Accumulate totals
-            foreach (array_keys($totalsA) as $key) {
-                $totalsA[$key] += $periodA[$key];
-                $totalsB[$key] += $periodB[$key];
-            }
-
-            $rows[] = [
-                'name'    => $site->name,
-                'periodA' => $periodA,
-                'periodB' => $periodB,
-                'change'  => $change,
-            ];
+            $siteLabels[] = $site->name;
+            $siteDataA[]  = $periodA['total'];
+            $siteDataB[]  = $periodB['total'];
         }
 
-        $totalsChange = [];
-        foreach (array_keys($totalsA) as $key) {
-            $totalsChange[$key] = $totalsB[$key] - $totalsA[$key];
+        // ── Per-Category Chart Data (grouped bar: Period A vs B per data category, aggregated across sites) ──
+        $catDataA = [];
+        $catDataB = [];
+
+        foreach ($categories as $cat) {
+            $sumA = 0;
+            $sumB = 0;
+            foreach ($sites as $site) {
+                $reportType = match ($cat) {
+                    'nursery'  => 'operation',
+                    'terminal' => 'terminal',
+                    default    => null,
+                };
+                $modelClass = match ($cat) {
+                    'harvest'      => MonthlyHarvest::class,
+                    'nursery'      => NurseryOperation::class,
+                    'pollen'       => PollenProduction::class,
+                    'distribution' => HybridDistribution::class,
+                    'terminal'     => NurseryOperation::class,
+                };
+                $sumA += $this->countForPeriod($modelClass, $monthA, $yearA, $site->id, $reportType);
+                $sumB += $this->countForPeriod($modelClass, $monthB, $yearB, $site->id, $reportType);
+            }
+            $catDataA[] = $sumA;
+            $catDataB[] = $sumB;
         }
 
         $months = [
@@ -152,24 +169,22 @@ class FieldSiteComparisonWidget extends Widget
             ->mapWithKeys(fn ($y) => [$y => $y])
             ->toArray();
 
+        $labelA = $months[$monthA] . ' ' . $yearA;
+        $labelB = $months[$monthB] . ' ' . $yearB;
+
         return [
-            'rows'         => $rows,
-            'totalsA'      => $totalsA,
-            'totalsB'      => $totalsB,
-            'totalsChange' => $totalsChange,
-            'months'       => $months,
-            'yearOptions'  => $yearOptions,
-            'labelA'       => $months[$monthA] . ' ' . $yearA,
-            'labelB'       => $months[$monthB] . ' ' . $yearB,
-            'categories'   => ['harvest', 'nursery', 'pollen', 'distribution', 'terminal', 'total'],
-            'categoryLabels' => [
-                'harvest'      => 'Harvest',
-                'nursery'      => 'Nursery',
-                'pollen'       => 'Pollen',
-                'distribution' => 'Distribution',
-                'terminal'     => 'Terminal',
-                'total'        => 'Total',
-            ],
+            'months'         => $months,
+            'yearOptions'    => $yearOptions,
+            'labelA'         => $labelA,
+            'labelB'         => $labelB,
+            // Per-site chart
+            'siteLabels'     => $siteLabels,
+            'siteDataA'      => $siteDataA,
+            'siteDataB'      => $siteDataB,
+            // Per-category chart
+            'catLabels'      => array_values($categoryLabels),
+            'catDataA'       => $catDataA,
+            'catDataB'       => $catDataB,
         ];
     }
 }
