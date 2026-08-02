@@ -1940,32 +1940,7 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════
-     ACADEMIC TRANSPARENCY
-════════════════════════════════════════ -->
-    <section class="hiw" id="academic-transparency" style="background: var(--surface)">
-        <div class="inner">
-            <div class="section-tag reveal">✦ Academic Transparency</div>
-            <h2 class="section-title reveal">Research & Academic Contributions</h2>
-            <p class="section-subtitle reveal">Discover agricultural research, theses, and papers related to PCA Bohol's hybridization programs and operations.</p>
-            
-            <div class="farm-grid" style="margin-top: 3rem;">
-                <div class="farm-card reveal">
-                    <div class="farm-card-header">
-                        <div class="farm-card-icon">📚</div>
-                        <div>
-                            <h3>PCA Hybridization Portal Process Specifications</h3>
-                            <span>Capstone Project / Undergraduate Thesis</span>
-                        </div>
-                    </div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-                        This system was conceptualized and developed as part of an undergraduate capstone project to digitize and streamline the tracking of hybrid coconut data across Bohol's agricultural sites.
-                    </p>
-                    <a href="#" class="btn-primary" style="display: inline-block; padding: 0.5rem 1rem; font-size: 0.85rem;">View Document</a>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- ═══════════════════════════════════════
      CTA
