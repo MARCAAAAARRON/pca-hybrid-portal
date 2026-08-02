@@ -237,7 +237,9 @@ class AdminPanelProvider extends PanelProvider
         height: 100%;
         z-index: -1;
         overflow: hidden;
-        background-color: #f9fafb;
+        background-image: url('/images/coconut_coverpage.jpg');
+        background-size: cover;
+        background-position: center;
         pointer-events: none;
     }
     
