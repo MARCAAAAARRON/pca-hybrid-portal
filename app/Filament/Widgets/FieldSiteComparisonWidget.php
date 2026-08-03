@@ -19,11 +19,9 @@ class FieldSiteComparisonWidget extends Widget
 
     /**
      * Hidden from all dashboards — this feature is still in beta.
+     * Set to true when ready to release.
      */
-    public static function canView(): bool
-    {
-        return false;
-    }
+    protected static bool $isDiscovered = false;
 
 
     // Period A filters
