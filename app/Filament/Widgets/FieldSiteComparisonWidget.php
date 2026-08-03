@@ -17,6 +17,15 @@ class FieldSiteComparisonWidget extends Widget
     protected static ?int $sort = 5;
     protected int | string | array $columnSpan = 'full';
 
+    /**
+     * Hidden from all dashboards — this feature is still in beta.
+     */
+    public static function canView(): bool
+    {
+        return false;
+    }
+
+
     // Period A filters
     public ?int $monthA = null;
     public ?int $yearA = null;
