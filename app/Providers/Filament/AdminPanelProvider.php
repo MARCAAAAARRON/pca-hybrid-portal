@@ -368,6 +368,11 @@ class AdminPanelProvider extends PanelProvider
     .dark .fi-header-heading {
         color: #ffffff !important;
     }
+
+    /* Capitalize FullCalendar button labels (Today, Month, Week, Day) */
+    .filament-fullcalendar .fc-button {
+        text-transform: capitalize !important;
+    }
 </style>
 HTML;
 

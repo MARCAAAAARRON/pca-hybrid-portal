@@ -19,17 +19,21 @@ class OrganizationCalendarPage extends Page
     
     public static function canAccess(): bool
     {
-        // Accessible by manager, admin, superadmin - similar to EventDocumentation
-        return in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        // Accessible by all roles except superadmin (who has a separate admin panel)
+        return in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor', 'manager', 'admin', 'superadmin']);
     }
 
     protected function getHeaderActions(): array
     {
+        $canCreateOrgReminder = in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+
         return [
             \Filament\Actions\Action::make('create_reminder')
                 ->label('Create Reminder')
                 ->icon('heroicon-o-bell')
                 ->form([
+                    // Supervisor & sub-supervisor: forced to personal, type selector hidden
+                    // Manager/admin/superadmin: can choose personal or organizational
                     \Filament\Forms\Components\Select::make('type')
                         ->label('Reminder Type')
                         ->options([
@@ -38,6 +42,7 @@ class OrganizationCalendarPage extends Page
                         ])
                         ->default('personal')
                         ->required()
+                        ->visible($canCreateOrgReminder)
                         ->disableOptionWhen(fn (string $value): bool => $value === 'organizational' && !(auth()->user()?->isSuperAdmin() ?? false))
                         ->helperText(fn () => !(auth()->user()?->isSuperAdmin() ?? false) ? 'Only Superadmins can create organizational reminders.' : ''),
                     \Filament\Forms\Components\TextInput::make('title')
@@ -50,11 +55,16 @@ class OrganizationCalendarPage extends Page
                         ->default(now()),
                 ])
                 ->action(function (array $data) {
+                    // Force personal type for supervisor/sub_supervisor
+                    $type = in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor'])
+                        ? 'personal'
+                        : ($data['type'] ?? 'personal');
+
                     $reminder = \App\Models\CalendarReminder::create([
                         'title' => $data['title'],
                         'description' => $data['description'],
                         'reminder_date' => $data['reminder_date'],
-                        'type' => $data['type'],
+                        'type' => $type,
                         'user_id' => auth()->id(),
                     ]);
 

@@ -88,7 +88,8 @@ class AuditLogResource extends Resource
                 Tables\Columns\TextColumn::make('formatted_details')
                     ->label('Details')
                     ->limit(60)
-                    ->wrap(),
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('ip_address')
                     ->label('IP')
                     ->toggleable(isToggledHiddenByDefault: true),

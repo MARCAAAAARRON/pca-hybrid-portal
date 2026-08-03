@@ -13,9 +13,58 @@ class OrganizationCalendarWidget extends FullCalendarWidget
 {
     public static function canView(): bool
     {
-        if (auth()->user()?->isSubSupervisor()) return false;
+        // Visible for all roles except superadmin (who has a separate admin dashboard)
         return ! auth()->user()?->isSuperAdmin();
     }
+
+    /**
+     * Disable the built-in header Create button.
+     * Event creation is handled by the page-level "Create Reminder" header action.
+     */
+    protected function headerActions(): array
+    {
+        return [];
+    }
+
+    /**
+     * Override event click: reminders show a notification modal.
+     * All other events already have a 'url' so they navigate directly (this won't be called for them).
+     */
+    public function onEventClick(array $event): void
+    {
+        $id = $event['id'] ?? null;
+
+        // Only reminders have no URL — show their details in a Filament notification
+        if ($id && str_starts_with($id, 'reminder_')) {
+            $reminderId = (int) str_replace('reminder_', '', $id);
+            $reminder   = \App\Models\CalendarReminder::find($reminderId);
+
+            if ($reminder) {
+                $typeLabel = $reminder->type === 'organizational' ? '🔔 Organizational Reminder' : '📌 Personal Reminder';
+                $dateLabel = \Carbon\Carbon::parse($reminder->reminder_date)->format('F d, Y');
+                $body      = ($reminder->description ? $reminder->description . "\n" : '') . "📅 Date: {$dateLabel}";
+
+                \Filament\Notifications\Notification::make()
+                    ->title("{$typeLabel}: {$reminder->title}")
+                    ->body($body)
+                    ->info()
+                    ->persistent()
+                    ->send();
+            }
+        }
+
+        // For all other event types, the 'url' field in the event array handles navigation
+        // natively in the browser — onEventClick is not called for those.
+    }
+
+    /**
+     * Disable date-select create modal — creation is via the "Create Reminder" page action.
+     */
+    public function onDateSelect(string $start, ?string $end, bool $allDay, ?array $view, ?array $resource): void
+    {
+        // intentionally no-op: prevents 419/500 from the missing create action
+    }
+
 
     public function fetchEvents(array $fetchInfo): array
     {
