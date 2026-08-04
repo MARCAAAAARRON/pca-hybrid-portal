@@ -104,16 +104,28 @@ class EventDocumentationResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Archive')
+                    ->icon('heroicon-m-archive-box'),
+                Tables\Actions\RestoreAction::make()
+                    ->label('Unarchive')
+                    ->icon('heroicon-m-arrow-path'),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Archive Selected')
+                        ->icon('heroicon-m-archive-box'),
+                    Tables\Actions\RestoreBulkAction::make()
+                        ->label('Unarchive Selected')
+                        ->icon('heroicon-m-arrow-path'),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -123,6 +135,14 @@ class EventDocumentationResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     public static function getPages(): array

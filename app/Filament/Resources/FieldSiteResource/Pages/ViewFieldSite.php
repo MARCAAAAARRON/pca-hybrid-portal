@@ -17,13 +17,6 @@ class ViewFieldSite extends ViewRecord
     {
         return [
             Actions\EditAction::make(),
-
-            Actions\Action::make('printQr')
-                ->label('Print QR Code')
-                ->icon('heroicon-m-qr-code')
-                ->color('success')
-                ->url(fn () => route('site.qr', $this->record))
-                ->openUrlInNewTab(),
         ];
     }
 
@@ -48,16 +41,6 @@ class ViewFieldSite extends ViewRecord
                             ->label('Created')
                             ->dateTime(),
                     ])->columns(2),
-
-                Infolists\Components\Section::make('QR Code — Quick Add')
-                    ->icon('heroicon-o-qr-code')
-                    ->description('Scan this QR code on a field marker to instantly open the Monthly Harvest form for this site.')
-                    ->schema([
-                        Infolists\Components\ViewEntry::make('qr_code')
-                            ->label('')
-                            ->view('filament.infolists.qr-code-entry')
-                            ->columnSpanFull(),
-                    ]),
             ]);
     }
 }

@@ -14,9 +14,17 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 use App\Traits\LogsActivity;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Prunable;
+
 class HybridizationRecord extends Model implements HasMedia
 {
-    use InteractsWithMedia, HasApprovalWorkflow, LogsActivity;
+    use InteractsWithMedia, HasApprovalWorkflow, LogsActivity, SoftDeletes, Prunable;
+
+    public function prunable()
+    {
+        return static::onlyTrashed()->where('deleted_at', '<=', now()->subMonths(3));
+    }
 
     /**
      * Average months from planting/pollination to harvest readiness.

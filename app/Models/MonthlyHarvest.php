@@ -10,9 +10,17 @@ use App\Models\Traits\HasApprovalWorkflow;
 use App\Models\Traits\NotifiesOnRecordCreation;
 use App\Traits\LogsActivity;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Prunable;
+
 class MonthlyHarvest extends Model
 {
-    use HasApprovalWorkflow, NotifiesOnRecordCreation, LogsActivity;
+    use HasApprovalWorkflow, NotifiesOnRecordCreation, LogsActivity, SoftDeletes, Prunable;
+
+    public function prunable()
+    {
+        return static::onlyTrashed()->where('deleted_at', '<=', now()->subMonths(3));
+    }
 
     protected static function booted(): void
     {

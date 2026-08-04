@@ -429,7 +429,6 @@ HTML;
         $plugins = [
             ThemesPlugin::make(),
             FilamentShieldPlugin::make(),
-            ApiServicePlugin::make(),
             \Saade\FilamentFullCalendar\FilamentFullCalendarPlugin::make()
                 ->selectable()
                 ->editable()

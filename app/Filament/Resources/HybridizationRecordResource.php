@@ -284,6 +284,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                 self::getStatusColumn(),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('field_site_id')
                     ->label('Field Site')
                     ->relationship('fieldSite', 'name'),
@@ -330,11 +331,23 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 ...self::getApprovalActions(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Archive')
+                    ->icon('heroicon-m-archive-box'),
+                Tables\Actions\RestoreAction::make()
+                    ->label('Unarchive')
+                    ->icon('heroicon-m-arrow-path'),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Archive Selected')
+                        ->icon('heroicon-m-archive-box'),
+                    Tables\Actions\RestoreBulkAction::make()
+                        ->label('Unarchive Selected')
+                        ->icon('heroicon-m-arrow-path'),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ])
             ->headerActions([
@@ -382,7 +395,10 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                \Illuminate\Database\Eloquent\SoftDeletingScope::class,
+            ]);
         if (auth()->user()?->isSupervisor()) {
             $query->where('field_site_id', auth()->user()->field_site_id);
         }

@@ -20,6 +20,11 @@ class ManageSetting extends SettingsPage
 
     protected static ?string $navigationGroup = 'Settings';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public function form(Form $form): Form
     {
         return $form

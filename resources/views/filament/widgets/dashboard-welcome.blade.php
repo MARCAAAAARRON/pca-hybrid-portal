@@ -145,9 +145,66 @@
                 min-height: 180px;
             }
         }
+        @keyframes slideDownFadeOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            10% { opacity: 1; transform: translate(-50%, 0); }
+            80% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); visibility: hidden; }
+        }
 
+        .welcome-overlay {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(11, 158, 79, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideDownFadeOut 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+        }
 
+        .dark .welcome-overlay {
+            background: rgba(17, 24, 39, 0.95);
+            border-color: rgba(52, 211, 153, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-overlay-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
     </style>
+
+    @if(!session()->has('welcome_shown'))
+        @php session()->put('welcome_shown', true); @endphp
+        <!-- Floating Overlay -->
+        <div id="welcome-floating-overlay" class="welcome-overlay">
+            <div class="h-1 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+            <div class="welcome-overlay-content">
+                <h2 class="welcome-text-title" style="margin-bottom: 0.5rem; color: #0b9e4f; font-weight: 700;">Mabuting araw!</h2>
+                <p class="welcome-text-desc" style="margin-bottom: 0;">
+                    We're thrilled to present our improved Field Portal designed with you in mind.
+                    Experience a seamless journey as you access your records, site information,
+                    and performance metrics - all at your fingertips.
+                </p>
+            </div>
+        </div>
+        
+        <script>
+            // Ensure the element is completely removed from DOM after animation completes
+            setTimeout(() => {
+                const el = document.getElementById('welcome-floating-overlay');
+                if (el) el.remove();
+            }, 5500);
+        </script>
+    @endif
 
     <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
         {{-- Accent gradient strip --}}
@@ -155,16 +212,7 @@
 
         <div class="welcome-card-wrapper">
             <!-- Left Side Data -->
-            <div class="welcome-left">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
-                    <h2 class="welcome-text-title" style="margin-bottom: 0;">Mabuting araw!</h2>
-                </div>
-                <p class="welcome-text-desc max-w-lg">
-                    We're thrilled to present our improved Field Portal designed with you in mind.
-                    Experience a seamless journey as you access your records, site information,
-                    and performance metrics - all at your fingertips.
-                </p>
-
+            <div class="welcome-left" style="display: flex; align-items: center;">
                 <div class="flex items-center gap-4" style="display: flex; align-items: center; gap: 1rem;">
                     <!-- User Avatar -->
                     <div class="welcome-avatar-border"

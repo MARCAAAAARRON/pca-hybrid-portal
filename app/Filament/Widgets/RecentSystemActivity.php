@@ -47,14 +47,7 @@ class RecentSystemActivity extends BaseWidget
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => AuditLog::ACTION_CHOICES[$state] ?? ucfirst($state)),
-                Tables\Columns\TextColumn::make('model_name')
-                    ->label('MODULE')
-                    ->formatStateUsing(fn (string $state): string => str_replace('App\\Models\\', '', $state))
-                    ->color('gray'),
-                Tables\Columns\TextColumn::make('formatted_details')
-                    ->label('DETAILS')
-                    ->limit(50)
-                    ->tooltip(fn (AuditLog $record): string => $record->formatted_details),
+
             ])
             ->paginated(false)
             ->headerActions([

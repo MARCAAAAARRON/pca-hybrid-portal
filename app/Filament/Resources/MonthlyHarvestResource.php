@@ -249,6 +249,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                     ->label('STATUS'),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('field_site_id')
                     ->label('Field Site')
                     ->relationship('fieldSite', 'name'),
@@ -272,15 +273,27 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                 Tables\Actions\EditAction::make()
                     ->visible(fn (Model $record) => $record->isDraft() && auth()->user()?->isSupervisor()),
                 Tables\Actions\DeleteAction::make()
+                    ->label('Archive')
+                    ->icon('heroicon-m-archive-box')
                     ->visible(fn (Model $record) => 
                         ($record->isDraft() && auth()->user()?->isSupervisor()) ||
                         ($record->isNoted() && in_array(auth()->user()?->role, ['admin', 'superadmin']))
                     ),
+                Tables\Actions\RestoreAction::make()
+                    ->label('Unarchive')
+                    ->icon('heroicon-m-arrow-path'),
+                Tables\Actions\ForceDeleteAction::make(),
                 ...self::getApprovalActions(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Archive Selected')
+                        ->icon('heroicon-m-archive-box'),
+                    Tables\Actions\RestoreBulkAction::make()
+                        ->label('Unarchive Selected')
+                        ->icon('heroicon-m-arrow-path'),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ])
             ;
@@ -317,7 +330,10 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                \Illuminate\Database\Eloquent\SoftDeletingScope::class,
+            ]);
 
         if (auth()->user()?->isSupervisor()) {
             $query->where('field_site_id', auth()->user()->field_site_id);

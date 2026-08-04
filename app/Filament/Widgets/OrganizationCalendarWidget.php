@@ -96,7 +96,7 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'hybrid_' . $record->id,
                 'title' => 'Hybrid Planted: ' . ($record->hybrid_code ?? 'Draft'),
                 'start' => $record->date_planted->toDateString(),
-                'url' => \App\Filament\Resources\HybridizationRecordResource::getUrl('view', ['record' => $record]),
+                'url' => \App\Filament\Resources\HybridizationRecordResource::getUrl('edit', ['record' => $record]),
                 'backgroundColor' => '#a855f7', // purple
             ];
         }
@@ -111,7 +111,7 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'pollen_' . $record->id,
                 'title' => 'Pollen Received: ' . ($record->pollen_variety ?? 'Unknown'),
                 'start' => $record->report_month->toDateString(),
-                'url' => \App\Filament\Resources\PollenProductionResource::getUrl('view', ['record' => $record]),
+                'url' => \App\Filament\Resources\PollenProductionResource::getUrl('edit', ['record' => $record]),
                 'backgroundColor' => '#eab308', // yellow
             ];
         }
@@ -126,7 +126,7 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'harvest_' . $harvest->id,
                 'title' => 'Harvest: ' . ($harvest->fieldSite->name ?? 'Site'),
                 'start' => $harvest->report_month->toDateString(),
-                'url' => \App\Filament\Resources\MonthlyHarvestResource::getUrl('view', ['record' => $harvest]),
+                'url' => \App\Filament\Resources\MonthlyHarvestResource::getUrl('edit', ['record' => $harvest]),
                 'backgroundColor' => '#22c55e', // green
             ];
         }
@@ -142,7 +142,7 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'nursery_' . $op->id,
                 'title' => 'Nursery: ' . ($op->proponent_entity ?? 'Operation'),
                 'start' => $op->nursery_start_date->toDateString(),
-                'url' => \App\Filament\Resources\NurseryOperationResource::getUrl('view', ['record' => $op]),
+                'url' => \App\Filament\Resources\NurseryOperationResource::getUrl('edit', ['record' => $op]),
                 'backgroundColor' => '#a16207', // brown
             ];
         }

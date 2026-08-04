@@ -19,11 +19,17 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Prunable;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, SoftDeletes;
+    use HasFactory, Notifiable, HasRoles, TwoFactorAuthenticatable, HasApiTokens, SoftDeletes, Prunable;
+
+    public function prunable()
+    {
+        return static::onlyTrashed()->where('deleted_at', '<=', now()->subMonths(3));
+    }
 
     public const ROLE_CHOICES = [
         'supervisor' => 'COS / Agriculturist',
