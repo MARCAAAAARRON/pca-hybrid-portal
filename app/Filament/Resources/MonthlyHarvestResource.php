@@ -196,9 +196,6 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                 ($state['variety'] ?? '') . ' — ' . ($state['seednuts_count'] ?? 0) . ' seednuts'
                             ),
                     ]),
-
-
-                Forms\Components\Textarea::make('remarks')->label('Remarks')->rows(3)->columnSpanFull(),
             ]);
     }
 
