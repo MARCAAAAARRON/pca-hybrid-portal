@@ -145,11 +145,28 @@
                 min-height: 180px;
             }
         }
+
         @keyframes slideDownFadeOut {
-            0% { opacity: 0; transform: translate(-50%, -20px); }
-            10% { opacity: 1; transform: translate(-50%, 0); }
-            80% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -20px); visibility: hidden; }
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+                visibility: hidden;
+            }
         }
 
         .welcome-overlay {
@@ -186,9 +203,11 @@
         @php session()->put('welcome_shown', true); @endphp
         <!-- Floating Overlay -->
         <div id="welcome-floating-overlay" class="welcome-overlay">
-            <div class="h-1 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+            <div class="h-1 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);">
+            </div>
             <div class="welcome-overlay-content">
-                <h2 class="welcome-text-title" style="margin-bottom: 0.5rem; color: #0b9e4f; font-weight: 700;">Mabuting araw!</h2>
+                <h2 class="welcome-text-title" style="margin-bottom: 0.5rem; color: #0b9e4f; font-weight: 700;">Mabuting
+                    araw!</h2>
                 <p class="welcome-text-desc" style="margin-bottom: 0;">
                     We're thrilled to present our improved Field Portal designed with you in mind.
                     Experience a seamless journey as you access your records, site information,
@@ -196,7 +215,7 @@
                 </p>
             </div>
         </div>
-        
+
         <script>
             // Ensure the element is completely removed from DOM after animation completes
             setTimeout(() => {
@@ -206,9 +225,11 @@
         </script>
     @endif
 
-    <div class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
+    <div
+        class="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm">
         {{-- Accent gradient strip --}}
-        <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);"></div>
+        <div class="h-1.5 w-full" style="background: linear-gradient(90deg, #0B9E4F 0%, #10B981 50%, #34D399 100%);">
+        </div>
 
         <div class="welcome-card-wrapper">
             <!-- Left Side Data -->

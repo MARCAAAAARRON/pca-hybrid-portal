@@ -26,35 +26,13 @@ class OrganizationCalendarWidget extends FullCalendarWidget
         return [];
     }
 
-    /**
-     * Override event click: reminders show a notification modal.
-     * All other events already have a 'url' so they navigate directly (this won't be called for them).
-     */
-    public function onEventClick(array $event): void
+    public function viewAction(): \Filament\Actions\Action
     {
-        $id = $event['id'] ?? null;
-
-        // Only reminders have no URL — show their details in a Filament notification
-        if ($id && str_starts_with($id, 'reminder_')) {
-            $reminderId = (int) str_replace('reminder_', '', $id);
-            $reminder   = \App\Models\CalendarReminder::find($reminderId);
-
-            if ($reminder) {
-                $typeLabel = $reminder->type === 'organizational' ? '🔔 Organizational Reminder' : '📌 Personal Reminder';
-                $dateLabel = \Carbon\Carbon::parse($reminder->reminder_date)->format('F d, Y');
-                $body      = ($reminder->description ? $reminder->description . "\n" : '') . "📅 Date: {$dateLabel}";
-
-                \Filament\Notifications\Notification::make()
-                    ->title("{$typeLabel}: {$reminder->title}")
-                    ->body($body)
-                    ->info()
-                    ->persistent()
-                    ->send();
-            }
-        }
-
-        // For all other event types, the 'url' field in the event array handles navigation
-        // natively in the browser — onEventClick is not called for those.
+        return \Filament\Actions\Action::make('view')
+            ->modalHeading(fn (array $arguments) => $arguments['event']['title'] ?? 'Event Details')
+            ->modalContent(fn (array $arguments) => view('filament.widgets.calendar-event-modal', ['event' => $arguments['event'] ?? []]))
+            ->modalSubmitAction(false)
+            ->modalCancelAction(fn ($action) => $action->label('Close'));
     }
 
     /**
@@ -80,9 +58,13 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'event_' . $event->id,
                 'title' => 'Event: ' . $event->title,
                 'start' => $event->event_date->toDateString(),
-                // Resource has no 'view' page, link to 'edit' instead
-                'url' => \App\Filament\Resources\EventDocumentationResource::getUrl('edit', ['record' => $event]),
+                'record_url' => \App\Filament\Resources\EventDocumentationResource::getUrl('edit', ['record' => $event]),
                 'backgroundColor' => '#3b82f6', // blue
+                'details' => [
+                    'Date' => $event->event_date->format('F d, Y'),
+                    'Location' => $event->location ?? 'N/A',
+                    'Description' => $event->description ?? 'No description provided.',
+                ]
             ];
         }
 
@@ -96,8 +78,13 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'hybrid_' . $record->id,
                 'title' => 'Hybrid Planted: ' . ($record->hybrid_code ?? 'Draft'),
                 'start' => $record->date_planted->toDateString(),
-                'url' => \App\Filament\Resources\HybridizationRecordResource::getUrl('edit', ['record' => $record]),
+                'record_url' => \App\Filament\Resources\HybridizationRecordResource::getUrl('edit', ['record' => $record]),
                 'backgroundColor' => '#a855f7', // purple
+                'details' => [
+                    'Date Planted' => $record->date_planted->format('F d, Y'),
+                    'Hybrid Code' => $record->hybrid_code ?? 'N/A',
+                    'Cross Combination' => $record->cross_combination ?? 'N/A',
+                ]
             ];
         }
 
@@ -111,12 +98,18 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'pollen_' . $record->id,
                 'title' => 'Pollen Received: ' . ($record->pollen_variety ?? 'Unknown'),
                 'start' => $record->report_month->toDateString(),
-                'url' => \App\Filament\Resources\PollenProductionResource::getUrl('edit', ['record' => $record]),
+                'record_url' => \App\Filament\Resources\PollenProductionResource::getUrl('edit', ['record' => $record]),
                 'backgroundColor' => '#eab308', // yellow
+                'details' => [
+                    'Report Month' => $record->report_month->format('F Y'),
+                    'Variety' => $record->pollen_variety ?? 'N/A',
+                    'Quantity (g)' => $record->quantity_grams ?? '0',
+                    'Proponent' => $record->proponent_entity ?? 'N/A',
+                ]
             ];
         }
         
-        // 4. Monthly Harvests — uses 'report_month' (not 'harvest_date')
+        // 4. Monthly Harvests
         $harvests = MonthlyHarvest::query()
             ->whereBetween('report_month', [$fetchInfo['start'], $fetchInfo['end']])
             ->get();
@@ -126,12 +119,18 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'harvest_' . $harvest->id,
                 'title' => 'Harvest: ' . ($harvest->fieldSite->name ?? 'Site'),
                 'start' => $harvest->report_month->toDateString(),
-                'url' => \App\Filament\Resources\MonthlyHarvestResource::getUrl('edit', ['record' => $harvest]),
+                'record_url' => \App\Filament\Resources\MonthlyHarvestResource::getUrl('edit', ['record' => $harvest]),
                 'backgroundColor' => '#22c55e', // green
+                'details' => [
+                    'Report Month' => $harvest->report_month->format('F Y'),
+                    'Field Site' => $harvest->fieldSite->name ?? 'N/A',
+                    'Total Seednuts' => $harvest->total_seednuts ?? '0',
+                    'Total Bunches' => $harvest->total_bunches ?? '0',
+                ]
             ];
         }
 
-        // 5. Nursery Operations — uses 'nursery_start_date' (not 'date_sown' which is on batches, not operations)
+        // 5. Nursery Operations
         $nurseryOps = NurseryOperation::query()
             ->whereNotNull('nursery_start_date')
             ->whereBetween('nursery_start_date', [$fetchInfo['start'], $fetchInfo['end']])
@@ -142,8 +141,13 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'id' => 'nursery_' . $op->id,
                 'title' => 'Nursery: ' . ($op->proponent_entity ?? 'Operation'),
                 'start' => $op->nursery_start_date->toDateString(),
-                'url' => \App\Filament\Resources\NurseryOperationResource::getUrl('edit', ['record' => $op]),
+                'record_url' => \App\Filament\Resources\NurseryOperationResource::getUrl('edit', ['record' => $op]),
                 'backgroundColor' => '#a16207', // brown
+                'details' => [
+                    'Start Date' => $op->nursery_start_date->format('F d, Y'),
+                    'Proponent' => $op->proponent_entity ?? 'N/A',
+                    'Seednuts Sown' => $op->seednuts_sown ?? '0',
+                ]
             ];
         }
 
@@ -164,6 +168,11 @@ class OrganizationCalendarWidget extends FullCalendarWidget
                 'title' => ($reminder->type === 'organizational' ? 'Org Reminder: ' : 'Personal: ') . $reminder->title,
                 'start' => $reminder->reminder_date->toDateString(),
                 'backgroundColor' => $reminder->type === 'organizational' ? '#ef4444' : '#64748b', // red vs slate
+                'details' => [
+                    'Type' => ucfirst($reminder->type),
+                    'Date' => \Carbon\Carbon::parse($reminder->reminder_date)->format('F d, Y'),
+                    'Description' => $reminder->description ?? 'No extra details.',
+                ]
             ];
         }
 

@@ -14,8 +14,7 @@ class AdminSummaryStats extends BaseWidget
 
     protected function getColumns(): int
     {
-        $count = 1 + \App\Models\FieldSite::count();
-        return 1;
+        return 4;
     }
 
     public static function canView(): bool

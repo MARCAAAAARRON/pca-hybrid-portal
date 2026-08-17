@@ -39,5 +39,10 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI')
     ],
+    
+    'openweather' => [
+        'key' => env('OPENWEATHERMAP_API_KEY'),
+        'city' => env('OPENWEATHER_CITY', 'Manila, PH'),
+    ],
 
 ];

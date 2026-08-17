@@ -238,8 +238,7 @@
                         <h4
                             style="font-size: 1.05rem; font-weight: 700; color: #0369a1; margin-bottom: 0.5rem; line-height: 1.2;">
                             Generate<br />Report</h4>
-                        <a href="{{ App\Filament\Pages\ReportsDashboard::getUrl() ?? '#' }}"
-                            class="service-btn"
+                        <a href="{{ App\Filament\Pages\ReportsDashboard::getUrl() ?? '#' }}" class="service-btn"
                             style="display: inline-flex; align-items: center; justify-content: center; border-width: 1px; border-style: solid; gap: 0.25rem; padding: 0.375rem 0; width: 70%; margin: 0 auto; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: all 0.2s;">
                             Apply <x-filament::icon icon="heroicon-o-arrow-right"
                                 style="width: 0.875rem; height: 0.875rem; margin-left: 0.125rem;" />

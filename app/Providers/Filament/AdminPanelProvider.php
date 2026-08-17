@@ -410,6 +410,10 @@ HTML;
             ->sidebarCollapsibleOnDesktop(true)
             ->renderHook(
                 \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'header-weather-widget\')')
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
                 fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'global-year-filter\')')
             )
             ->authMiddleware([

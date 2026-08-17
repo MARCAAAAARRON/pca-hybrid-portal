@@ -9,7 +9,7 @@ class DashboardActionCardsWidget extends Widget
 {
     protected static string $view = 'filament.widgets.dashboard-action-cards';
 
-    protected static ?int $sort = -9;
+    protected static ?int $sort = -8;
     protected int | string | array $columnSpan = 'full';
 
     public ?int $year = null;
