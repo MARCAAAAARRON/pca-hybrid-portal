@@ -1814,15 +1814,15 @@
                         </div>
                     </div>
 
-                    <div class="reveal" style="margin-top: 2.5rem; background: var(--surface); border: 1.5px solid rgba(10, 46, 18, .08); padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+                    <div class="reveal" style="margin-top: 2.5rem; background: var(--surface); border: 1.5px solid rgba(10, 46, 18, .08); padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center;">
                         <h4 style="color:var(--green-900); font-weight:700; margin-bottom:1rem; text-align: center; font-size: 1.25rem;">QUALITY POLICY STATEMENT</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: justify;">
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
                             The Philippine Coconut Authority is committed to becoming a globally recognized leader championing a thriving, market-driven coconut and other palm oil industry. We achieve this by delivering exceptional programs and services with unwavering transparency and accountability.
                         </p>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: justify;">
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
                             We are dedicated to upholding the highest standards of professionalism, integrity, transparency, excellence and compliance with all relevant regulations and laws. Our unwavering commitment to continuous improvement drives us to constantly enhance our research, extension, and administrative operations.
                         </p>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem; text-align: justify;">
+                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem; text-align: center;">
                             Ultimately, these efforts ensure the sustainable development and growth of all stakeholders and communities within the coconut industry.
                         </p>
                     </div>
