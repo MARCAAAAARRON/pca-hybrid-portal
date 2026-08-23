@@ -75,97 +75,99 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                 ->visible(fn () => !auth()->user()?->isSupervisor())
                                 ->columnSpanFull(),
 
-                            Forms\Components\Actions::make([
-                                Forms\Components\Actions\Action::make('loadPrevious')
-                                    ->label('Load from Previous Month')
-                                    ->icon('heroicon-o-arrow-path')
-                                    ->color('success')
-                                    ->outlined()
-                                    ->size('sm')
-                                    ->action(function (Forms\Set $set, Forms\Get $get) {
-                                        $siteId = $get('field_site_id') ?: auth()->user()->field_site_id;
+                            Forms\Components\Grid::make(2)->schema([
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('loadPrevious')
+                                        ->label('Load from Previous Month')
+                                        ->icon('heroicon-o-arrow-path')
+                                        ->color('success')
+                                        ->outlined()
+                                        ->size('sm')
+                                        ->action(function (Forms\Set $set, Forms\Get $get) {
+                                            $siteId = $get('field_site_id') ?: auth()->user()->field_site_id;
+                                            if (!$siteId) {
+                                                \Filament\Notifications\Notification::make()->warning()->title('Please select a Field Site first.')->send();
+                                                return;
+                                            }
+                                            
+                                            $latest = \App\Models\NurseryOperation::with('batches.varieties')
+                                                ->where('field_site_id', $siteId)
+                                                ->where('report_type', 'operation')
+                                                ->orderBy('report_month', 'desc')
+                                                ->first();
+                                                
+                                            if (!$latest) {
+                                                \Filament\Notifications\Notification::make()->warning()->title('No previous records found for this site.')->send();
+                                                return;
+                                            }
+                                            
+                                            if ($latest->report_month) {
+                                                $set('report_month', $latest->report_month->copy()->addMonth()->startOfMonth()->format('Y-m-d'));
+                                            }
+                                            $set('region_province_district', $latest->region_province_district);
+                                            $set('barangay_municipality', $latest->barangay_municipality);
+                                            $set('proponent_entity', $latest->proponent_entity);
+                                            $set('proponent_representative', $latest->proponent_representative);
+                                            $set('target_seednuts', $latest->target_seednuts);
+                                            
+                                            if ($latest->batches->isNotEmpty()) {
+                                                $batches = $latest->batches->map(function ($b) {
+                                                    return [
+                                                        'seednuts_harvested' => $b->seednuts_harvested,
+                                                        'date_harvested' => $b->date_harvested,
+                                                        'date_received' => $b->date_received,
+                                                        'source_of_seednuts' => $b->source_of_seednuts,
+                                                        'varieties' => $b->varieties->map(function ($v) {
+                                                            return [
+                                                                'variety' => $v->variety,
+                                                                'seednuts_sown' => 0,
+                                                                'date_sown' => null,
+                                                                'seedlings_germinated' => 0,
+                                                                'ungerminated_seednuts' => 0,
+                                                                'culled_seedlings' => 0,
+                                                                'good_seedlings' => 0,
+                                                                'ready_to_plant' => 0,
+                                                                'seedlings_dispatched' => 0,
+                                                                'remarks' => '',
+                                                            ];
+                                                        })->toArray(),
+                                                    ];
+                                                })->toArray();
+                                                $set('batches', $batches);
+                                            }
+                                            
+                                            \Filament\Notifications\Notification::make()->success()->title('Loaded from previous record.')->send();
+                                        })
+                                ]),
+
+                                Forms\Components\Placeholder::make('previous_month_note')
+                                    ->label('')
+                                    ->content(function (Forms\Get $get) {
+                                        $siteId = $get('field_site_id') ?: auth()->user()?->field_site_id;
                                         if (!$siteId) {
-                                            \Filament\Notifications\Notification::make()->warning()->title('Please select a Field Site first.')->send();
-                                            return;
+                                            return new \Illuminate\Support\HtmlString('');
                                         }
-                                        
-                                        $latest = \App\Models\NurseryOperation::with('batches.varieties')
-                                            ->where('field_site_id', $siteId)
+                                        $latest = \App\Models\NurseryOperation::where('field_site_id', $siteId)
                                             ->where('report_type', 'operation')
                                             ->orderBy('report_month', 'desc')
                                             ->first();
-                                            
-                                        if (!$latest) {
-                                            \Filament\Notifications\Notification::make()->warning()->title('No previous records found for this site.')->send();
-                                            return;
+                                        if (!$latest || !$latest->report_month) {
+                                            return new \Illuminate\Support\HtmlString(
+                                                '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;font-size:13px;color:#fca5a5;">'
+                                                . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                                                . '<span>No previous month record found for this site.</span>'
+                                                . '</div>'
+                                            );
                                         }
-                                        
-                                        if ($latest->report_month) {
-                                            $set('report_month', $latest->report_month->copy()->addMonth()->startOfMonth()->format('Y-m-d'));
-                                        }
-                                        $set('region_province_district', $latest->region_province_district);
-                                        $set('barangay_municipality', $latest->barangay_municipality);
-                                        $set('proponent_entity', $latest->proponent_entity);
-                                        $set('proponent_representative', $latest->proponent_representative);
-                                        $set('target_seednuts', $latest->target_seednuts);
-                                        
-                                        if ($latest->batches->isNotEmpty()) {
-                                            $batches = $latest->batches->map(function ($b) {
-                                                return [
-                                                    'seednuts_harvested' => $b->seednuts_harvested,
-                                                    'date_harvested' => $b->date_harvested,
-                                                    'date_received' => $b->date_received,
-                                                    'source_of_seednuts' => $b->source_of_seednuts,
-                                                    'varieties' => $b->varieties->map(function ($v) {
-                                                        return [
-                                                            'variety' => $v->variety,
-                                                            'seednuts_sown' => 0,
-                                                            'date_sown' => null,
-                                                            'seedlings_germinated' => 0,
-                                                            'ungerminated_seednuts' => 0,
-                                                            'culled_seedlings' => 0,
-                                                            'good_seedlings' => 0,
-                                                            'ready_to_plant' => 0,
-                                                            'seedlings_dispatched' => 0,
-                                                            'remarks' => '',
-                                                        ];
-                                                    })->toArray(),
-                                                ];
-                                            })->toArray();
-                                            $set('batches', $batches);
-                                        }
-                                        
-                                        \Filament\Notifications\Notification::make()->success()->title('Loaded from previous record.')->send();
-                                    })
-                            ]),
-
-                            Forms\Components\Placeholder::make('previous_month_note')
-                                ->label('')
-                                ->content(function (Forms\Get $get) {
-                                    $siteId = $get('field_site_id') ?: auth()->user()?->field_site_id;
-                                    if (!$siteId) {
-                                        return new \Illuminate\Support\HtmlString('');
-                                    }
-                                    $latest = \App\Models\NurseryOperation::where('field_site_id', $siteId)
-                                        ->where('report_type', 'operation')
-                                        ->orderBy('report_month', 'desc')
-                                        ->first();
-                                    if (!$latest || !$latest->report_month) {
+                                        $date = $latest->report_month->format('F d, Y');
                                         return new \Illuminate\Support\HtmlString(
-                                            '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;font-size:13px;color:#fca5a5;">'
-                                            . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-                                            . '<span>No previous month record found for this site.</span>'
+                                            '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:13px;color:#6ee7b7;">'
+                                            . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                                            . '<span><strong>Note:</strong> There is a record from the previous month &mdash; <strong>' . $date . '</strong></span>'
                                             . '</div>'
                                         );
-                                    }
-                                    $date = $latest->report_month->format('F d, Y');
-                                    return new \Illuminate\Support\HtmlString(
-                                        '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:13px;color:#6ee7b7;">'
-                                        . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-                                        . '<span><strong>Note:</strong> There is a record from the previous month &mdash; <strong>' . $date . '</strong></span>'
-                                        . '</div>'
-                                    );
-                                }),
+                                    }),
+                            ])->columnSpanFull(),
                         ])->columnSpan(1),
 
                         Forms\Components\DatePicker::make('report_month')
