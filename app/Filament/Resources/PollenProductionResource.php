@@ -67,6 +67,7 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                     ->searchable()
                                     ->preload()
                                     ->native(false)
+                                    ->live()
                                     ->visible(fn () => !auth()->user()?->isSupervisor())
                                     ->columnSpanFull(),
 
@@ -104,6 +105,33 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                             \Filament\Notifications\Notification::make()->success()->title('Loaded from previous record.')->send();
                                         })
                                 ]),
+
+                                Forms\Components\Placeholder::make('previous_month_note')
+                                    ->label('')
+                                    ->content(function (Forms\Get $get) {
+                                        $siteId = $get('field_site_id') ?: auth()->user()?->field_site_id;
+                                        if (!$siteId) {
+                                            return new \Illuminate\Support\HtmlString('');
+                                        }
+                                        $latest = \App\Models\PollenProduction::where('field_site_id', $siteId)
+                                            ->orderBy('report_month', 'desc')
+                                            ->first();
+                                        if (!$latest || !$latest->report_month) {
+                                            return new \Illuminate\Support\HtmlString(
+                                                '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;font-size:13px;color:#fca5a5;">'
+                                                . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                                                . '<span>No previous month record found for this site.</span>'
+                                                . '</div>'
+                                            );
+                                        }
+                                        $date = $latest->report_month->format('F d, Y');
+                                        return new \Illuminate\Support\HtmlString(
+                                            '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:13px;color:#6ee7b7;">'
+                                            . '<svg xmlns="http://www.w3.org/2000/svg" style="width:15px;height:15px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+                                            . '<span><strong>Note:</strong> There is a record from the previous month &mdash; <strong>' . $date . '</strong></span>'
+                                            . '</div>'
+                                        );
+                                    }),
                             ])->columnSpan(1),
 
                             Forms\Components\DatePicker::make('report_month')

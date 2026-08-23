@@ -1,7 +1,7 @@
 # Product Requirements Document (PRD)
 
 ## Project Title
-PCA Bohol Hybridization Portal with Role-Based Algorithm System
+PCA Hybridization Portal with Role-Based Access and Sequential Data Propagation Algorithm
 
 ## Version
 v3.0 (Laravel/Filament Migration)
@@ -22,7 +22,7 @@ This Product Requirements Document (PRD) specifies the complete functional and n
 ## 2. Project Overview
 
 ### 2.1 System Description
-The PCA Hybridization Portal System is a secure, web-based information system designed to manage coconut hybridization activities across multiple Philippine Coconut Authority (PCA) field sites in Bohol. It features a **Role-Based Algorithm System** that governs data isolation, multi-stage approval workflows, and automated reporting. Built with the Laravel and Filament framework, it supports structured data recording, real-time analytics, and official PCA-formatted exports.
+The **PCA Hybridization Portal with Role-Based Access and Sequential Data Propagation Algorithm** is a secure, web-based information system designed to manage coconut hybridization activities across multiple Philippine Coconut Authority (PCA) field sites in Bohol. It features a **Role-Based Access** system that governs data isolation, multi-stage approval workflows, and a **Sequential Data Propagation Algorithm** for automated carry-forward logic and reporting. Built with the Laravel and Filament framework, it supports structured data recording, real-time analytics, and official PCA-formatted exports.
 
 ### 2.2 Background and Rationale
 Agricultural hybridization data at PCA field sites is often recorded manually, resulting in fragmented records, limited traceability, and weak reporting. This system centralizes all field data — hybrid seedling distribution, monthly seednut harvest, nursery operations, and pollen production — while enforcing strict access control via role-based logic to preserve data integrity and accountability.

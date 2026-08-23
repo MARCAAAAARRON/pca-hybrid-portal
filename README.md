@@ -1,11 +1,11 @@
-# 🌴 PCA Hybridization Portal System
+# 🌴 PCA Hybridization Portal with Role-Based Access and Sequential Data Propagation Algorithm
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat-square&logo=php)](https://www.php.net/)
 [![Laravel Version](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel)](https://laravel.com/)
 [![Filament Version](https://img.shields.io/badge/Filament-3.2-D97706?style=flat-square&logo=filament)](https://filamentphp.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-The **PCA Hybridization Portal System** is a secure, enterprise-grade web application designed for the **Philippine Coconut Authority (PCA)**. It streamlines and centralizes the management of coconut hybridization activities across multiple field sites (Loay and Balilihan Farms), ensuring data integrity, traceability, and professional reporting.
+The **PCA Hybridization Portal with Role-Based Access and Sequential Data Propagation Algorithm** is a secure, enterprise-grade web application designed for the **Philippine Coconut Authority (PCA)**. It streamlines and centralizes the management of coconut hybridization activities across multiple field sites (Loay and Balilihan Farms), ensuring data integrity, traceability, and professional reporting.
 
 Originally conceptualized as a Django-based system, this modern implementation leverages the **Laravel 11** ecosystem and **Filament v3** for a high-performance, real-time administrative experience.
 
