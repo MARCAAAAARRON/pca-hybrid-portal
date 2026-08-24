@@ -88,5 +88,8 @@ class DatabaseSeeder extends Seeder
                 'is_approved' => true,
             ]
         );
+
+        // 7. Seed demo field data (Jan–Aug 2026, all 3 sites)
+        $this->call(TestFieldDataSeeder::class);
     }
 }
