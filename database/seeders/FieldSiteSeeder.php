@@ -18,10 +18,6 @@ class FieldSiteSeeder extends Seeder
                 'name' => 'Balilihan Farm',
                 'description' => 'PCA Bohol Sub-Station, Balilihan, Bohol — Field site managed by Balilihan Supervisor',
             ],
-            [
-                'name' => 'Loon Farm',
-                'description' => 'PCA Bohol Sub-Station, Loon, Bohol — Field site managed by Loon Supervisor',
-            ],
         ];
 
         foreach ($sites as $site) {

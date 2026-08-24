@@ -64,38 +64,12 @@ class TestFieldDataSeeder extends Seeder
             'pollen_mult'    => 1.15,
             'terminal_month' => 5,
         ],
-        'Loon Farm' => [
-            'location'       => 'Brgy. Naatang, Loon, Bohol',
-            'farm_name'      => 'PCA Loon Sub-Station',
-            'area_ha'        => '2.85',
-            'age_of_palms'   => '10 yrs',
-            'num_palms'      => 380,
-            'varieties'      => [
-                ['name' => 'Bago Oshiro Dwarf × TALL',   'type' => 'Hybrid'],
-                ['name' => 'Catigan Green Dwarf × TALL', 'type' => 'Hybrid'],
-            ],
-            'region'         => 'Region VII',
-            'province'       => 'Bohol',
-            'district'       => 'III',
-            'municipality'   => 'Loon',
-            'barangay'       => 'Naatang',
-            'rpd'            => 'VII-Bohol/III',
-            'bm'             => 'Naatang, Loon',
-            'proponent'      => 'Loon Communal Nursery',
-            'rep'            => 'Roberto C. Limpahan',
-            'target_sn'      => 4000,
-            'pollen_variety' => 'TACUNAN GREEN DWARF POLLENS',
-            'pollen_source'  => 'CVSPC',
-            'pollen_mult'    => 0.85,
-            'terminal_month' => 6,
-        ],
     ];
 
     /** Seednut counts per month (Jan–Aug index 0–7), keyed by site name */
     private array $seednutsPerMonth = [
         'Loay Farm'      => [120, 145, 180, 210, 190, 165, 140, 125],
         'Balilihan Farm' => [135, 160, 200, 235, 215, 188, 158, 140],
-        'Loon Farm'      => [ 95, 115, 148, 168, 152, 132, 118, 102],
     ];
 
     /**
@@ -125,11 +99,6 @@ class TestFieldDataSeeder extends Seeder
             ['last'=>'Garcia',    'first'=>'Rosa',     'mi'=>'M.','male'=>0,'female'=>1,'brgy'=>'Cabad',    'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
             ['last'=>'Mahinay',   'first'=>'Epigenio', 'mi'=>'L.','male'=>1,'female'=>0,'brgy'=>'Abucay',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
             ['last'=>'Caballes',  'first'=>'Luisa',    'mi'=>'R.','male'=>0,'female'=>1,'brgy'=>'Owac',     'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
-        ],
-        'Loon Farm' => [
-            ['last'=>'Limpahan',  'first'=>'Roberto',  'mi'=>'C.','male'=>1,'female'=>0,'brgy'=>'Naatang',  'mun'=>'Loon',     'prov'=>'Bohol','variety'=>'Bago Oshiro Dwarf'],
-            ['last'=>'Noval',     'first'=>'Teresita', 'mi'=>'V.','male'=>0,'female'=>1,'brgy'=>'Lintuan',  'mun'=>'Loon',     'prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
-            ['last'=>'Bautista',  'first'=>'Ricardo',  'mi'=>'P.','male'=>1,'female'=>0,'brgy'=>'Candijay', 'mun'=>'Loon',     'prov'=>'Bohol','variety'=>'Bago Oshiro Dwarf'],
         ],
     ];
 
@@ -168,26 +137,9 @@ class TestFieldDataSeeder extends Seeder
             return;
         }
 
-        // Ensure Loon supervisor exists (not in base DatabaseSeeder)
-        $loonSite = $sites->get('Loon Farm');
-        if ($loonSite) {
-            User::firstOrCreate(
-                ['email' => 'loon@pca.gov.ph'],
-                [
-                    'name'              => 'Loon Supervisor',
-                    'password'          => Hash::make('PCA@gov.ph'),
-                    'role'              => 'supervisor',
-                    'field_site_id'     => $loonSite->id,
-                    'email_verified_at' => now(),
-                    'is_approved'       => true,
-                ]
-            );
-        }
-
         $supervisors = [
             'Loay Farm'      => User::where('email', 'loay@pca.gov.ph')->first(),
             'Balilihan Farm' => User::where('email', 'balilihan@pca.gov.ph')->first(),
-            'Loon Farm'      => User::where('email', 'loon@pca.gov.ph')->first(),
         ];
         $manager = User::where('email', 'manager@pca.gov.ph')->first();
         $admin   = User::where('email', 'admin@pca.gov.ph')->first();
