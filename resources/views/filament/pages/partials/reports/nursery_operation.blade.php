@@ -84,23 +84,23 @@
                                 @endif
 
                                 <td class="border border-black px-0.5 py-0">{{ $v->variety }}</td>
-                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->sown_seednuts }}</td>
+                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->seednuts_sown }}</td>
                                 <td class="border border-black px-0.5 py-0 text-center">{{ $v->date_sown ? \Carbon\Carbon::parse($v->date_sown)->format('m/d/Y') : '' }}</td>
-                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->germinated_seedlings }}</td>
+                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->seedlings_germinated }}</td>
                                 <td class="border border-black px-0.5 py-0 text-center">{{ $v->ungerminated_seednuts }}</td>
                                 <td class="border border-black px-0.5 py-0 text-center">{{ $v->culled_seedlings }}</td>
                                 <td class="border border-black px-0.5 py-0 text-center">{{ $v->good_seedlings }}</td>
                                 <td class="border border-black px-0.5 py-0 text-center">{{ $v->ready_to_plant }}</td>
-                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->dispatched_seedlings }}</td>
+                                <td class="border border-black px-0.5 py-0 text-center">{{ $v->seedlings_dispatched }}</td>
                             </tr>
                             @php
-                                $grandTotals[10] += (int)$v->sown_seednuts;
-                                $grandTotals[12] += (int)$v->germinated_seedlings;
+                                $grandTotals[10] += (int)$v->seednuts_sown;
+                                $grandTotals[12] += (int)$v->seedlings_germinated;
                                 $grandTotals[13] += (int)$v->ungerminated_seednuts;
                                 $grandTotals[14] += (int)$v->culled_seedlings;
                                 $grandTotals[15] += (int)$v->good_seedlings;
                                 $grandTotals[16] += (int)$v->ready_to_plant;
-                                $grandTotals[17] += (int)$v->dispatched_seedlings;
+                                $grandTotals[17] += (int)$v->seedlings_dispatched;
                             @endphp
                         @endforeach
                     @endif
