@@ -72,6 +72,14 @@ class GenerateAndEmailReportJob implements ShouldQueue
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(600);
+
+        // Bypass SSL verification for local Windows development without cURL CA certs
+        stream_context_set_default([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
         
         try {
             $isCumulative = ($this->formData['export_range'] ?? 'single') === 'cumulative';

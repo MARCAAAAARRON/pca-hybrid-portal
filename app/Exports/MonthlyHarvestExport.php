@@ -424,7 +424,7 @@ class MonthlyHarvestExport
             $user = $signatories[$key]['user'] ?? null;
             if ($user && $user->signature_image) {
                 try {
-                    $url = \Illuminate\Support\Facades\Storage::disk('cloudinary')->url($user->signature_image);
+                    $url = \App\Helpers\SignatureHelper::getSignatureUrl($user->signature_image);
                     $imgData = @file_get_contents($url);
                     if ($imgData) {
                         $tmp = tempnam(sys_get_temp_dir(), 'sig');
