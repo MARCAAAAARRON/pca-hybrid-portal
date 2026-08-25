@@ -84,13 +84,13 @@ class FullPackageExport
             // Copy all sheets from the category spreadsheet into the combined one
             $catLabel = self::CATEGORY_LABELS[$category] ?? $category;
             foreach ($tempSpreadsheet->getAllSheets() as $sheet) {
-                $cloned = clone $sheet;
                 // Prefix sheet title with category abbreviation if multi-category
                 $originalTitle = $sheet->getTitle();
                 $prefix = substr($this->getCategoryPrefix($category), 0, 5);
                 $newTitle = substr($prefix . ' - ' . $originalTitle, 0, 31);
-                $cloned->setTitle($newTitle);
-                $combinedSpreadsheet->addSheet($cloned);
+                
+                $sheet->setTitle($newTitle);
+                $combinedSpreadsheet->addExternalSheet($sheet);
             }
         }
 
