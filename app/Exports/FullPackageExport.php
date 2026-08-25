@@ -99,6 +99,12 @@ class FullPackageExport
         $tempFile = tempnam(sys_get_temp_dir(), 'full_pkg') . '.xlsx';
         $writer->save($tempFile);
 
+        // Clean up component temp files now that the combined file is saved
+        foreach ($this->tempFilesToCleanup as $cleanupFile) {
+            @unlink($cleanupFile);
+        }
+        $this->tempFilesToCleanup = [];
+
         return $tempFile;
     }
 
@@ -117,6 +123,11 @@ class FullPackageExport
 
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
+
+    /**
+     * @var array
+     */
+    protected array $tempFilesToCleanup = [];
 
     /**
      * Build a Spreadsheet object from a category exporter
@@ -141,7 +152,9 @@ class FullPackageExport
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($tempFile);
-        @unlink($tempFile);
+        
+        // Defer deleting the temp file because PhpSpreadsheet references images inside it via zip stream
+        $this->tempFilesToCleanup[] = $tempFile;
 
         return $spreadsheet;
     }
