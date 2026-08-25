@@ -37,6 +37,12 @@ class ReportsDashboard extends Page implements HasForms, HasActions
     public ?array $data = [];
     public $reportData = null; // Contains the queried records
     public $rawReportData = null; // Contains raw queried records for export
+    
+    // Job Tracking
+    public ?string $trackingJobId = null;
+    public int $jobProgress = 0;
+    public string $jobStatus = '';
+
     public $reportFarms = null; // For aggregated data
     public bool $showModal = false; // Controls floating report modal
     public int $currentPage = 0; // Current page index for multi-site navigation
@@ -427,6 +433,42 @@ class ReportsDashboard extends Page implements HasForms, HasActions
     public function closeModal(): void
     {
         $this->showModal = false;
+        $this->trackingJobId = null;
+        $this->jobProgress = 0;
+        $this->jobStatus = '';
+    }
+
+    public function checkJobProgress(): void
+    {
+        if (!$this->trackingJobId) {
+            return;
+        }
+
+        $cacheKey = 'report_job_' . $this->trackingJobId;
+        $data = \Illuminate\Support\Facades\Cache::get($cacheKey);
+
+        if ($data) {
+            $this->jobProgress = $data['progress'] ?? 0;
+            $this->jobStatus = $data['status'] ?? '';
+
+            if ($this->jobProgress === 100) {
+                $this->trackingJobId = null;
+                \Illuminate\Support\Facades\Cache::forget($cacheKey);
+                \Filament\Notifications\Notification::make()
+                    ->success()
+                    ->title('Report Emailed Successfully')
+                    ->body('The generated report has been sent.')
+                    ->send();
+            } elseif ($this->jobProgress === -1) {
+                $this->trackingJobId = null;
+                \Illuminate\Support\Facades\Cache::forget($cacheKey);
+                \Filament\Notifications\Notification::make()
+                    ->danger()
+                    ->title('Error Sending Report')
+                    ->body($this->jobStatus)
+                    ->send();
+            }
+        }
     }
 
     public function nextPage(): void
@@ -578,6 +620,11 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                 }
 
                 try {
+                    $trackingId = uniqid('email_', true);
+                    $this->trackingJobId = $trackingId;
+                    $this->jobProgress = 0;
+                    $this->jobStatus = 'Starting...';
+
                     dispatch(new \App\Jobs\GenerateAndEmailReportJob(
                         $formData,
                         $data['email'],
@@ -587,7 +634,8 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                         $this->fullPackageMode,
                         auth()->id(),
                         auth()->user()?->field_site_id,
-                        auth()->user()?->role
+                        auth()->user()?->role,
+                        $trackingId
                     ));
 
                     \Filament\Notifications\Notification::make()

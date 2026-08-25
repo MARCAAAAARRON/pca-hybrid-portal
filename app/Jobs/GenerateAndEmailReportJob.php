@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\FieldSite;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
 use App\Mail\FieldDataReportMail;
 use App\Exports\FullPackageExport;
 use App\Exports\MonthlyHarvestExport;
@@ -35,6 +36,7 @@ class GenerateAndEmailReportJob implements ShouldQueue
     public ?int $authUserId;
     public ?int $authUserFieldSiteId;
     public ?string $authUserRole;
+    public string $trackingJobId;
 
     /**
      * Create a new job instance.
@@ -48,7 +50,8 @@ class GenerateAndEmailReportJob implements ShouldQueue
         bool $fullPackageMode,
         ?int $authUserId,
         ?int $authUserFieldSiteId,
-        ?string $authUserRole
+        ?string $authUserRole,
+        string $trackingJobId
     ) {
         $this->formData = $formData;
         $this->email = $email;
@@ -59,6 +62,7 @@ class GenerateAndEmailReportJob implements ShouldQueue
         $this->authUserId = $authUserId;
         $this->authUserFieldSiteId = $authUserFieldSiteId;
         $this->authUserRole = $authUserRole;
+        $this->trackingJobId = $trackingJobId;
     }
 
     /**
@@ -77,6 +81,7 @@ class GenerateAndEmailReportJob implements ShouldQueue
             $excelFilename = 'Report.xlsx';
             
             // 1. Re-fetch Data
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => 10, 'status' => 'Querying data...'], 600);
             if ($this->fullPackageMode) {
                 foreach ($this->selectedCategories as $cat) {
                     $query = $this->buildCategoryQuery($cat);
@@ -136,15 +141,18 @@ class GenerateAndEmailReportJob implements ShouldQueue
             }
 
             // 2. Generate Excel
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => 40, 'status' => 'Generating Excel file...'], 600);
             $response = $exporter->export();
             $excelFile = $response->getFile()->getPathname();
 
             // 3. Generate PDF
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => 70, 'status' => 'Generating PDF report...'], 600);
             $pdfInfo = $this->generatePdfReport($fullPackageData, $activeRecords, $isCumulative);
             $pdfFile = $pdfInfo['path'];
             $pdfName = $pdfInfo['filename'];
 
             // 4. Send Email
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => 90, 'status' => 'Sending email...'], 600);
             $filesToAttach = [$excelFile, $pdfFile];
             $fileNames = [$excelFilename, $pdfName];
 
@@ -154,7 +162,10 @@ class GenerateAndEmailReportJob implements ShouldQueue
             @unlink($excelFile);
             @unlink($pdfFile);
 
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => 100, 'status' => 'Completed'], 600);
+
         } catch (\Exception $e) {
+            Cache::put('report_job_' . $this->trackingJobId, ['progress' => -1, 'status' => 'Error: ' . $e->getMessage()], 600);
             Log::error('GenerateAndEmailReportJob Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);

@@ -106,6 +106,18 @@
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Preparing print preview, please wait...</span>
                 </div>
 
+                @if($trackingJobId)
+                <div wire:poll.1s="checkJobProgress" class="shrink-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-900 dark:text-white">Email Report Progress</span>
+                        <span class="text-sm font-medium text-[#0b9e4f]">{{ $jobProgress }}% - {{ $jobStatus }}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+                        <div class="bg-[#0b9e4f] h-2.5 rounded-full transition-all duration-500 ease-out" style="width: {{ $jobProgress }}%"></div>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Modal Header --}}
                 <div class="shrink-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700">
 
