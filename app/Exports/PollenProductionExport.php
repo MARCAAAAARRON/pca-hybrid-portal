@@ -372,6 +372,7 @@ class PollenProductionExport
                         file_put_contents($tmp, $imgData);
                         $drawing = new Drawing();
                         $drawing->setPath($tmp);
+                        $drawing->setHeight(45);
                         // Anchor the image to the starting column to perfectly align with the left-aligned text
                         $startCol = $range['start'];
                         
