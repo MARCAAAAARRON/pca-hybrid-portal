@@ -88,17 +88,41 @@ class TestFieldDataSeeder extends Seeder
         [160, 250,  65,  75,  80,  60, 280, 130],
     ];
 
-    /** 3 farmers per site — same farmers appear every month (carry-forward) */
+    /** 15 farmers per site — same farmers appear every month (carry-forward) */
     private array $farmers = [
         'Loay Farm' => [
-            ['last'=>'Dela Cruz', 'first'=>'Juan',     'mi'=>'D.','male'=>1,'female'=>0,'brgy'=>'Boctol',   'mun'=>'Loay',     'prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
-            ['last'=>'Reyes',     'first'=>'Maria',    'mi'=>'S.','male'=>0,'female'=>1,'brgy'=>'Tangnan',  'mun'=>'Loay',     'prov'=>'Bohol','variety'=>'Laguna Tall'],
-            ['last'=>'Santos',    'first'=>'Pedro',    'mi'=>'A.','male'=>1,'female'=>0,'brgy'=>'Ubayon',   'mun'=>'Loay',     'prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Dela Cruz',  'first'=>'Juan',      'mi'=>'D.','male'=>1,'female'=>0,'brgy'=>'Boctol',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Reyes',      'first'=>'Maria',     'mi'=>'S.','male'=>0,'female'=>1,'brgy'=>'Tangnan',      'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Santos',     'first'=>'Pedro',     'mi'=>'A.','male'=>1,'female'=>0,'brgy'=>'Ubayon',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Mendoza',    'first'=>'Ernesto',   'mi'=>'G.','male'=>1,'female'=>0,'brgy'=>'Poblacion',    'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Ramos',      'first'=>'Lourdes',   'mi'=>'T.','male'=>0,'female'=>1,'brgy'=>'Aghaoy',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Villanueva', 'first'=>'Carlos',    'mi'=>'B.','male'=>1,'female'=>0,'brgy'=>'Bonbon',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Navarro',    'first'=>'Elena',     'mi'=>'M.','male'=>0,'female'=>1,'brgy'=>'Calvario',     'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Bautista',   'first'=>'Antonio',   'mi'=>'R.','male'=>1,'female'=>0,'brgy'=>'Concepcion',   'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Torres',     'first'=>'Rosario',   'mi'=>'L.','male'=>0,'female'=>1,'brgy'=>'Hinawanan',    'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Gonzales',   'first'=>'Manuel',    'mi'=>'P.','male'=>1,'female'=>0,'brgy'=>'Lourdes',      'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Flores',     'first'=>'Josefa',    'mi'=>'C.','male'=>0,'female'=>1,'brgy'=>'Mocpoc Norte', 'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Castillo',   'first'=>'Ricardo',   'mi'=>'E.','male'=>1,'female'=>0,'brgy'=>'Mocpoc Sur',   'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Soriano',    'first'=>'Norma',     'mi'=>'D.','male'=>0,'female'=>1,'brgy'=>'Tayong',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
+            ['last'=>'Aquino',     'first'=>'Fernando',  'mi'=>'V.','male'=>1,'female'=>0,'brgy'=>'Ynihan',       'mun'=>'Loay','prov'=>'Bohol','variety'=>'Laguna Tall'],
+            ['last'=>'Jamil',      'first'=>'Conchita',  'mi'=>'A.','male'=>0,'female'=>1,'brgy'=>'Agape',        'mun'=>'Loay','prov'=>'Bohol','variety'=>'Catigan Green Dwarf'],
         ],
         'Balilihan Farm' => [
-            ['last'=>'Garcia',    'first'=>'Rosa',     'mi'=>'M.','male'=>0,'female'=>1,'brgy'=>'Cabad',    'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
-            ['last'=>'Mahinay',   'first'=>'Epigenio', 'mi'=>'L.','male'=>1,'female'=>0,'brgy'=>'Abucay',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
-            ['last'=>'Caballes',  'first'=>'Luisa',    'mi'=>'R.','male'=>0,'female'=>1,'brgy'=>'Owac',     'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Garcia',     'first'=>'Rosa',      'mi'=>'M.','male'=>0,'female'=>1,'brgy'=>'Cabad',        'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Mahinay',    'first'=>'Epigenio',  'mi'=>'L.','male'=>1,'female'=>0,'brgy'=>'Abucay',       'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Caballes',   'first'=>'Luisa',     'mi'=>'R.','male'=>0,'female'=>1,'brgy'=>'Owac',         'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Padilla',    'first'=>'Arturo',    'mi'=>'S.','male'=>1,'female'=>0,'brgy'=>'Poblacion',    'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Lugue',      'first'=>'Remedios',  'mi'=>'P.','male'=>0,'female'=>1,'brgy'=>'Baucan Norte', 'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Bernales',   'first'=>'Vicente',   'mi'=>'T.','male'=>1,'female'=>0,'brgy'=>'Baucan Sur',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Dagohoy',    'first'=>'Erlinda',   'mi'=>'C.','male'=>0,'female'=>1,'brgy'=>'Candumayao',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Tumbok',     'first'=>'Gregorio',  'mi'=>'M.','male'=>1,'female'=>0,'brgy'=>'Cantuod',      'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Gallares',   'first'=>'Patricia',  'mi'=>'A.','male'=>0,'female'=>1,'brgy'=>'Datag Norte',  'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Aumentado',  'first'=>'Isidro',    'mi'=>'R.','male'=>1,'female'=>0,'brgy'=>'Datag Sur',    'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Piscal',     'first'=>'Felicidad', 'mi'=>'B.','male'=>0,'female'=>1,'brgy'=>'Del Carmen',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Loigoy',     'first'=>'Demetrio',  'mi'=>'G.','male'=>1,'female'=>0,'brgy'=>'Hanopol',      'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Batiquin',   'first'=>'Gloria',    'mi'=>'V.','male'=>0,'female'=>1,'brgy'=>'Limocon',      'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
+            ['last'=>'Carvajal',   'first'=>'Marcelo',   'mi'=>'D.','male'=>1,'female'=>0,'brgy'=>'San Isidro',   'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Malayan Yellow Dwarf'],
+            ['last'=>'Ampo',       'first'=>'Juliana',   'mi'=>'E.','male'=>0,'female'=>1,'brgy'=>'Magsija',      'mun'=>'Balilihan','prov'=>'Bohol','variety'=>'Tacunan Green Dwarf'],
         ],
     ];
 
