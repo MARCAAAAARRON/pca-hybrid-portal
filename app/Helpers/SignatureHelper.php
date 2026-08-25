@@ -16,9 +16,9 @@ class SignatureHelper
             return null;
         }
 
-        $cloudinaryUrl = env('CLOUDINARY_URL', '');
+        $cloudinaryUrl = env('CLOUDINARY_URL', config('cloudinary.cloud_url', ''));
         preg_match('/@([^\/]+)/', $cloudinaryUrl, $matches);
-        $cloudName = $matches[1] ?? 'dlvgoszbo';
+        $cloudName = isset($matches[1]) ? $matches[1] : 'dlvgoszbo';
 
         return "https://res.cloudinary.com/{$cloudName}/image/upload/{$signatureImage}";
     }
