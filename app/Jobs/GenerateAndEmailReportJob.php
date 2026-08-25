@@ -268,46 +268,6 @@ class GenerateAndEmailReportJob implements ShouldQueue
                 : 'For the month of ' . $asOfDate->format('F Y');
         }
 
-        $pages = [];
-
-        if ($this->fullPackageMode) {
-            // Get all unique site IDs first
-            $allSiteIds = [];
-            foreach ($this->selectedCategories as $cat) {
-                if (isset($fullPackageData[$cat])) {
-                    $allSiteIds = array_merge($allSiteIds, array_keys($fullPackageData[$cat]));
-                }
-            }
-            $allSiteIds = array_unique($allSiteIds);
-
-            // Group by site first, then category
-            foreach ($allSiteIds as $siteId) {
-                foreach ($this->selectedCategories as $cat) {
-                    if (isset($fullPackageData[$cat][$siteId])) {
-                        $siteData = $fullPackageData[$cat][$siteId];
-                        $pages[] = [
-                            'category' => $cat,
-                            'records'  => $siteData['records'],
-                            'farms'    => $siteData['farms'] ?? null,
-                        ];
-                    }
-                }
-            }
-        } else {
-            $grouped = $activeRecords->groupBy('field_site_id');
-            foreach ($grouped as $siteId => $siteRecords) {
-                $pages[] = [
-                    'category' => $activeCat,
-                    'records'  => $siteRecords,
-                    'farms'    => $activeCat === 'monthly_harvest' ? $this->groupHarvestData($siteRecords) : null,
-                ];
-            }
-        }
-
-        if (empty($pages)) {
-            throw new \Exception('No data available for PDF export.');
-        }
-
         $categoryLabels = [
             'monthly_harvest'     => 'Monthly Harvest',
             'pollen_production'   => 'Pollen Production',
@@ -316,38 +276,111 @@ class GenerateAndEmailReportJob implements ShouldQueue
             'terminal_report'     => 'Terminal Report',
         ];
 
-        if ($this->fullPackageMode) {
-            $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
-            $reportTitle = "Report Package ({$catNames})";
-        } else {
-            $reportTitle = $categoryLabels[$activeCat] ?? $activeCat;
-        }
-
-        $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
         $period = $this->formData['month'] ? $asOfDate->format('F_Y') : $this->formData['year'];
-        $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
 
-        $pdf = Pdf::loadView('pdf.report-dashboard', [
-            'pages'       => $pages,
-            'periodStr'   => $periodStr,
-            'title'       => $pdfTitle,
-            'filterMonth' => $this->formData['month'] ?? null,
-            'filterYear'  => $this->formData['year'] ?? null,
-        ])->setPaper($this->paperSize, $this->orientation);
+        if ($this->fullPackageMode) {
+            $zipFile = tempnam(sys_get_temp_dir(), 'pdf_pkg') . '.zip';
+            $zip = new \ZipArchive();
+            $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        $pdfContent = $pdf->output();
+            $allSiteIds = [];
+            foreach ($this->selectedCategories as $cat) {
+                if (isset($fullPackageData[$cat])) {
+                    $allSiteIds = array_merge($allSiteIds, array_keys($fullPackageData[$cat]));
+                }
+            }
+            $allSiteIds = array_unique($allSiteIds);
 
-        $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
-        $safeCatName = $this->fullPackageMode ? 'Full_Package' : preg_replace('/[^A-Za-z0-9_\-]/', '_', $categoryLabels[$activeCat] ?? $activeCat);
-        $timestamp = now()->format('Ymd_His');
-        $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
+            foreach ($allSiteIds as $siteId) {
+                $sitePages = [];
+                $siteName = 'Unknown_Site';
+                foreach ($this->selectedCategories as $cat) {
+                    if (isset($fullPackageData[$cat][$siteId])) {
+                        $siteData = $fullPackageData[$cat][$siteId];
+                        $sitePages[] = [
+                            'category' => $cat,
+                            'records'  => $siteData['records'],
+                            'farms'    => $siteData['farms'] ?? null,
+                        ];
+                        if ($siteName === 'Unknown_Site' && $siteData['records']->isNotEmpty()) {
+                            $siteName = $siteData['records']->first()->fieldSite?->name ?? 'Unknown_Site';
+                        }
+                    }
+                }
 
-        $storagePath = "reports/{$filename}";
-        Storage::disk('local')->put($storagePath, $pdfContent);
-        
-        return [
-            'path' => Storage::disk('local')->path($storagePath),
-            'filename' => $filename,
-        ];
+                if (!empty($sitePages)) {
+                    $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
+                    $pdfTitle = "Report Package ({$catNames}) - {$siteName} - {$period}";
+                    
+                    $pdf = Pdf::loadView('pdf.report-dashboard', [
+                        'pages'       => $sitePages,
+                        'periodStr'   => $periodStr,
+                        'title'       => $pdfTitle,
+                        'filterMonth' => $this->formData['month'] ?? null,
+                        'filterYear'  => $this->formData['year'] ?? null,
+                    ])->setPaper($this->paperSize, $this->orientation);
+
+                    $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $siteName);
+                    $pdfFilename = "{$safeSiteName}_Full_Package_{$period}.pdf";
+                    $zip->addFromString($pdfFilename, $pdf->output());
+                }
+            }
+
+            if ($zip->numFiles === 0) {
+                $zip->addFromString('No_Data.txt', 'No records found.');
+            }
+            $zip->close();
+
+            $timestamp = now()->format('Ymd_His');
+            $filename = "Full_Report_Package_PDFs_{$period}_{$timestamp}.zip";
+            $storagePath = "reports/{$filename}";
+            Storage::disk('local')->put($storagePath, file_get_contents($zipFile));
+            @unlink($zipFile);
+
+            return [
+                'path' => Storage::disk('local')->path($storagePath),
+                'filename' => $filename,
+            ];
+
+        } else {
+            $pages = [];
+            $grouped = $activeRecords->groupBy('field_site_id');
+            foreach ($grouped as $siteId => $siteRecords) {
+                $pages[] = [
+                    'category' => $activeCat,
+                    'records'  => $siteRecords,
+                    'farms'    => $activeCat === 'monthly_harvest' ? $this->groupHarvestData($siteRecords) : null,
+                ];
+            }
+
+            if (empty($pages)) {
+                throw new \Exception('No data available for PDF export.');
+            }
+
+            $reportTitle = $categoryLabels[$activeCat] ?? $activeCat;
+            $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
+            $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
+
+            $pdf = Pdf::loadView('pdf.report-dashboard', [
+                'pages'       => $pages,
+                'periodStr'   => $periodStr,
+                'title'       => $pdfTitle,
+                'filterMonth' => $this->formData['month'] ?? null,
+                'filterYear'  => $this->formData['year'] ?? null,
+            ])->setPaper($this->paperSize, $this->orientation);
+
+            $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
+            $safeCatName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $reportTitle);
+            $timestamp = now()->format('Ymd_His');
+            $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
+
+            $storagePath = "reports/{$filename}";
+            Storage::disk('local')->put($storagePath, $pdf->output());
+            
+            return [
+                'path' => Storage::disk('local')->path($storagePath),
+                'filename' => $filename,
+            ];
+        }
     }
 }

@@ -743,11 +743,15 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                         ->body("Report saved and download started.")
                         ->send();
 
-                    return response()->streamDownload(
-                        fn () => print($pdfInfo['content']),
-                        $pdfInfo['filename'],
-                        ['Content-Type' => 'application/pdf']
-                    );
+                    if (str_ends_with($pdfInfo['filename'], '.zip')) {
+                        return response()->download($pdfInfo['path'], $pdfInfo['filename'])->deleteFileAfterSend(true);
+                    } else {
+                        return response()->streamDownload(
+                            fn () => print($pdfInfo['content']),
+                            $pdfInfo['filename'],
+                            ['Content-Type' => 'application/pdf']
+                        );
+                    }
                 } catch (\Throwable $e) {
                     \Illuminate\Support\Facades\Log::error('PDF Export Error: ' . $e->getMessage(), [
                         'trace' => $e->getTraceAsString(),
@@ -783,10 +787,21 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                 : 'For the month of ' . $asOfDate->format('F Y');
         }
 
-        $pages = [];
+        $categoryLabels = [
+            'monthly_harvest'     => 'Monthly Harvest',
+            'pollen_production'   => 'Pollen Production',
+            'hybrid_distribution' => 'Hybrid Distribution',
+            'nursery_operation'   => 'Nursery Operation',
+            'terminal_report'     => 'Terminal Report',
+        ];
+
+        $period = $formData['month'] ? $asOfDate->format('F_Y') : $formData['year'];
 
         if ($this->fullPackageMode) {
-            // Get all unique site IDs first
+            $zipFile = tempnam(sys_get_temp_dir(), 'pdf_pkg') . '.zip';
+            $zip = new \ZipArchive();
+            $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
             $allSiteIds = [];
             foreach ($this->selectedCategories as $cat) {
                 if (isset($this->fullPackageData[$cat])) {
@@ -795,20 +810,56 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             }
             $allSiteIds = array_unique($allSiteIds);
 
-            // Group by site first, then category
             foreach ($allSiteIds as $siteId) {
+                $sitePages = [];
+                $siteName = 'Unknown_Site';
                 foreach ($this->selectedCategories as $cat) {
                     if (isset($this->fullPackageData[$cat][$siteId])) {
                         $siteData = $this->fullPackageData[$cat][$siteId];
-                        $pages[] = [
+                        $sitePages[] = [
                             'category' => $cat,
                             'records'  => $siteData['records'],
                             'farms'    => $siteData['farms'] ?? null,
                         ];
+                        if ($siteName === 'Unknown_Site' && $siteData['records']->isNotEmpty()) {
+                            $siteName = $siteData['records']->first()->fieldSite?->name ?? 'Unknown_Site';
+                        }
                     }
                 }
+
+                if (!empty($sitePages)) {
+                    $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
+                    $pdfTitle = "Report Package ({$catNames}) - {$siteName} - {$period}";
+                    
+                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report-dashboard', [
+                        'pages'       => $sitePages,
+                        'periodStr'   => $periodStr,
+                        'title'       => $pdfTitle,
+                        'filterMonth' => $formData['month'] ?? null,
+                        'filterYear'  => $formData['year'] ?? null,
+                    ])->setPaper($paperSize, $orientation);
+
+                    $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $siteName);
+                    $pdfFilename = "{$safeSiteName}_Full_Package_{$period}.pdf";
+                    $zip->addFromString($pdfFilename, $pdf->output());
+                }
             }
+
+            if ($zip->numFiles === 0) {
+                $zip->addFromString('No_Data.txt', 'No records found.');
+            }
+            $zip->close();
+
+            $timestamp = now()->format('Ymd_His');
+            $filename = "Full_Report_Package_PDFs_{$period}_{$timestamp}.zip";
+
+            return [
+                'path' => $zipFile,
+                'filename' => $filename,
+            ];
+
         } else {
+            $pages = [];
             if (!empty($this->reportData)) {
                 foreach ($this->reportData as $siteId => $siteData) {
                     $pages[] = [
@@ -818,50 +869,37 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                     ];
                 }
             }
-        }
 
-        if (empty($pages)) {
-            throw new \Exception('No data available for PDF export.');
-        }
+            if (empty($pages)) {
+                throw new \Exception('No data available for PDF export.');
+            }
 
-        $categoryLabels = [
-            'monthly_harvest'     => 'Monthly Harvest',
-            'pollen_production'   => 'Pollen Production',
-            'hybrid_distribution' => 'Hybrid Distribution',
-            'nursery_operation'   => 'Nursery Operation',
-            'terminal_report'     => 'Terminal Report',
-        ];
-
-        if ($this->fullPackageMode) {
-            $catNames = collect($this->selectedCategories)->map(fn($c) => $categoryLabels[$c] ?? $c)->implode(' + ');
-            $reportTitle = "Report Package ({$catNames})";
-        } else {
             $reportTitle = $categoryLabels[$activeCat] ?? $activeCat;
+            $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
+            $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
+
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report-dashboard', [
+                'pages'       => $pages,
+                'periodStr'   => $periodStr,
+                'title'       => $pdfTitle,
+                'filterMonth' => $formData['month'] ?? null,
+                'filterYear'  => $formData['year'] ?? null,
+            ])->setPaper($paperSize, $orientation);
+
+            $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
+            $safeCatName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $reportTitle);
+            $timestamp = now()->format('Ymd_His');
+            $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
+            
+            $storagePath = "reports/{$filename}";
+            \Illuminate\Support\Facades\Storage::disk('public')->put($storagePath, $pdf->output());
+
+            return [
+                'path' => \Illuminate\Support\Facades\Storage::disk('public')->path($storagePath),
+                'filename' => $filename,
+                'content' => $pdf->output(),
+            ];
         }
-
-        $firstSite = $pages[0]['records']->first()->fieldSite?->name ?? 'All Sites';
-        $period = $formData['month']
-            ? $asOfDate->format('F_Y')
-            : $formData['year'];
-        $pdfTitle = "{$reportTitle} - {$firstSite} - {$period}";
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.report-dashboard', [
-            'pages'       => $pages,
-            'periodStr'   => $periodStr,
-            'title'       => $pdfTitle,
-            'filterMonth' => $formData['month'] ?? null,
-            'filterYear'  => $formData['year'] ?? null,
-        ])->setPaper($paperSize, $orientation);
-
-        $pdfContent = $pdf->output();
-
-        $safeSiteName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $firstSite);
-        $safeCatName = $this->fullPackageMode ? 'Full_Package' : preg_replace('/[^A-Za-z0-9_\-]/', '_', $categoryLabels[$activeCat] ?? $activeCat);
-        $timestamp = now()->format('Ymd_His');
-        $filename = "{$safeCatName}_{$safeSiteName}_{$period}_{$timestamp}.pdf";
-
-        $storagePath = "reports/{$filename}";
-        \Illuminate\Support\Facades\Storage::disk('public')->put($storagePath, $pdfContent);
 
         $fieldSiteId = null;
         if (!$this->fullPackageMode && count($this->reportData) === 1) {

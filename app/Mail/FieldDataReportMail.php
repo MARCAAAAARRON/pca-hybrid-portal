@@ -69,6 +69,8 @@ class FieldDataReportMail extends Mailable
                 $mime = 'application/pdf';
             } elseif (str_ends_with(strtolower($name), '.xlsx')) {
                 $mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            } elseif (str_ends_with(strtolower($name), '.zip')) {
+                $mime = 'application/zip';
             }
 
             $attachments[] = \Illuminate\Mail\Mailables\Attachment::fromPath($path)
