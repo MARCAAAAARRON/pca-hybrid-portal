@@ -206,9 +206,8 @@ class HybridDistributionExport
             $sheet->setCellValue('G' . $row, $rec->farmer_first_name);
             $sheet->setCellValue('H' . $row, $rec->farmer_middle_initial);
             
-            $gender = $rec->gender ?? '';
-            $sheet->setCellValue('I' . $row, $gender === 'M' ? '/' : '');
-            $sheet->setCellValue('J' . $row, $gender === 'F' ? '/' : '');
+            $sheet->setCellValue('I' . $row, $rec->is_male ? '/' : '');
+            $sheet->setCellValue('J' . $row, $rec->is_female ? '/' : '');
             
             $sheet->setCellValue('K' . $row, $rec->farm_barangay);
             $sheet->setCellValue('L' . $row, $rec->farm_municipality);

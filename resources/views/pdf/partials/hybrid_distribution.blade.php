@@ -59,8 +59,8 @@
                 <td style="border: 1px solid #000; padding: 2px 3px;">{{ $rec->farmer_last_name }}</td>
                 <td style="border: 1px solid #000; padding: 2px 3px;">{{ $rec->farmer_first_name }}</td>
                 <td style="border: 1px solid #000; padding: 2px 3px; text-align: center;">{{ $rec->farmer_middle_initial }}</td>
-                <td style="border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold;">{{ ($rec->gender ?? '') === 'M' ? '/' : '' }}</td>
-                <td style="border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold;">{{ ($rec->gender ?? '') === 'F' ? '/' : '' }}</td>
+                <td style="border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold;">{{ $rec->is_male ? '/' : '' }}</td>
+                <td style="border: 1px solid #000; padding: 2px 3px; text-align: center; font-weight: bold;">{{ $rec->is_female ? '/' : '' }}</td>
                 <td style="border: 1px solid #000; padding: 2px 3px;">{{ $rec->farm_barangay }}</td>
                 <td style="border: 1px solid #000; padding: 2px 3px;">{{ $rec->farm_municipality }}</td>
                 <td style="border: 1px solid #000; padding: 2px 3px;">{{ $rec->farm_province ?? 'Bohol' }}</td>
