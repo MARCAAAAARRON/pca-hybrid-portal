@@ -786,14 +786,26 @@ class ReportsDashboard extends Page implements HasForms, HasActions
         $pages = [];
 
         if ($this->fullPackageMode) {
+            // Get all unique site IDs first
+            $allSiteIds = [];
             foreach ($this->selectedCategories as $cat) {
-                $catData = $this->fullPackageData[$cat] ?? [];
-                foreach ($catData as $siteId => $siteData) {
-                    $pages[] = [
-                        'category' => $cat,
-                        'records'  => $siteData['records'],
-                        'farms'    => $siteData['farms'] ?? null,
-                    ];
+                if (isset($this->fullPackageData[$cat])) {
+                    $allSiteIds = array_merge($allSiteIds, array_keys($this->fullPackageData[$cat]));
+                }
+            }
+            $allSiteIds = array_unique($allSiteIds);
+
+            // Group by site first, then category
+            foreach ($allSiteIds as $siteId) {
+                foreach ($this->selectedCategories as $cat) {
+                    if (isset($this->fullPackageData[$cat][$siteId])) {
+                        $siteData = $this->fullPackageData[$cat][$siteId];
+                        $pages[] = [
+                            'category' => $cat,
+                            'records'  => $siteData['records'],
+                            'farms'    => $siteData['farms'] ?? null,
+                        ];
+                    }
                 }
             }
         } else {

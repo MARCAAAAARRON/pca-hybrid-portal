@@ -111,7 +111,7 @@ class GenerateAndEmailReportJob implements ShouldQueue
                 
                 $exporter = new FullPackageExport($fullPackageData, $this->formData['year'], $this->formData['month'], $isCumulative);
                 $period = $this->formData['month'] ? \Carbon\Carbon::create($this->formData['year'], $this->formData['month'], 1)->format('F_Y') : $this->formData['year'];
-                $excelFilename = 'Full_Report_Package_' . $period . '.xlsx';
+                $excelFilename = 'Full_Report_Package_' . $period . '.zip';
             } else {
                 $activeCat = $this->selectedCategories[0];
                 $query = $this->buildCategoryQuery($activeCat);
@@ -271,14 +271,26 @@ class GenerateAndEmailReportJob implements ShouldQueue
         $pages = [];
 
         if ($this->fullPackageMode) {
+            // Get all unique site IDs first
+            $allSiteIds = [];
             foreach ($this->selectedCategories as $cat) {
-                $catData = $fullPackageData[$cat] ?? [];
-                foreach ($catData as $siteId => $siteData) {
-                    $pages[] = [
-                        'category' => $cat,
-                        'records'  => $siteData['records'],
-                        'farms'    => $siteData['farms'] ?? null,
-                    ];
+                if (isset($fullPackageData[$cat])) {
+                    $allSiteIds = array_merge($allSiteIds, array_keys($fullPackageData[$cat]));
+                }
+            }
+            $allSiteIds = array_unique($allSiteIds);
+
+            // Group by site first, then category
+            foreach ($allSiteIds as $siteId) {
+                foreach ($this->selectedCategories as $cat) {
+                    if (isset($fullPackageData[$cat][$siteId])) {
+                        $siteData = $fullPackageData[$cat][$siteId];
+                        $pages[] = [
+                            'category' => $cat,
+                            'records'  => $siteData['records'],
+                            'farms'    => $siteData['farms'] ?? null,
+                        ];
+                    }
                 }
             }
         } else {
