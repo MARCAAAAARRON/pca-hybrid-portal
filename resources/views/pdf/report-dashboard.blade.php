@@ -181,7 +181,7 @@
         @php
             $selectedMonth = $filterMonth ?? null;
             $selectedYear = $filterYear ?? null;
-            $currentMonthRecords = $selectedMonth
+            $currentMonthRecords = ($selectedMonth && $pageCategory !== 'terminal_report')
                 ? $pageSiteRecords->filter(fn($r) => \Carbon\Carbon::parse($r->report_month)->month == $selectedMonth && \Carbon\Carbon::parse($r->report_month)->year == $selectedYear)
                 : $pageSiteRecords;
             $statusOrder = ['draft' => 0, 'prepared' => 1, 'reviewed' => 2, 'noted' => 3];
