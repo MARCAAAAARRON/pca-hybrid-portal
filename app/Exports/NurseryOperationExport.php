@@ -169,7 +169,7 @@ class NurseryOperationExport
 
         $col = 1;
         foreach ($headers as $h) {
-            $sheet->setCellValue([$col, 5], $h);
+            $sheet->setCellValueByColumnAndRow($col, 5, $h);
             $col++;
         }
 
@@ -202,7 +202,7 @@ class NurseryOperationExport
                 ];
                 $col = 1;
                 foreach ($vals as $v) {
-                    $sheet->setCellValue([$col, $row], $v);
+                    $sheet->setCellValueByColumnAndRow($col, $row, $v);
                     $col++;
                 }
                 $this->applyDataRowStyle($sheet, $row);
@@ -230,7 +230,7 @@ class NurseryOperationExport
                     ];
                     $col = 1;
                     foreach ($vals as $v) {
-                        $sheet->setCellValue([$col, $row], $v);
+                        $sheet->setCellValueByColumnAndRow($col, $row, $v);
                         $col++;
                     }
                     $this->applyDataRowStyle($sheet, $row);
@@ -263,7 +263,7 @@ class NurseryOperationExport
                     
                     $col = 1;
                     foreach ($vals as $valItem) {
-                        $sheet->setCellValue([$col, $row], $valItem);
+                        $sheet->setCellValueByColumnAndRow($col, $row, $valItem);
                         $col++;
                     }
                     $this->applyDataRowStyle($sheet, $row);
@@ -273,8 +273,8 @@ class NurseryOperationExport
                 $batchEndRow = $row - 1;
                 if ($batchEndRow > $batchStartRow) {
                     for ($c = 6; $c <= 9; $c++) { // Batch columns F to I
-                        $sheet->mergeCells([$c, $batchStartRow, $c, $batchEndRow]);
                         $range = Coordinate::stringFromColumnIndex($c) . $batchStartRow . ':' . Coordinate::stringFromColumnIndex($c) . $batchEndRow;
+                        $sheet->mergeCells($range);
                         $sheet->getStyle($range)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
                         $sheet->getStyle($range)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                         $sheet->getStyle($range)->getAlignment()->setWrapText(true);
@@ -286,8 +286,8 @@ class NurseryOperationExport
             $endRow = $row - 1;
             if ($endRow > $startRow) {
                 for ($c = 1; $c <= 5; $c++) { // Operation columns A to E
-                    $sheet->mergeCells([$c, $startRow, $c, $endRow]);
                     $range = Coordinate::stringFromColumnIndex($c) . $startRow . ':' . Coordinate::stringFromColumnIndex($c) . $endRow;
+                    $sheet->mergeCells($range);
                     $sheet->getStyle($range)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
                     $sheet->getStyle($range)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                     $sheet->getStyle($range)->getAlignment()->setWrapText(true);
