@@ -535,8 +535,6 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                 $isCumulative = ($formData['export_range'] ?? 'single') === 'cumulative';
                 
                 $unnotedRecords = collect();
-                $exporter = null;
-                $filename = 'Report.xlsx';
 
                 if ($this->fullPackageMode) {
                     foreach ($this->fullPackageData as $cat => $sites) {
@@ -547,11 +545,7 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                         }
                     }
                     
-                    if ($unnotedRecords->isEmpty()) {
-                        $exporter = new \App\Exports\FullPackageExport($this->fullPackageData, $formData['year'], $formData['month'], $isCumulative);
-                        $period = $formData['month'] ? \Carbon\Carbon::create($formData['year'], $formData['month'], 1)->format('F_Y') : $formData['year'];
-                        $filename = 'Full_Report_Package_' . $period . '.xlsx';
-                    }
+                    // Exporter instantiation moved to background job
                 } else {
                     // Single category — re-apply filters to validate
                     $activeCat = $this->activeCategory;
@@ -569,31 +563,6 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                     }
 
                     $unnotedRecords = $activeRecords->where('status', '!=', 'noted');
-
-                    if ($unnotedRecords->isEmpty()) {
-                        switch ($activeCat) {
-                            case 'monthly_harvest':
-                                $exporter = new \App\Exports\MonthlyHarvestExport($activeRecords, $formData['year'], $formData['month'], $isCumulative);
-                                $filename = 'Monthly_Harvest.xlsx';
-                                break;
-                            case 'pollen_production':
-                                $exporter = new \App\Exports\PollenProductionExport($activeRecords, $formData['year'], $formData['month'], $isCumulative);
-                                $filename = 'Pollen_Production.xlsx';
-                                break;
-                            case 'hybrid_distribution':
-                                $exporter = new \App\Exports\HybridDistributionExport($activeRecords, $formData['year'], $formData['month'], $isCumulative);
-                                $filename = 'Hybrid_Distribution.xlsx';
-                                break;
-                            case 'nursery_operation':
-                                $exporter = new \App\Exports\NurseryOperationExport($activeRecords, $formData['year'], $formData['month'], $isCumulative);
-                                $filename = 'Nursery_Operation.xlsx';
-                                break;
-                            case 'terminal_report':
-                                $exporter = new \App\Exports\NurseryOperationExport($activeRecords, $formData['year'], $formData['month'], $isCumulative);
-                                $filename = 'Terminal_Report.xlsx';
-                                break;
-                        }
-                    }
                 }
 
                 $unnotedCount = $unnotedRecords->count();
@@ -608,35 +577,26 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                     return;
                 }
 
-                if ($exporter) {
-                    try {
-                        // Generate Excel
-                        $response = $exporter->export();
-                        $excelFile = $response->getFile()->getPathname();
-                        
-                        // Generate PDF
-                        $pdfInfo = $this->generatePdfReport($data['orientation'], $data['paper_size'], $formData);
-                        $pdfFile = $pdfInfo['path'];
-                        $pdfName = $pdfInfo['filename'];
+                try {
+                    dispatch(new \App\Jobs\GenerateAndEmailReportJob(
+                        $formData,
+                        $data['email'],
+                        $data['orientation'],
+                        $data['paper_size'],
+                        $this->selectedCategories,
+                        $this->fullPackageMode,
+                        auth()->id(),
+                        auth()->user()?->field_site_id,
+                        auth()->user()?->role
+                    ));
 
-                        // Attach Both
-                        $filesToAttach = [$excelFile, $pdfFile];
-                        $fileNames = [$filename, $pdfName];
-
-                        \Illuminate\Support\Facades\Mail::to($data['email'])
-                            ->send(new \App\Mail\FieldDataReportMail($filesToAttach, $fileNames));
-
-                        $notification = \Filament\Notifications\Notification::make()
-                            ->success()
-                            ->title('Report Shared via Email')
-                            ->body('The PDF and Excel reports have been successfully emailed to ' . $data['email']);
-
-                        $notification->send();
-                        $notification->sendToDatabase(auth()->user());
-
-                    } catch (\Exception $e) {
-                        \Filament\Notifications\Notification::make()->danger()->title('Error generating export: ' . $e->getMessage())->send();
-                    }
+                    \Filament\Notifications\Notification::make()
+                        ->success()
+                        ->title('Email Queued Successfully')
+                        ->body('The PDF and Excel reports are being generated in the background and will be emailed to ' . $data['email'] . ' shortly.')
+                        ->send();
+                } catch (\Exception $e) {
+                    \Filament\Notifications\Notification::make()->danger()->title('Error queueing email: ' . $e->getMessage())->send();
                 }
             });
     }
