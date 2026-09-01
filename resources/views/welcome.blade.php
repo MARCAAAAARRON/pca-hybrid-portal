@@ -1458,6 +1458,226 @@
                 font-size: 2.5rem
             }
         }
+
+        /* ── SEEDLING DISTRIBUTION ── */
+        .dist-section {
+            background: var(--white);
+            border-top: 3px solid var(--green-600);
+        }
+
+        .dist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .dist-month-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--surface);
+            border: 1.5px solid rgba(10, 46, 18, .1);
+            border-radius: 100px;
+            padding: .5rem 1rem;
+            font-size: .875rem;
+            font-weight: 600;
+            color: var(--green-900);
+            flex-shrink: 0;
+        }
+
+        .dist-month-pill select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: .875rem;
+            font-weight: 700;
+            color: var(--green-900);
+            cursor: pointer;
+            font-family: 'Sora', sans-serif;
+            padding-right: .5rem;
+        }
+
+        .dist-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .dist-stat-card {
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border: 1.5px solid rgba(10, 46, 18, .07);
+            transition: all .3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dist-stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(10, 46, 18, .1);
+        }
+
+        .dist-stat-card.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, .08), rgba(2, 140, 66, .05));
+            border-color: rgba(16, 185, 129, .2);
+        }
+
+        .dist-stat-card.yellow {
+            background: linear-gradient(135deg, rgba(245, 226, 0, .1), rgba(223, 237, 31, .05));
+            border-color: rgba(223, 237, 31, .3);
+        }
+
+        .dist-stat-card.white {
+            background: var(--surface);
+        }
+
+        .dist-stat-icon {
+            font-size: 1.75rem;
+            margin-bottom: .75rem;
+        }
+
+        .dist-stat-num {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--green-900);
+            line-height: 1;
+            margin-bottom: .35rem;
+        }
+
+        .dist-stat-label {
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            line-height: 1.4;
+        }
+
+        .dist-site-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .dist-site-card {
+            background: var(--surface);
+            border: 1.5px solid rgba(10, 46, 18, .08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all .3s;
+        }
+
+        .dist-site-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(10, 46, 18, .08);
+        }
+
+        .dist-site-name {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--green-900);
+            margin-bottom: 1rem;
+        }
+
+        .dist-site-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .dist-site-metric {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .dist-site-metric .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dist-site-metric .dot.green { background: #10b981; }
+        .dist-site-metric .dot.yellow { background: #dfed1f; }
+        .dist-site-metric .dot.blue { background: #60a5fa; }
+
+        .dist-site-metric strong {
+            color: var(--green-900);
+            font-weight: 700;
+        }
+
+        .dist-site-varieties {
+            margin-top: .75rem;
+            padding-top: .75rem;
+            border-top: 1px solid rgba(10, 46, 18, .06);
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+
+        .dist-site-varieties span {
+            font-weight: 600;
+            color: var(--green-800);
+        }
+
+        .dist-cta {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(2, 140, 66, .06), rgba(16, 185, 129, .04));
+            border-radius: 16px;
+            border: 1px solid rgba(2, 140, 66, .1);
+        }
+
+        .dist-cta p {
+            font-size: .95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .dist-cta strong {
+            color: var(--green-900);
+            font-weight: 700;
+        }
+
+        .dist-empty {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .dist-empty .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: .5;
+        }
+
+        @media(max-width:768px) {
+            .dist-stats-row {
+                grid-template-columns: 1fr;
+            }
+            .dist-site-grid {
+                grid-template-columns: 1fr;
+            }
+            .dist-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 
@@ -1480,6 +1700,7 @@
         </div>
 
         <div class="nav-links">
+            <a href="#seedling-distribution">Seedlings</a>
             <a href="#farm-activity">Farm Activity</a>
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
@@ -1493,6 +1714,7 @@
             <span></span><span></span><span></span>
         </button>
         <div class="mobile-menu" id="mobile-menu">
+            <a href="#seedling-distribution">Seedlings</a>
             <a href="#farm-activity">Farm Activity</a>
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
@@ -1578,6 +1800,105 @@
             </div>
         </div>
     </div>
+
+
+    <!-- ═══════════════════════════════════════
+     SEEDLING DISTRIBUTION
+════════════════════════════════════════ -->
+    <section class="dist-section" id="seedling-distribution">
+        <div class="section-inner">
+            <div class="dist-header">
+                <div>
+                    <div class="section-tag reveal">✦ Seedling Distribution</div>
+                    <h2 class="section-title font-bold reveal">Seedlings Available<br>& Distributed</h2>
+                    <p class="section-desc reveal">See how many hybrid seedlings are available at PCA Bohol nurseries and how many were distributed to farmers.</p>
+                </div>
+                <div class="dist-month-pill reveal">
+                    📅
+                    <select onchange="window.location.href='/?year={{ $year }}&dist_month='+this.value+'&dist_year={{ $distYear }}'">
+                        @foreach(['January','February','March','April','May','June','July','August','September','October','November','December'] as $i => $monthName)
+                            <option value="{{ $i + 1 }}" {{ $distMonth == ($i + 1) ? 'selected' : '' }}>{{ $monthName }}</option>
+                        @endforeach
+                    </select>
+                    <select onchange="window.location.href='/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year='+this.value">
+                        @for($y = now()->year; $y >= 2024; $y--)
+                            <option value="{{ $y }}" {{ $distYear == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    ▾
+                </div>
+            </div>
+
+            {{-- Summary Stat Cards --}}
+            <div class="dist-stats-row">
+                <div class="dist-stat-card green reveal">
+                    <div class="dist-stat-icon">🟢</div>
+                    <div class="dist-stat-num">{{ number_format($totalAvailable) }}</div>
+                    <div class="dist-stat-label">Available in Nurseries<br>
+                        @if(!empty($isNurseryCarried))
+                            <span style="font-size:0.68rem;opacity:0.85;">(As of {{ $nurseryTargetMonth->format('F Y') }})</span>
+                        @else
+                            {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
+                        @endif
+                    </div>
+                </div>
+                <div class="dist-stat-card yellow reveal">
+                    <div class="dist-stat-icon">🌱</div>
+                    <div class="dist-stat-num">{{ number_format($totalDistributed) }}</div>
+                    <div class="dist-stat-label">Distributed<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                </div>
+                <div class="dist-stat-card white reveal">
+                    <div class="dist-stat-icon">👨‍🌾</div>
+                    <div class="dist-stat-num">{{ number_format($totalFarmers) }}</div>
+                    <div class="dist-stat-label">Farmers Served<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                </div>
+            </div>
+
+            {{-- Per-Site Breakdown --}}
+            @if($distSiteData->isNotEmpty())
+                <h3 class="reveal" style="font-size:1.1rem;font-weight:700;color:var(--green-900);margin-bottom:1.25rem">Per Field Site</h3>
+                <div class="dist-site-grid">
+                    @foreach($distSiteData as $distSite)
+                        <div class="dist-site-card reveal">
+                            <div class="dist-site-name">📍 {{ $distSite['name'] }}</div>
+                            <div class="dist-site-metrics">
+                                <div class="dist-site-metric">
+                                    <span class="dot green"></span>
+                                    <strong>{{ number_format($distSite['available']) }}</strong> available in nursery
+                                    @if(!empty($isNurseryCarried))
+                                        <small style="opacity:0.8;font-size:0.75rem;margin-left:2px;">(as of {{ $nurseryTargetMonth->format('M Y') }})</small>
+                                    @endif
+                                </div>
+                                <div class="dist-site-metric">
+                                    <span class="dot yellow"></span>
+                                    <strong>{{ number_format($distSite['distributed']) }}</strong> distributed this month
+                                </div>
+                                <div class="dist-site-metric">
+                                    <span class="dot blue"></span>
+                                    <strong>{{ number_format($distSite['farmers']) }}</strong> farmers served
+                                </div>
+                            </div>
+                            @if($distSite['varieties'])
+                                <div class="dist-site-varieties">
+                                    Varieties: <span>{{ $distSite['varieties'] }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="dist-empty reveal">
+                    <div class="icon">🌱</div>
+                    <p>No distribution data available for {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}.</p>
+                </div>
+            @endif
+
+            {{-- CTA Footer --}}
+            <div class="dist-cta reveal">
+                <p>🌴 Interested in receiving hybrid coconut seedlings? Go to the <strong>PCA Bohol Main Office</strong> for further information.</p>
+            </div>
+        </div>
+    </section>
 
 
     <!-- ═══════════════════════════════════════
