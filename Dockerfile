@@ -11,8 +11,10 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     zip \
     unzip \
+    supervisor \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_pgsql pgsql zip intl bcmath exif
+    && docker-php-ext-install gd pdo pdo_pgsql pgsql zip intl bcmath exif \
+    && mkdir -p /var/log/supervisor
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
@@ -45,6 +47,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 # Expose port 80
 EXPOSE 80
+
+# Copy supervisor config
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy the start script and make it executable
 COPY start.sh /usr/local/bin/start.sh

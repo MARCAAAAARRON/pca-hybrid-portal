@@ -11,6 +11,6 @@ php artisan migrate --force
 echo "Publishing Filament assets..."
 php artisan filament:assets
 
-# Start Apache in the foreground
-echo "Starting Apache..."
-apache2-foreground
+# Start Supervisor to run Apache and Laravel Queue Worker concurrently
+echo "Starting Supervisor (Apache + Laravel Queue Worker)..."
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
