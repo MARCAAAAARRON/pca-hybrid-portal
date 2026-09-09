@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html, body { overscroll-behavior-y: none !important; }
         body {
             font-family: 'Sora', sans-serif;
         }

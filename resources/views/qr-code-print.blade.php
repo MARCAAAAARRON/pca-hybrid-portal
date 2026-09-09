@@ -9,6 +9,8 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html, body { overscroll-behavior-y: none !important; }
+
         body {
             font-family: 'Inter', sans-serif;
             background: #f8fafc;

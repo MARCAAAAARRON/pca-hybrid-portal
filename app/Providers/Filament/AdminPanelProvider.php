@@ -81,6 +81,7 @@ class AdminPanelProvider extends PanelProvider
                 function (): string {
                     $html = <<<HTML
 <style>
+    html, body { overscroll-behavior-y: none !important; }
     /* --- Brand Logo Text (prevent wrapping on mobile) --- */
     .pca-logo-text {
         white-space: nowrap;

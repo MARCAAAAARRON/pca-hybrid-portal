@@ -30,7 +30,10 @@
             --white: #ffffff;
             --text: #028c42;
             --text-muted: #4a6650;
+            overscroll-behavior-y: none;
         }
+
+        html, body { overscroll-behavior-y: none !important; }
 
         html {
             scroll-behavior: smooth;
@@ -41,7 +44,8 @@
             font-family: 'Sora', sans-serif;
             background: var(--white);
             color: var(--text);
-            overflow-x: hidden
+            overflow-x: hidden;
+
         }
 
         /* ── NAV ── */
@@ -141,7 +145,7 @@
         /* Mobile hamburger */
         .hamburger {
             background: var(--yellow);
-            border-radius: 6px; 
+            border-radius: 6px;
             display: none;
             flex-direction: column;
             gap: 4px;
@@ -205,7 +209,7 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(135deg, rgba(2, 140, 66, 0.9) 0%, rgba(2, 140, 66, 0.85) 45%, rgba(16, 185, 129, 0.8) 100%),
-                        url('{{ asset("images/coconut_coverpage.jpg") }}');
+                url('{{ asset("images/coconut_coverpage.jpg") }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -761,10 +765,10 @@
             padding: 3rem;
             background: rgba(10, 46, 18, 0.7);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
         }
-        
+
         .about-text-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1263,14 +1267,16 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
-        
+
         .farm-grid::-webkit-scrollbar {
             height: 8px;
         }
+
         .farm-grid::-webkit-scrollbar-track {
             background: rgba(10, 46, 18, .05);
             border-radius: 4px;
         }
+
         .farm-grid::-webkit-scrollbar-thumb {
             background: rgba(10, 46, 18, .2);
             border-radius: 4px;
@@ -1612,9 +1618,17 @@
             flex-shrink: 0;
         }
 
-        .dist-site-metric .dot.green { background: #10b981; }
-        .dist-site-metric .dot.yellow { background: #dfed1f; }
-        .dist-site-metric .dot.blue { background: #60a5fa; }
+        .dist-site-metric .dot.green {
+            background: #10b981;
+        }
+
+        .dist-site-metric .dot.yellow {
+            background: #dfed1f;
+        }
+
+        .dist-site-metric .dot.blue {
+            background: #60a5fa;
+        }
 
         .dist-site-metric strong {
             color: var(--green-900);
@@ -1670,9 +1684,11 @@
             .dist-stats-row {
                 grid-template-columns: 1fr;
             }
+
             .dist-site-grid {
                 grid-template-columns: 1fr;
             }
+
             .dist-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1811,16 +1827,20 @@
                 <div>
                     <div class="section-tag reveal">✦ Seedling Distribution</div>
                     <h2 class="section-title font-bold reveal">Seedlings Available<br>& Distributed</h2>
-                    <p class="section-desc reveal">See how many hybrid seedlings are available at PCA Bohol nurseries and how many were distributed to farmers.</p>
+                    <p class="section-desc reveal">See how many hybrid seedlings are available at PCA Bohol nurseries
+                        and how many were distributed to farmers.</p>
                 </div>
                 <div class="dist-month-pill reveal">
                     📅
-                    <select onchange="window.location.href='/?year={{ $year }}&dist_month='+this.value+'&dist_year={{ $distYear }}'">
-                        @foreach(['January','February','March','April','May','June','July','August','September','October','November','December'] as $i => $monthName)
-                            <option value="{{ $i + 1 }}" {{ $distMonth == ($i + 1) ? 'selected' : '' }}>{{ $monthName }}</option>
+                    <select
+                        onchange="window.location.href='/?year={{ $year }}&dist_month='+this.value+'&dist_year={{ $distYear }}'">
+                        @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $i => $monthName)
+                            <option value="{{ $i + 1 }}" {{ $distMonth == ($i + 1) ? 'selected' : '' }}>{{ $monthName }}
+                            </option>
                         @endforeach
                     </select>
-                    <select onchange="window.location.href='/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year='+this.value">
+                    <select
+                        onchange="window.location.href='/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year='+this.value">
                         @for($y = now()->year; $y >= 2024; $y--)
                             <option value="{{ $y }}" {{ $distYear == $y ? 'selected' : '' }}>{{ $y }}</option>
                         @endfor
@@ -1836,7 +1856,8 @@
                     <div class="dist-stat-num">{{ number_format($totalAvailable) }}</div>
                     <div class="dist-stat-label">Available in Nurseries<br>
                         @if(!empty($isNurseryCarried))
-                            <span style="font-size:0.68rem;opacity:0.85;">(As of {{ $nurseryTargetMonth->format('F Y') }})</span>
+                            <span style="font-size:0.68rem;opacity:0.85;">(As of
+                                {{ $nurseryTargetMonth->format('F Y') }})</span>
                         @else
                             {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
                         @endif
@@ -1845,18 +1866,21 @@
                 <div class="dist-stat-card yellow reveal">
                     <div class="dist-stat-icon">🌱</div>
                     <div class="dist-stat-num">{{ number_format($totalDistributed) }}</div>
-                    <div class="dist-stat-label">Distributed<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                    <div class="dist-stat-label">
+                        Distributed<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
                 </div>
                 <div class="dist-stat-card white reveal">
                     <div class="dist-stat-icon">👨‍🌾</div>
                     <div class="dist-stat-num">{{ number_format($totalFarmers) }}</div>
-                    <div class="dist-stat-label">Farmers Served<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                    <div class="dist-stat-label">Farmers
+                        Served<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
                 </div>
             </div>
 
             {{-- Per-Site Breakdown --}}
             @if($distSiteData->isNotEmpty())
-                <h3 class="reveal" style="font-size:1.1rem;font-weight:700;color:var(--green-900);margin-bottom:1.25rem">Per Field Site</h3>
+                <h3 class="reveal" style="font-size:1.1rem;font-weight:700;color:var(--green-900);margin-bottom:1.25rem">Per
+                    Field Site</h3>
                 <div class="dist-site-grid">
                     @foreach($distSiteData as $distSite)
                         <div class="dist-site-card reveal">
@@ -1866,7 +1890,8 @@
                                     <span class="dot green"></span>
                                     <strong>{{ number_format($distSite['available']) }}</strong> available in nursery
                                     @if(!empty($isNurseryCarried))
-                                        <small style="opacity:0.8;font-size:0.75rem;margin-left:2px;">(as of {{ $nurseryTargetMonth->format('M Y') }})</small>
+                                        <small style="opacity:0.8;font-size:0.75rem;margin-left:2px;">(as of
+                                            {{ $nurseryTargetMonth->format('M Y') }})</small>
                                     @endif
                                 </div>
                                 <div class="dist-site-metric">
@@ -1889,13 +1914,16 @@
             @else
                 <div class="dist-empty reveal">
                     <div class="icon">🌱</div>
-                    <p>No distribution data available for {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}.</p>
+                    <p>No distribution data available for
+                        {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}.
+                    </p>
                 </div>
             @endif
 
             {{-- CTA Footer --}}
             <div class="dist-cta reveal">
-                <p>🌴 Interested in receiving hybrid coconut seedlings? Go to the <strong>PCA Bohol Main Office</strong> for further information.</p>
+                <p>🌴 Interested in receiving hybrid coconut seedlings? Go to the <strong>PCA Bohol Main Office</strong>
+                    for further information.</p>
             </div>
         </div>
     </section>
@@ -1939,14 +1967,14 @@
                         @endphp
                         <div class="farm-stats-row">
                             @if(!$isSubSupervisor)
-                            <div class="farm-stat-item">
-                                <div class="num">{{ $site['harvests'] }}</div>
-                                <div class="label">Harvest Reports</div>
-                            </div>
-                            <div class="farm-stat-item">
-                                <div class="num">{{ $site['pollen'] }}</div>
-                                <div class="label">Pollen Records</div>
-                            </div>
+                                <div class="farm-stat-item">
+                                    <div class="num">{{ $site['harvests'] }}</div>
+                                    <div class="label">Harvest Reports</div>
+                                </div>
+                                <div class="farm-stat-item">
+                                    <div class="num">{{ $site['pollen'] }}</div>
+                                    <div class="label">Pollen Records</div>
+                                </div>
                             @endif
                             <div class="farm-stat-item">
                                 <div class="num">{{ $site['nursery'] }}</div>
@@ -1959,7 +1987,7 @@
                         </div>
                         <div class="farm-card-footer">
                             @if(!$isSubSupervisor)
-                            <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
+                                <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
                             @endif
                             <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
                         </div>
@@ -2097,8 +2125,10 @@
         <div class="section-inner">
             <div class="about-grid">
                 <div class="about-header reveal">
-                    <div class="section-tag" style="margin: 0 auto 1rem auto; width: max-content;">✦ About the Program</div>
-                    <h2 class="section-title font-bold text-center">Securing the future<br>of Bohol's coconut industry</h2>
+                    <div class="section-tag" style="margin: 0 auto 1rem auto; width: max-content;">✦ About the Program
+                    </div>
+                    <h2 class="section-title font-bold text-center">Securing the future<br>of Bohol's coconut industry
+                    </h2>
                 </div>
 
                 <div class="about-visual reveal">
@@ -2116,14 +2146,19 @@
                         <div class="reveal" style="text-align: center;">
                             <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">VISION</h4>
                             <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                                A modernized authority empowering coconut farmers and other stakeholders through sustainable, resilient, and inclusive development programs towards a globally competitive coconut and other palm oil industries by 2030.
+                                A modernized authority empowering coconut farmers and other stakeholders through
+                                sustainable, resilient, and inclusive development programs towards a globally
+                                competitive coconut and other palm oil industries by 2030.
                             </p>
                         </div>
-                        
+
                         <div class="reveal" style="text-align: center;">
                             <h4 style="color:var(--green-900); font-weight:700; margin-bottom:0.5rem;">MISSION</h4>
                             <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem">
-                                To develop and implement sustainable programs utilizing relevant and appropriate technologies and policies that foster growth, modernization and inclusivity across the entire coconut and other palm oil value chains with utmost degree of excellence and professionalism.
+                                To develop and implement sustainable programs utilizing relevant and appropriate
+                                technologies and policies that foster growth, modernization and inclusivity across the
+                                entire coconut and other palm oil value chains with utmost degree of excellence and
+                                professionalism.
                             </p>
                         </div>
 
@@ -2135,16 +2170,28 @@
                         </div>
                     </div>
 
-                    <div class="reveal" style="margin-top: 2.5rem; background: var(--surface); border: 1.5px solid rgba(10, 46, 18, .08); padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center;">
-                        <h4 style="color:var(--green-900); font-weight:700; margin-bottom:1rem; text-align: center; font-size: 1.25rem;">QUALITY POLICY STATEMENT</h4>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
-                            The Philippine Coconut Authority is committed to becoming a globally recognized leader championing a thriving, market-driven coconut and other palm oil industry. We achieve this by delivering exceptional programs and services with unwavering transparency and accountability.
+                    <div class="reveal"
+                        style="margin-top: 2.5rem; background: var(--surface); border: 1.5px solid rgba(10, 46, 18, .08); padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center;">
+                        <h4
+                            style="color:var(--green-900); font-weight:700; margin-bottom:1rem; text-align: center; font-size: 1.25rem;">
+                            QUALITY POLICY STATEMENT</h4>
+                        <p
+                            style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
+                            The Philippine Coconut Authority is committed to becoming a globally recognized leader
+                            championing a thriving, market-driven coconut and other palm oil industry. We achieve this
+                            by delivering exceptional programs and services with unwavering transparency and
+                            accountability.
                         </p>
-                        <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
-                            We are dedicated to upholding the highest standards of professionalism, integrity, transparency, excellence and compliance with all relevant regulations and laws. Our unwavering commitment to continuous improvement drives us to constantly enhance our research, extension, and administrative operations.
+                        <p
+                            style="color:var(--text-muted);line-height:1.75;font-size:.95rem;margin-bottom:1rem; text-align: center;">
+                            We are dedicated to upholding the highest standards of professionalism, integrity,
+                            transparency, excellence and compliance with all relevant regulations and laws. Our
+                            unwavering commitment to continuous improvement drives us to constantly enhance our
+                            research, extension, and administrative operations.
                         </p>
                         <p style="color:var(--text-muted);line-height:1.75;font-size:.95rem; text-align: center;">
-                            Ultimately, these efforts ensure the sustainable development and growth of all stakeholders and communities within the coconut industry.
+                            Ultimately, these efforts ensure the sustainable development and growth of all stakeholders
+                            and communities within the coconut industry.
                         </p>
                     </div>
 

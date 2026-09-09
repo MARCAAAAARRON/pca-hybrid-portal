@@ -6,6 +6,7 @@
     <title>Terms of Service - PCA Bohol</title>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html, body { overscroll-behavior-y: none !important; }
         body { font-family: 'Sora', sans-serif; background: #f0fdf4; color: #028c42; line-height: 1.6; margin: 0; padding: 0; }
         .container { max-width: 800px; margin: 4rem auto; background: #ffffff; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         h1 { color: #0b9e4f; margin-bottom: 2rem; }
