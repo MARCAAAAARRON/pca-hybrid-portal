@@ -1219,7 +1219,7 @@
 
         /* ── FARM ACTIVITY ── */
         .farm-activity {
-            background: var(--white);
+            background: var(--surface);
         }
 
         .farm-activity-header {
@@ -1468,7 +1468,6 @@
         /* ── SEEDLING DISTRIBUTION ── */
         .dist-section {
             background: var(--white);
-            border-top: 3px solid var(--green-600);
         }
 
         .dist-header {
@@ -1716,8 +1715,8 @@
         </div>
 
         <div class="nav-links">
-            <a href="#seedling-distribution">Seedlings</a>
             <a href="#farm-activity">Farm Activity</a>
+            <a href="#seedling-distribution">Seedlings</a>
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
             <a href="#about">About</a>
@@ -1730,8 +1729,8 @@
             <span></span><span></span><span></span>
         </button>
         <div class="mobile-menu" id="mobile-menu">
-            <a href="#seedling-distribution">Seedlings</a>
             <a href="#farm-activity">Farm Activity</a>
+            <a href="#seedling-distribution">Seedlings</a>
             <a href="#features">Features</a>
             <a href="#how-it-works">How It Works</a>
             <a href="#about">About</a>
@@ -1816,6 +1815,75 @@
             </div>
         </div>
     </div>
+
+
+    <!-- ═══════════════════════════════════════
+     FARM ACTIVITY
+════════════════════════════════════════ -->
+    <section class="farm-activity" id="farm-activity">
+        <div class="section-inner">
+            <div class="farm-activity-header">
+                <div>
+                    <div class="section-tag reveal">✦ Live Program Data</div>
+                    <h2 class="section-title font-bold reveal">Farm Activity<br>per Field Site</h2>
+                    <p class="section-desc reveal">Real-time operational data from all PCA Bohol hybridization field
+                        sites — open for public transparency.</p>
+                </div>
+                <div class="year-select-pill reveal">
+                    📅
+                    <select onchange="window.location.href='/?year='+this.value">
+                        @for($y = now()->year; $y >= 2024; $y--)
+                            <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    ▾
+                </div>
+            </div>
+
+            <div class="farm-grid">
+                @foreach($sites as $site)
+                    <div class="farm-card reveal">
+                        <div class="farm-card-header">
+                            <div class="farm-card-icon">🌴</div>
+                            <div>
+                                <h3>{{ $site['name'] }}</h3>
+                                <span>{{ $year }} Data</span>
+                            </div>
+                        </div>
+                        @php
+                            $isSubSupervisor = auth()->check() && auth()->user()?->isSubSupervisor();
+                        @endphp
+                        <div class="farm-stats-row">
+                            @if(!$isSubSupervisor)
+                                <div class="farm-stat-item">
+                                    <div class="num">{{ $site['harvests'] }}</div>
+                                    <div class="label">Harvest Reports</div>
+                                </div>
+                                <div class="farm-stat-item">
+                                    <div class="num">{{ $site['pollen'] }}</div>
+                                    <div class="label">Pollen Records</div>
+                                </div>
+                            @endif
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['nursery'] }}</div>
+                                <div class="label">Nursery Ops</div>
+                            </div>
+                            <div class="farm-stat-item">
+                                <div class="num">{{ $site['distribution'] }}</div>
+                                <div class="label">Distributions</div>
+                            </div>
+                        </div>
+                        <div class="farm-card-footer">
+                            @if(!$isSubSupervisor)
+                                <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
+                            @endif
+                            <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
 
     <!-- ═══════════════════════════════════════
@@ -1924,75 +1992,6 @@
             <div class="dist-cta reveal">
                 <p>🌴 Interested in receiving hybrid coconut seedlings? Go to the <strong>PCA Bohol Main Office</strong>
                     for further information.</p>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ═══════════════════════════════════════
-     FARM ACTIVITY
-════════════════════════════════════════ -->
-    <section class="farm-activity" id="farm-activity">
-        <div class="section-inner">
-            <div class="farm-activity-header">
-                <div>
-                    <div class="section-tag reveal">✦ Live Program Data</div>
-                    <h2 class="section-title font-bold reveal">Farm Activity<br>per Field Site</h2>
-                    <p class="section-desc reveal">Real-time operational data from all PCA Bohol hybridization field
-                        sites — open for public transparency.</p>
-                </div>
-                <div class="year-select-pill reveal">
-                    📅
-                    <select onchange="window.location.href='/?year='+this.value">
-                        @for($y = now()->year; $y >= 2024; $y--)
-                            <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
-                        @endfor
-                    </select>
-                    ▾
-                </div>
-            </div>
-
-            <div class="farm-grid">
-                @foreach($sites as $site)
-                    <div class="farm-card reveal">
-                        <div class="farm-card-header">
-                            <div class="farm-card-icon">🌴</div>
-                            <div>
-                                <h3>{{ $site['name'] }}</h3>
-                                <span>{{ $year }} Data</span>
-                            </div>
-                        </div>
-                        @php
-                            $isSubSupervisor = auth()->check() && auth()->user()?->isSubSupervisor();
-                        @endphp
-                        <div class="farm-stats-row">
-                            @if(!$isSubSupervisor)
-                                <div class="farm-stat-item">
-                                    <div class="num">{{ $site['harvests'] }}</div>
-                                    <div class="label">Harvest Reports</div>
-                                </div>
-                                <div class="farm-stat-item">
-                                    <div class="num">{{ $site['pollen'] }}</div>
-                                    <div class="label">Pollen Records</div>
-                                </div>
-                            @endif
-                            <div class="farm-stat-item">
-                                <div class="num">{{ $site['nursery'] }}</div>
-                                <div class="label">Nursery Ops</div>
-                            </div>
-                            <div class="farm-stat-item">
-                                <div class="num">{{ $site['distribution'] }}</div>
-                                <div class="label">Distributions</div>
-                            </div>
-                        </div>
-                        <div class="farm-card-footer">
-                            @if(!$isSubSupervisor)
-                                <div class="farm-seednut-badge">🥥 {{ number_format($site['seednuts']) }} seednuts</div>
-                            @endif
-                            <div class="farm-seedling-text">🌱 {{ number_format($site['seedlings']) }} seedlings</div>
-                        </div>
-                    </div>
-                @endforeach
             </div>
         </div>
     </section>

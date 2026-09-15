@@ -30,3 +30,6 @@ CHANGELOG_*.md
 *.pdf
 _pdf_*.txt
 generate_pdf.py
+
+.rune/
+.runeignore
