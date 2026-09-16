@@ -69,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
                     <span class="pca-logo-text">PCA Hybridization Portal</span>
                 </div>
             '))
+            ->favicon(asset('images/PCA_Logo.png'))
             ->colors([
                 'primary' => Color::hex('#0b9e4f'), // PCA Green
                 'warning' => Color::hex('#dfed1f'), // PCA Yellow

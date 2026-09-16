@@ -39,7 +39,7 @@ class NurseryOperationPolicy
      */
     public function update(User $user, NurseryOperation $nurseryOperation): bool
     {
-        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+        if (in_array($user->role, ['manager', 'admin'])) {
             return true;
         }
         

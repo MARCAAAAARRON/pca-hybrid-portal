@@ -417,4 +417,28 @@ class TerminalResource extends Resource implements HasShieldPermissions
             'edit' => Pages\EditTerminalReport::route('/{record}/edit'),
         ];
     }
+
+    public static function canCreate(): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canCreate();
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canEdit($record);
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canDelete($record);
+    }
 }

@@ -39,7 +39,7 @@ class MonthlyHarvestPolicy
      */
     public function update(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
-        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+        if (in_array($user->role, ['manager', 'admin'])) {
             return true;
         }
         

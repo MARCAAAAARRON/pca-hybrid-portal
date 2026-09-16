@@ -39,7 +39,7 @@ class PollenProductionPolicy
      */
     public function update(User $user, PollenProduction $pollenProduction): bool
     {
-        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+        if (in_array($user->role, ['manager', 'admin'])) {
             return true;
         }
         

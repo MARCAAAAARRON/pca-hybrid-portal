@@ -39,7 +39,7 @@ class HybridDistributionPolicy
      */
     public function update(User $user, HybridDistribution $hybridDistribution): bool
     {
-        if (in_array($user->role, ['manager', 'admin', 'superadmin'])) {
+        if (in_array($user->role, ['manager', 'admin'])) {
             return true;
         }
         

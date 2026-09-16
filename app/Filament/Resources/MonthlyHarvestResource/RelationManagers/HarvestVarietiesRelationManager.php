@@ -70,4 +70,28 @@ class HarvestVarietiesRelationManager extends RelationManager
                 ]),
             ]);
     }
+
+    protected function canCreate(): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canCreate();
+    }
+
+    protected function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canEdit($record);
+    }
+
+    protected function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canDelete($record);
+    }
 }
