@@ -33,7 +33,10 @@
             overscroll-behavior-y: none;
         }
 
-        html, body { overscroll-behavior-y: none !important; }
+        html,
+        body {
+            overscroll-behavior-y: none !important;
+        }
 
         html {
             scroll-behavior: smooth;
@@ -1920,7 +1923,7 @@
             {{-- Summary Stat Cards --}}
             <div class="dist-stats-row">
                 <div class="dist-stat-card green reveal">
-                    <div class="dist-stat-icon">🟢</div>
+                    <!-- <div class="dist-stat-icon">🟢</div> -->
                     <div class="dist-stat-num">{{ number_format($totalAvailable) }}</div>
                     <div class="dist-stat-label">Available in Nurseries<br>
                         @if(!empty($isNurseryCarried))
@@ -1932,13 +1935,13 @@
                     </div>
                 </div>
                 <div class="dist-stat-card yellow reveal">
-                    <div class="dist-stat-icon">🌱</div>
+                    <!-- <div class="dist-stat-icon">🌱</div> -->
                     <div class="dist-stat-num">{{ number_format($totalDistributed) }}</div>
                     <div class="dist-stat-label">
                         Distributed<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
                 </div>
                 <div class="dist-stat-card white reveal">
-                    <div class="dist-stat-icon">👨‍🌾</div>
+                    <!-- <div class="dist-stat-icon">👨‍🌾</div> -->
                     <div class="dist-stat-num">{{ number_format($totalFarmers) }}</div>
                     <div class="dist-stat-label">Farmers
                         Served<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
@@ -1981,7 +1984,7 @@
                 </div>
             @else
                 <div class="dist-empty reveal">
-                    <div class="icon">🌱</div>
+                    <!-- <div class="icon">🌱</div> -->
                     <p>No distribution data available for
                         {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}.
                     </p>
@@ -2193,14 +2196,6 @@
                             and communities within the coconut industry.
                         </p>
                     </div>
-
-                    <div class="about-tags reveal" style="margin-top: 3rem; justify-content: center;">
-                        <span class="tag">🥥 Dwarf Variety</span>
-                        <span class="tag">🌴 Tall Variety</span>
-                        <span class="tag">🔬 Makapuno Hybrid</span>
-                        <span class="tag">📋 LGU Certified</span>
-                        <span class="tag">🇵🇭 DA–Philippines</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -2354,12 +2349,10 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div class="footer-logo-row">
-                        <div class="nav-logo-circle"
-                            style="background:rgba(255,255,255,.08);color:var(--yellow);font-size:.6rem">PCA<br>DA</div>
-                        <!-- Real logos:
-          <img src="{{ asset('images/PCA_Logo.png') }}" alt="PCA" style="height:36px;background:#fff;border-radius:50%;padding:3px">
-          <img src="{{ asset('images/DA_Logo.png') }}" alt="DA" style="height:36px;background:#fff;border-radius:50%;padding:3px">
-          -->
+                        <img src="{{ asset('images/PCA_Logo.png') }}" alt="PCA"
+                            style="height:36px;background:#fff;border-radius:50%;padding:3px">
+                        <img src="{{ asset('images/DA_logo.png') }}" alt="DA"
+                            style="height:36px;background:#fff;border-radius:50%;padding:3px">
                         <span style="color:var(--white);font-weight:700;font-size:.95rem">Philippine Coconut Authority –
                             Bohol</span>
                     </div>
