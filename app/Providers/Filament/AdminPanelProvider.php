@@ -61,7 +61,6 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('portal')
             ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(\App\Filament\Pages\Auth\CustomLogin::class))
-            ->when($this->settings->registration_enabled ?? false, fn($panel) => $panel->registration())
             ->when($this->settings->password_reset_enabled ?? true, fn($panel) => $panel->passwordReset())
             ->brandLogo(fn() => new \Illuminate\Support\HtmlString('
                 <div class="flex items-center gap-2">
@@ -110,7 +109,7 @@ class AdminPanelProvider extends PanelProvider
         content: "";
         position: fixed;
         inset: 0;
-        background-image: url("/images/coconut_farm.png");
+        background-image: url("/images/coconut_farm.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center bottom;
@@ -412,11 +411,11 @@ HTML;
             ->sidebarCollapsibleOnDesktop(true)
             ->renderHook(
                 \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'header-weather-widget\')')
+                fn(): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'header-weather-widget\')')
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'global-year-filter\')')
+                fn(): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'global-year-filter\')')
             )
             ->authMiddleware([
                 Authenticate::class,
