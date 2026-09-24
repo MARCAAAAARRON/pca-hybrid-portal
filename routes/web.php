@@ -28,78 +28,223 @@ Route::get('/', function () {
     // ── Seedling Distribution Section ──────────────────────────────
     $distMonth = (int) request('dist_month', now()->month);
     $distYear  = (int) request('dist_year', now()->year);
+    $distMode  = request('dist_mode', 'monthly'); // 'monthly' or 'cumulative'
+    $isCumulative = $distMode === 'cumulative';
 
     $allSites = FieldSite::all();
-
-    // 1. Available stock: if selected month has nursery records, use it; otherwise carry forward from latest recorded nursery month
     $selectedDate = sprintf('%04d-%02d-01', $distYear, $distMonth);
+    $selectedDateEnd = \Carbon\Carbon::create($distYear, $distMonth, 1)->endOfMonth()->format('Y-m-d');
 
-    $latestMonthRecorded = \App\Models\NurseryOperation::withoutGlobalScopes()
-        ->where('report_month', '<=', $selectedDate)
-        ->whereHas('batches.varieties', fn($q) => $q->where('ready_to_plant', '>', 0))
-        ->orderBy('report_month', 'desc')
-        ->value('report_month');
+    if ($isCumulative) {
+        // ── CUMULATIVE MODE ──────────────────────────────────────
+        $isNurseryCarried = false;
+        $nurseryTargetMonth = \Carbon\Carbon::create($distYear, $distMonth, 1);
 
-    $nurseryTargetMonth = $latestMonthRecorded ? \Carbon\Carbon::parse($latestMonthRecorded) : \Carbon\Carbon::create($distYear, $distMonth, 1);
-    $isNurseryCarried = $latestMonthRecorded && ($nurseryTargetMonth->month != $distMonth || $nurseryTargetMonth->year != $distYear);
+        // Available: all nursery stock up to selected month
+        $availableBySite = $allSites->mapWithKeys(function ($site) use ($selectedDate) {
+            $readyToPlant = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->where('report_month', '<=', $selectedDate)
+            )->sum('ready_to_plant');
 
-    $availableBySite = $allSites->mapWithKeys(function ($site) use ($nurseryTargetMonth) {
-        $readyToPlant = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+            $dispatched = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->where('report_month', '<=', $selectedDate)
+            )->sum('seedlings_dispatched');
+
+            $varieties = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->where('report_month', '<=', $selectedDate)
+            )->pluck('variety')->unique()->filter()->implode(', ');
+
+            return [$site->id => [
+                'available' => max(0, (int) $readyToPlant - (int) $dispatched),
+                'varieties' => $varieties,
+            ]];
+        });
+
+        $totalAvailable = $availableBySite->sum('available');
+
+        // Distributed: all distribution records up to selected month
+        $distThisMonth = $allSites->mapWithKeys(function ($site) use ($selectedDate) {
+            $records = \App\Models\HybridDistribution::where('field_site_id', $site->id)
+                ->where('report_month', '<=', $selectedDate)
+                ->get();
+            return [$site->id => [
+                'distributed' => (int) $records->sum('seedlings_planted'),
+                'farmers'     => $records->count(),
+                'varieties'   => $records->pluck('variety')->filter()->unique()->implode(', '),
+            ]];
+        });
+
+        $totalDistributed = $distThisMonth->sum('distributed');
+        $totalFarmers     = $distThisMonth->sum('farmers');
+        $totalRemaining   = max(0, $totalAvailable - $totalDistributed);
+
+        // Variety breakdown: cumulative
+        $varietyBreakdown = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+            $q->withoutGlobalScopes()->where('report_month', '<=', $selectedDate)
+        )->get()
+        ->groupBy('variety')
+        ->map(function ($rows, $variety) use ($selectedDate) {
+            $sown       = (int) $rows->sum('seednuts_sown');
+            $ready      = (int) $rows->sum('ready_to_plant');
+            $dispatched = (int) $rows->sum('seedlings_dispatched');
+            $available  = max(0, $ready - $dispatched);
+
+            // Match distribution records - variety names may differ
+            // Nursery: 'Catigan Green Dwarf × TALL', Distribution: 'Catigan Green Dwarf'
+            $baseVariety = trim(preg_replace('/\s*[×x]\s*.*/i', '', $variety));
+            $distributed = (int) \App\Models\HybridDistribution::withoutGlobalScopes()
+                ->where('report_month', '<=', $selectedDate)
+                ->where(function ($q) use ($variety, $baseVariety) {
+                    $q->where('variety', $variety)
+                      ->orWhere('variety', $baseVariety)
+                      ->orWhere('variety', 'LIKE', $baseVariety . '%');
+                })
+                ->sum('seedlings_planted');
+
+            $remaining = max(0, $available - $distributed);
+
+            return [
+                'variety'     => $variety ?: 'Unknown',
+                'sown'        => $sown,
+                'available'   => $available,
+                'distributed' => $distributed,
+                'remaining'   => $remaining,
+            ];
+        })->filter(fn($v) => $v['sown'] > 0 || $v['available'] > 0 || $v['distributed'] > 0)
+        ->values();
+
+        // Cumulative card value equals totalAvailable in this mode
+        $cumulativeAvailable = $totalAvailable;
+
+    } else {
+        // ── MONTHLY MODE (default) ───────────────────────────────
+
+        // 1. Available stock: carry forward from latest recorded nursery month
+        $latestMonthRecorded = \App\Models\NurseryOperation::withoutGlobalScopes()
+            ->where('report_month', '<=', $selectedDate)
+            ->whereHas('batches.varieties', fn($q) => $q->where('ready_to_plant', '>', 0))
+            ->orderBy('report_month', 'desc')
+            ->value('report_month');
+
+        $nurseryTargetMonth = $latestMonthRecorded ? \Carbon\Carbon::parse($latestMonthRecorded) : \Carbon\Carbon::create($distYear, $distMonth, 1);
+        $isNurseryCarried = $latestMonthRecorded && ($nurseryTargetMonth->month != $distMonth || $nurseryTargetMonth->year != $distYear);
+
+        $availableBySite = $allSites->mapWithKeys(function ($site) use ($nurseryTargetMonth) {
+            $readyToPlant = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->whereYear('report_month', $nurseryTargetMonth->year)
+                    ->whereMonth('report_month', $nurseryTargetMonth->month)
+            )->sum('ready_to_plant');
+
+            $dispatched = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->whereYear('report_month', $nurseryTargetMonth->year)
+                    ->whereMonth('report_month', $nurseryTargetMonth->month)
+            )->sum('seedlings_dispatched');
+
+            $varieties = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+                $q->withoutGlobalScopes()
+                    ->where('field_site_id', $site->id)
+                    ->whereYear('report_month', $nurseryTargetMonth->year)
+                    ->whereMonth('report_month', $nurseryTargetMonth->month)
+            )->pluck('variety')->unique()->filter()->implode(', ');
+
+            return [$site->id => [
+                'available' => max(0, (int) $readyToPlant - (int) $dispatched),
+                'varieties' => $varieties,
+            ]];
+        });
+
+        $totalAvailable = $availableBySite->sum('available');
+
+        // 2. Distributed this month
+        $distThisMonth = $allSites->mapWithKeys(function ($site) use ($distYear, $distMonth) {
+            $records = \App\Models\HybridDistribution::where('field_site_id', $site->id)
+                ->whereYear('report_month', $distYear)
+                ->whereMonth('report_month', $distMonth)
+                ->get();
+            return [$site->id => [
+                'distributed' => (int) $records->sum('seedlings_planted'),
+                'farmers'     => $records->count(),
+                'varieties'   => $records->pluck('variety')->filter()->unique()->implode(', '),
+            ]];
+        });
+
+        $totalDistributed = $distThisMonth->sum('distributed');
+        $totalFarmers     = $distThisMonth->sum('farmers');
+        $totalRemaining   = max(0, $totalAvailable - $totalDistributed);
+
+        // 4. Variety breakdown for the selected month
+        $varietyBreakdown = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
             $q->withoutGlobalScopes()
-                ->where('field_site_id', $site->id)
                 ->whereYear('report_month', $nurseryTargetMonth->year)
                 ->whereMonth('report_month', $nurseryTargetMonth->month)
+        )->get()
+        ->groupBy('variety')
+        ->map(function ($rows, $variety) use ($distYear, $distMonth) {
+            $sown       = (int) $rows->sum('seednuts_sown');
+            $ready      = (int) $rows->sum('ready_to_plant');
+            $dispatched = (int) $rows->sum('seedlings_dispatched');
+            $available  = max(0, $ready - $dispatched);
+
+            // Match distribution records - variety names may differ
+            // Nursery: 'Catigan Green Dwarf × TALL', Distribution: 'Catigan Green Dwarf'
+            $baseVariety = trim(preg_replace('/\s*[×x]\s*.*/i', '', $variety));
+            $distributed = (int) \App\Models\HybridDistribution::withoutGlobalScopes()
+                ->whereYear('report_month', $distYear)
+                ->whereMonth('report_month', $distMonth)
+                ->where(function ($q) use ($variety, $baseVariety) {
+                    $q->where('variety', $variety)
+                      ->orWhere('variety', $baseVariety)
+                      ->orWhere('variety', 'LIKE', $baseVariety . '%');
+                })
+                ->sum('seedlings_planted');
+
+            $remaining = max(0, $available - $distributed);
+
+            return [
+                'variety'     => $variety ?: 'Unknown',
+                'sown'        => $sown,
+                'available'   => $available,
+                'distributed' => $distributed,
+                'remaining'   => $remaining,
+            ];
+        })->filter(fn($v) => $v['sown'] > 0 || $v['available'] > 0 || $v['distributed'] > 0)
+        ->values();
+
+        // 5. Cumulative nursery availability (all months up to selected)
+        $cumulativeReady = (int) \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+            $q->withoutGlobalScopes()->where('report_month', '<=', $selectedDate)
         )->sum('ready_to_plant');
 
-        $dispatched = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
-            $q->withoutGlobalScopes()
-                ->where('field_site_id', $site->id)
-                ->whereYear('report_month', $nurseryTargetMonth->year)
-                ->whereMonth('report_month', $nurseryTargetMonth->month)
+        $cumulativeDispatched = (int) \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
+            $q->withoutGlobalScopes()->where('report_month', '<=', $selectedDate)
         )->sum('seedlings_dispatched');
 
-        $varieties = \App\Models\NurseryBatchVariety::whereHas('batch.nurseryOperation', fn($q) =>
-            $q->withoutGlobalScopes()
-                ->where('field_site_id', $site->id)
-                ->whereYear('report_month', $nurseryTargetMonth->year)
-                ->whereMonth('report_month', $nurseryTargetMonth->month)
-        )->pluck('variety')->unique()->filter()->implode(', ');
+        $cumulativeAvailable = max(0, $cumulativeReady - $cumulativeDispatched);
+    }
 
-        return [$site->id => [
-            'available' => max(0, (int) $readyToPlant - (int) $dispatched),
-            'varieties' => $varieties,
-        ]];
-    });
-
-    $totalAvailable = $availableBySite->sum('available');
-
-    // 2. Distributed this month (from HybridDistribution)
-    $distThisMonth = $allSites->mapWithKeys(function ($site) use ($distYear, $distMonth) {
-        $records = \App\Models\HybridDistribution::where('field_site_id', $site->id)
-            ->whereYear('report_month', $distYear)
-            ->whereMonth('report_month', $distMonth)
-            ->get();
-        return [$site->id => [
-            'distributed' => (int) $records->sum('seedlings_planted'),
-            'farmers'     => $records->count(),
-            'varieties'   => $records->pluck('variety')->filter()->unique()->implode(', '),
-        ]];
-    });
-
-    $totalDistributed = $distThisMonth->sum('distributed');
-    $totalFarmers     = $distThisMonth->sum('farmers');
-
-    // 3. Merge per-site data for display
+    // 6. Merge per-site data for display
     $distSiteData = $allSites->map(function ($site) use ($availableBySite, $distThisMonth) {
         $avail = $availableBySite[$site->id] ?? ['available' => 0, 'varieties' => ''];
         $dist = $distThisMonth[$site->id] ?? ['distributed' => 0, 'farmers' => 0, 'varieties' => ''];
         
         $varieties = $dist['varieties'] ?: $avail['varieties'];
+        $remaining = max(0, $avail['available'] - $dist['distributed']);
 
         return [
             'name'        => $site->name,
             'available'   => $avail['available'],
             'distributed' => $dist['distributed'],
+            'remaining'   => $remaining,
             'farmers'     => $dist['farmers'],
             'varieties'   => $varieties,
         ];
@@ -109,8 +254,9 @@ Route::get('/', function () {
         'sites', 'year', 'siteCount',
         'totalHarvests', 'totalPollen', 'totalDistribution',
         'totalSeednuts', 'totalSeedlings',
-        'distMonth', 'distYear',
+        'distMonth', 'distYear', 'distMode', 'isCumulative',
         'totalAvailable', 'totalDistributed', 'totalFarmers',
+        'totalRemaining', 'varietyBreakdown', 'cumulativeAvailable',
         'distSiteData',
         'nurseryTargetMonth', 'isNurseryCarried'
     ));

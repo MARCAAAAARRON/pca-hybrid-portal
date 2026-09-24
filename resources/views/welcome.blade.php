@@ -1510,9 +1510,51 @@
             padding-right: .5rem;
         }
 
+        /* ── View Mode Toggle ── */
+        .dist-controls {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            flex-wrap: wrap;
+        }
+
+        .dist-mode-toggle {
+            display: inline-flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1.5px solid rgba(10, 46, 18, .1);
+            border-radius: 100px;
+            padding: 3px;
+            flex-shrink: 0;
+        }
+
+        .dist-mode-toggle a {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: .45rem 1rem;
+            border-radius: 100px;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all .25s;
+            white-space: nowrap;
+        }
+
+        .dist-mode-toggle a:hover {
+            color: var(--green-900);
+        }
+
+        .dist-mode-toggle a.active {
+            background: var(--green-900);
+            color: var(--white);
+            box-shadow: 0 2px 8px rgba(2, 140, 66, .25);
+        }
+
         .dist-stats-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
             margin-bottom: 2.5rem;
         }
@@ -1544,6 +1586,11 @@
 
         .dist-stat-card.white {
             background: var(--surface);
+        }
+
+        .dist-stat-card.orange {
+            background: linear-gradient(135deg, rgba(251, 146, 60, .1), rgba(234, 88, 12, .06));
+            border-color: rgba(251, 146, 60, .25);
         }
 
         .dist-stat-icon {
@@ -1632,6 +1679,10 @@
             background: #60a5fa;
         }
 
+        .dist-site-metric .dot.orange {
+            background: #fb923c;
+        }
+
         .dist-site-metric strong {
             color: var(--green-900);
             font-weight: 700;
@@ -1682,6 +1733,166 @@
             opacity: .5;
         }
 
+        /* ── Variety Breakdown Table ── */
+        .dist-variety-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .dist-variety-section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--green-900);
+            margin-bottom: 1.25rem;
+        }
+
+        .dist-variety-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1.5px solid rgba(10, 46, 18, .08);
+            background: var(--white);
+        }
+
+        .dist-variety-table thead {
+            background: linear-gradient(135deg, rgba(2, 140, 66, .08), rgba(16, 185, 129, .04));
+        }
+
+        .dist-variety-table th {
+            padding: .85rem 1.25rem;
+            text-align: left;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--green-900);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            border-bottom: 1.5px solid rgba(10, 46, 18, .08);
+        }
+
+        .dist-variety-table th:not(:first-child) {
+            text-align: center;
+        }
+
+        .dist-variety-table td {
+            padding: .85rem 1.25rem;
+            font-size: .88rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(10, 46, 18, .04);
+        }
+
+        .dist-variety-table td:not(:first-child) {
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .dist-variety-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .dist-variety-table tr:hover td {
+            background: rgba(16, 185, 129, .03);
+        }
+
+        .dist-variety-table td:first-child {
+            font-weight: 600;
+            color: var(--green-800);
+        }
+
+        .dist-variety-table .val-sown { color: var(--green-900); }
+        .dist-variety-table .val-available { color: #10b981; }
+        .dist-variety-table .val-distributed { color: #ca8a04; }
+        .dist-variety-table .val-remaining { color: #ea580c; }
+
+        /* ── Cumulative Card ── */
+        .dist-cumulative-card {
+            background: linear-gradient(135deg, var(--green-800), var(--green-600));
+            border-radius: 20px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dist-cumulative-card::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -15%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(245, 226, 0, .08);
+            pointer-events: none;
+        }
+
+        .dist-cumulative-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .dist-cumulative-info .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 100px;
+            padding: .3rem .9rem;
+            font-size: .7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, .85);
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            margin-bottom: .75rem;
+        }
+
+        .dist-cumulative-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: .35rem;
+        }
+
+        .dist-cumulative-info p {
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .6);
+            font-weight: 500;
+        }
+
+        .dist-cumulative-num {
+            position: relative;
+            z-index: 1;
+            text-align: right;
+        }
+
+        .dist-cumulative-num .big {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--yellow);
+            line-height: 1;
+        }
+
+        .dist-cumulative-num .sub {
+            font-size: .75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, .55);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            margin-top: .25rem;
+        }
+
+        @media(max-width:900px) {
+            .dist-stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media(max-width:768px) {
             .dist-stats-row {
                 grid-template-columns: 1fr;
@@ -1694,6 +1905,21 @@
             .dist-header {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .dist-variety-table th,
+            .dist-variety-table td {
+                padding: .6rem .75rem;
+                font-size: .78rem;
+            }
+
+            .dist-cumulative-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .dist-cumulative-num {
+                text-align: center;
             }
         }
     </style>
@@ -1901,32 +2127,41 @@
                     <p class="section-desc reveal">See how many hybrid seedlings are available at PCA Bohol nurseries
                         and how many were distributed to farmers.</p>
                 </div>
-                <div class="dist-month-pill reveal">
-                    📅
-                    <select
-                        onchange="window.location.href='/?year={{ $year }}&dist_month='+this.value+'&dist_year={{ $distYear }}'">
-                        @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $i => $monthName)
-                            <option value="{{ $i + 1 }}" {{ $distMonth == ($i + 1) ? 'selected' : '' }}>{{ $monthName }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <select
-                        onchange="window.location.href='/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year='+this.value">
-                        @for($y = now()->year; $y >= 2024; $y--)
-                            <option value="{{ $y }}" {{ $distYear == $y ? 'selected' : '' }}>{{ $y }}</option>
-                        @endfor
-                    </select>
-                    ▾
+                <div class="dist-controls">
+                    <div class="dist-mode-toggle reveal">
+                        <a href="/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year={{ $distYear }}&dist_mode=monthly"
+                           class="{{ !$isCumulative ? 'active' : '' }}">📅 Monthly</a>
+                        <a href="/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year={{ $distYear }}&dist_mode=cumulative"
+                           class="{{ $isCumulative ? 'active' : '' }}">📊 Cumulative</a>
+                    </div>
+                    <div class="dist-month-pill reveal">
+                        📅
+                        <select
+                            onchange="window.location.href='/?year={{ $year }}&dist_month='+this.value+'&dist_year={{ $distYear }}&dist_mode={{ $distMode }}'">
+                            @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $i => $monthName)
+                                <option value="{{ $i + 1 }}" {{ $distMonth == ($i + 1) ? 'selected' : '' }}>{{ $monthName }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select
+                            onchange="window.location.href='/?year={{ $year }}&dist_month={{ $distMonth }}&dist_year='+this.value+'&dist_mode={{ $distMode }}'">
+                            @for($y = now()->year; $y >= 2024; $y--)
+                                <option value="{{ $y }}" {{ $distYear == $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endfor
+                        </select>
+                        ▾
+                    </div>
                 </div>
             </div>
 
             {{-- Summary Stat Cards --}}
             <div class="dist-stats-row">
                 <div class="dist-stat-card green reveal">
-                    <!-- <div class="dist-stat-icon">🟢</div> -->
                     <div class="dist-stat-num">{{ number_format($totalAvailable) }}</div>
                     <div class="dist-stat-label">Available in Nurseries<br>
-                        @if(!empty($isNurseryCarried))
+                        @if($isCumulative)
+                            <span style="font-size:0.68rem;opacity:0.85;">Up to {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</span>
+                        @elseif(!empty($isNurseryCarried))
                             <span style="font-size:0.68rem;opacity:0.85;">(As of
                                 {{ $nurseryTargetMonth->format('F Y') }})</span>
                         @else
@@ -1935,18 +2170,78 @@
                     </div>
                 </div>
                 <div class="dist-stat-card yellow reveal">
-                    <!-- <div class="dist-stat-icon">🌱</div> -->
                     <div class="dist-stat-num">{{ number_format($totalDistributed) }}</div>
                     <div class="dist-stat-label">
-                        Distributed<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                        Distributed<br>
+                        @if($isCumulative)
+                            Up to {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
+                        @else
+                            {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
+                        @endif
+                    </div>
                 </div>
                 <div class="dist-stat-card white reveal">
-                    <!-- <div class="dist-stat-icon">👨‍🌾</div> -->
                     <div class="dist-stat-num">{{ number_format($totalFarmers) }}</div>
                     <div class="dist-stat-label">Farmers
-                        Served<br>{{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</div>
+                        Served<br>
+                        @if($isCumulative)
+                            Up to {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
+                        @else
+                            {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}
+                        @endif
+                    </div>
+                </div>
+                <div class="dist-stat-card orange reveal">
+                    <div class="dist-stat-num">{{ number_format($totalRemaining) }}</div>
+                    <div class="dist-stat-label">Remaining Seedlings<br>
+                        <span style="font-size:0.65rem;opacity:0.85;text-transform:none;letter-spacing:0;">(Available − Distributed)</span>
+                    </div>
                 </div>
             </div>
+
+            {{-- Cumulative Nursery Availability (only in monthly mode) --}}
+            @if(!$isCumulative)
+            <div class="dist-cumulative-card reveal">
+                <div class="dist-cumulative-info">
+                    <div class="tag">📊 Cumulative Stock</div>
+                    <h4>Total Nursery Availability</h4>
+                    <p>Seedlings available across all nurseries from all months up to {{ \Carbon\Carbon::create($distYear, $distMonth, 1)->format('F Y') }}</p>
+                </div>
+                <div class="dist-cumulative-num">
+                    <div class="big">{{ number_format($cumulativeAvailable) }}</div>
+                    <div class="sub">Seedlings</div>
+                </div>
+            </div>
+            @endif
+
+            {{-- Variety Breakdown --}}
+            @if($varietyBreakdown->isNotEmpty())
+                <div class="dist-variety-section reveal">
+                    <h3>🌱 Seednut Varieties Breakdown</h3>
+                    <table class="dist-variety-table">
+                        <thead>
+                            <tr>
+                                <th>Variety</th>
+                                <th>Seednuts Sown</th>
+                                <th>Available</th>
+                                <th>Distributed</th>
+                                <th>Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($varietyBreakdown as $vb)
+                                <tr>
+                                    <td>{{ $vb['variety'] }}</td>
+                                    <td class="val-sown">{{ number_format($vb['sown']) }}</td>
+                                    <td class="val-available">{{ number_format($vb['available']) }}</td>
+                                    <td class="val-distributed">{{ number_format($vb['distributed']) }}</td>
+                                    <td class="val-remaining">{{ number_format($vb['remaining']) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
 
             {{-- Per-Site Breakdown --}}
             @if($distSiteData->isNotEmpty())
@@ -1967,7 +2262,11 @@
                                 </div>
                                 <div class="dist-site-metric">
                                     <span class="dot yellow"></span>
-                                    <strong>{{ number_format($distSite['distributed']) }}</strong> distributed this month
+                                    <strong>{{ number_format($distSite['distributed']) }}</strong> distributed {{ $isCumulative ? 'total' : 'this month' }}
+                                </div>
+                                <div class="dist-site-metric">
+                                    <span class="dot orange"></span>
+                                    <strong>{{ number_format($distSite['remaining']) }}</strong> remaining
                                 </div>
                                 <div class="dist-site-metric">
                                     <span class="dot blue"></span>
