@@ -23,6 +23,8 @@ class EventDocumentationResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-camera';
 
     protected static ?string $navigationLabel = 'PCA Events & Milestones';
+    
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function canViewAny(): bool
     {
