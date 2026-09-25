@@ -1,0 +1,127 @@
+{
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "results": [
+        {
+            "category": "Data Type Mismatches",
+            "test": "String in seednuts_count trapped by integer validation",
+            "status": "PASSED",
+            "details": "Validation should reject alphabetic string"
+        },
+        {
+            "category": "Data Type Mismatches",
+            "test": "Special characters in seednuts_count rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Data Type Mismatches",
+            "test": "String in area_ha decimal field rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Data Type Mismatches",
+            "test": "String in seedlings_planted rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Data Type Mismatches",
+            "test": "String in ready_to_plant rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Negative & Boundary Values",
+            "test": "Negative seednuts_count (-50) trapped by min:0",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Negative & Boundary Values",
+            "test": "Negative area_ha (-1.5) rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Negative & Boundary Values",
+            "test": "Negative seedlings_planted (-10) rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Negative & Boundary Values",
+            "test": "Valid zero count (0) accepted without error",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Text & Security Injections",
+            "test": "Malformed email string (not-an-email) rejected",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Text & Security Injections",
+            "test": "Oversized text (>100 chars) trapped by maxLength",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Text & Security Injections",
+            "test": "Whitespace-only input rejected on required field",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Text & Security Injections",
+            "test": "XSS HTML payload auto-neutralized by Blade e()",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Text & Security Injections",
+            "test": "SQL injection string safely parameterized by Eloquent PDO",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Logical Business Traps",
+            "test": "Over-dispatch does not produce negative available stock (clamped at 0)",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Logical Business Traps",
+            "test": "User blocked from re-uploading signature within 3 months",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Logical Business Traps",
+            "test": "Maker-checker blocks supervisor from reviewing own record",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Logical Business Traps",
+            "test": "Maker-checker blocks preparer from directly noting record",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Model Casting & Sanitization",
+            "test": "Numeric string (\"450\") cast to native PHP integer",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "category": "Model Casting & Sanitization",
+            "test": "User name auto-constructed from first_name and last_name",
+            "status": "PASSED",
+            "details": ""
+        }
+    ]
+}

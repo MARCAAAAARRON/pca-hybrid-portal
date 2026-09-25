@@ -419,6 +419,7 @@ HTML;
             )
             ->authMiddleware([
                 Authenticate::class,
+                \App\Http\Middleware\PreventBackHistory::class,
             ])
             ->middleware([
                 SetTheme::class

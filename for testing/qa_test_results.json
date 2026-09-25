@@ -1,0 +1,392 @@
+{
+    "total": 64,
+    "passed": 64,
+    "failed": 0,
+    "skipped": 0,
+    "results": [
+        {
+            "phase": "Environment & Database",
+            "test": "Database Connection (PDO)",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: users",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: field_sites",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: monthly_harvests",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: harvest_varieties",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: pollen_productions",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: nursery_operations",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: nursery_batches",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: nursery_batch_varieties",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: hybrid_distributions",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: audit_logs",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: reports",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: calendar_reminders",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Environment & Database",
+            "test": "Table Existence: user_notifications",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Role Defined: supervisor",
+            "status": "PASSED",
+            "details": "Role choice mapping for supervisor"
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Role Defined: sub_supervisor",
+            "status": "PASSED",
+            "details": "Role choice mapping for sub_supervisor"
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Role Defined: manager",
+            "status": "PASSED",
+            "details": "Role choice mapping for manager"
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Role Defined: admin",
+            "status": "PASSED",
+            "details": "Role choice mapping for admin"
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Role Defined: superadmin",
+            "status": "PASSED",
+            "details": "Role choice mapping for superadmin"
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "User isSupervisor() method",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "User getRoleDisplayAttribute()",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Signature update allowed after 3+ months",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "User Roles & Access",
+            "test": "Signature update blocked within 3 months",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Data Isolation",
+            "test": "Supervisor query auto-scoped to field_site_id",
+            "status": "PASSED",
+            "details": "SQL: select * from \"monthly_harvests\" where \"monthly_harvests\".\"deleted_at\" is null and \"monthly_harvests\".\"field_site_id\" = ?"
+        },
+        {
+            "phase": "Data Isolation",
+            "test": "Manager query NOT scoped to single field site",
+            "status": "PASSED",
+            "details": "SQL: select * from \"monthly_harvests\" where \"monthly_harvests\".\"deleted_at\" is null"
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Initial Status is Draft",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Transition to Prepared",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Maker-Checker: Cannot review own prepared record",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Transition to Reviewed",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Maker-Checker: Preparer\/Reviewer cannot Note",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Transition to Noted",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Approval Workflow",
+            "test": "Return to Draft resets signatories",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Calculations & Aggregations",
+            "test": "Harvest varieties seednuts summation",
+            "status": "PASSED",
+            "details": "Expected 400, got 400"
+        },
+        {
+            "phase": "Calculations & Aggregations",
+            "test": "Nursery batch available seedlings calculation",
+            "status": "PASSED",
+            "details": "Expected 350, got 350"
+        },
+        {
+            "phase": "Calculations & Aggregations",
+            "test": "Hybrid distribution record creation",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Soft Deletes & Pruning",
+            "test": "User Soft Delete with Email Suffix",
+            "status": "PASSED",
+            "details": "Email: softdelete.test.1790297350@pca.gov.ph.deleted.1790297350"
+        },
+        {
+            "phase": "Soft Deletes & Pruning",
+            "test": "User Restore with Original Email Restored",
+            "status": "PASSED",
+            "details": "Restored Email: softdelete.test.1790297350@pca.gov.ph"
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: MonthlyHarvestPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: PollenProductionPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: NurseryOperationPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: HybridDistributionPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: UserPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: AuditLogPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: FieldSitePolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Policies & Authorization",
+            "test": "Policy Loaded: ReportPolicy",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource FieldSiteResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\FieldSite"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource MonthlyHarvestResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\MonthlyHarvest"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource PollenProductionResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\PollenProduction"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource NurseryOperationResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\NurseryOperation"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource HybridDistributionResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\HybridDistribution"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource HybridizationRecordResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\HybridizationRecord"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource UserResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\User"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource AuditLogResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\AuditLog"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource ReportResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: App\\Models\\Report"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Resource RoleResource Model Binding",
+            "status": "PASSED",
+            "details": "Model: Spatie\\Permission\\Models\\Role"
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Custom Page Registered: MyProfile",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Custom Page Registered: ReportsDashboard",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Custom Page Registered: FarmOverview",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Custom Page Registered: ActivityFeed",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Filament Resources & Pages",
+            "test": "Custom Page Registered: OrganizationCalendarPage",
+            "status": "PASSED",
+            "details": ""
+        },
+        {
+            "phase": "Routes & Views",
+            "test": "Route: \/ (Public Landing Page)",
+            "status": "PASSED",
+            "details": "HTTP Status: 200"
+        },
+        {
+            "phase": "Routes & Views",
+            "test": "Route: \/pending-approval (Pending Approval Page)",
+            "status": "PASSED",
+            "details": "HTTP Status: 200"
+        },
+        {
+            "phase": "Routes & Views",
+            "test": "Route: \/privacy-policy (Privacy Policy Page)",
+            "status": "PASSED",
+            "details": "HTTP Status: 200"
+        },
+        {
+            "phase": "Routes & Views",
+            "test": "Route: \/terms-of-service (Terms of Service Page)",
+            "status": "PASSED",
+            "details": "HTTP Status: 200"
+        }
+    ]
+}
