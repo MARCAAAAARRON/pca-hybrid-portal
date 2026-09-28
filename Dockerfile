@@ -37,8 +37,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 RUN npm install \
     && npm run build
 
-# Change ownership of the storage folder so Laravel can write to it
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Increase PHP upload limits to allow larger images
+RUN echo "upload_max_filesize = 20M" > /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 25M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
+
+# Create Livewire temp directory and change ownership of the storage folder
+RUN mkdir -p /var/www/html/storage/app/livewire-tmp \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Tell Apache that the public folder is the root directory
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
