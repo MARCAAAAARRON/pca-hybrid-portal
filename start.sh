@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Fix permissions for storage if a persistent disk is mounted at runtime
+echo "Fixing storage permissions..."
+mkdir -p /var/www/html/storage/app/livewire-tmp
+chown -R www-data:www-data /var/www/html/storage
+chmod -R 775 /var/www/html/storage
+
 # Clear configuration/cache
 php artisan optimize:clear
 
