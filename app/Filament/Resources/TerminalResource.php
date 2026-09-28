@@ -47,7 +47,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')->required()
+                            Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -195,7 +195,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                             ->label('Representative')
                             ->placeholder('e.g. Epigenio M. Mahinay')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('target_seednuts')->required()
+                        Forms\Components\TextInput::make('target_seednuts')->required()->integer()->minValue(0)
                             ->label('Target No. of Seednuts')
                             ->numeric()
                             ->default(0),
@@ -226,7 +226,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                     $set('seedling_age', \Carbon\Carbon::parse($start)->diffInMonths(\Carbon\Carbon::parse($state)) . ' months');
                                 }
                             }),
-                        Forms\Components\TextInput::make('seedling_age')->required()
+                        Forms\Components\TextInput::make('seedling_age')->required()->numeric()->integer()->minValue(0)
                             ->label('Seedling Age')
                             ->helperText('Auto-calculated from dates')
                             ->placeholder('—')
@@ -250,7 +250,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                         Forms\Components\Repeater::make('batches')
                             ->relationship()
                             ->schema([
-                                Forms\Components\TextInput::make('seednuts_harvested')->required()
+                                Forms\Components\TextInput::make('seednuts_harvested')->required()->integer()->minValue(0)
                                     ->label('No. Harvested')->numeric()->default(0),
                                 Forms\Components\TextInput::make('date_harvested')->required()
                                     ->label('Date Harvested')->placeholder('e.g. August 27, 2025')->maxLength(50),
@@ -265,21 +265,21 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                     ->schema([
                                         Forms\Components\TextInput::make('variety')->required()
                                             ->label('Variety / Type')->placeholder('e.g. PCA 15-10')->maxLength(100),
-                                        Forms\Components\TextInput::make('seednuts_sown')
+                                        Forms\Components\TextInput::make('seednuts_sown')->integer()
                                             ->label('No. Sown')->numeric()->required()->minValue(0)->default(0),
                                         Forms\Components\TextInput::make('date_sown')->required()
                                             ->label('Date Sown')->placeholder('e.g. Sept 11, 2025')->maxLength(50),
-                                        Forms\Components\TextInput::make('seedlings_germinated')
+                                        Forms\Components\TextInput::make('seedlings_germinated')->integer()
                                             ->label('No. Germinated')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('ungerminated_seednuts')
+                                        Forms\Components\TextInput::make('ungerminated_seednuts')->integer()
                                             ->label('No. Ungerminated')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('culled_seedlings')
+                                        Forms\Components\TextInput::make('culled_seedlings')->integer()
                                             ->label('No. Culled Seedlings')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('good_seedlings')
+                                        Forms\Components\TextInput::make('good_seedlings')->integer()
                                             ->label('Good Seedlings @ 1 ft')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('ready_to_plant')
+                                        Forms\Components\TextInput::make('ready_to_plant')->maxLength(255)
                                             ->label('Ready to Plant (Polybagged)')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('seedlings_dispatched')
+                                        Forms\Components\TextInput::make('seedlings_dispatched')->integer()
                                             ->label('Seedlings Dispatched')->numeric()->required()->minValue(0)->default(0),
                                         Forms\Components\TextInput::make('remarks')->required()
                                             ->label('Remarks')->maxLength(255),

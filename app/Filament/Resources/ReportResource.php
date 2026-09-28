@@ -30,19 +30,19 @@ class ReportResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('generated_by')
+                Forms\Components\TextInput::make('generated_by')->maxLength(255)
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('report_type')
+                Forms\Components\TextInput::make('report_type')->maxLength(255)
                     ->required(),
                 Forms\Components\Select::make('field_site_id')->required()
                     ->relationship('fieldSite', 'name')
                     ->searchable()
                     ->preload()
                     ->native(false),
-                Forms\Components\TextInput::make('title')
+                Forms\Components\TextInput::make('title')->maxLength(255)
                     ->required(),
-                Forms\Components\TextInput::make('file')
+                Forms\Components\TextInput::make('file')->maxLength(255)
                     ->required(),
             ]);
     }

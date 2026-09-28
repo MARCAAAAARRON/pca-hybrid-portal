@@ -52,7 +52,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')->required()
+                            Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -193,11 +193,11 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                             ->label('Area (Ha.)')
                             ->placeholder('e.g. 3.62')
                             ->maxLength(20),
-                        Forms\Components\TextInput::make('age_of_palms')->required()
+                        Forms\Components\TextInput::make('age_of_palms')->required()->numeric()->integer()->minValue(0)
                             ->label('Age of Palms (Years)')
                             ->placeholder('e.g. 16')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('num_hybridized_palms')->required()
+                        Forms\Components\TextInput::make('num_hybridized_palms')->required()->maxLength(255)
                             ->label('No. of Hybridized Palms')
                             ->numeric()
                             ->default(0),
@@ -223,7 +223,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                     ])
                                     ->default('OPV')
                                     ->required(),
-                                Forms\Components\TextInput::make('seednuts_count')
+                                Forms\Components\TextInput::make('seednuts_count')->integer()->minValue(0)
                                     ->label('Seednuts Count')
                                     ->numeric()
                                     ->default(0)

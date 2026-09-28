@@ -20,7 +20,7 @@ class NurseryBatchesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Section::make('Seednut Details')
                     ->schema([
-                        Forms\Components\TextInput::make('seednuts_harvested')->required()
+                        Forms\Components\TextInput::make('seednuts_harvested')->required()->integer()->minValue(0)
                             ->label('No. Harvested')
                             ->numeric()->default(0),
                         Forms\Components\TextInput::make('date_harvested')->required()
@@ -39,28 +39,28 @@ class NurseryBatchesRelationManager extends RelationManager
 
                 Forms\Components\Section::make('Nursery Progress')
                     ->schema([
-                        Forms\Components\TextInput::make('seednuts_sown')->required()
+                        Forms\Components\TextInput::make('seednuts_sown')->required()->integer()->minValue(0)
                             ->label('No. Sown')
                             ->numeric()->default(0),
                         Forms\Components\TextInput::make('date_sown')->required()
                             ->label('Date Sown')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('seedlings_germinated')->required()
+                        Forms\Components\TextInput::make('seedlings_germinated')->required()->integer()->minValue(0)
                             ->label('Germinated')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('ungerminated_seednuts')->required()
+                        Forms\Components\TextInput::make('ungerminated_seednuts')->required()->integer()->minValue(0)
                             ->label('Ungerminated')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('culled_seedlings')->required()
+                        Forms\Components\TextInput::make('culled_seedlings')->required()->integer()->minValue(0)
                             ->label('Culled')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('good_seedlings')->required()
+                        Forms\Components\TextInput::make('good_seedlings')->required()->integer()->minValue(0)
                             ->label('Good @ 1ft')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('ready_to_plant')->required()
+                        Forms\Components\TextInput::make('ready_to_plant')->required()->maxLength(255)
                             ->label('Ready (Polybagged)')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('seedlings_dispatched')->required()
+                        Forms\Components\TextInput::make('seedlings_dispatched')->required()->integer()->minValue(0)
                             ->label('Dispatched')
                             ->numeric()->default(0),
                     ])->columns(4),

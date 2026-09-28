@@ -71,9 +71,9 @@ class EventDocumentationResource extends Resource
                 ])->columns(2),
                 
                 Forms\Components\Section::make('EXIF Data (Auto-extracted)')->schema([
-                    Forms\Components\TextInput::make('latitude')->required()
+                    Forms\Components\TextInput::make('latitude')->required()->maxLength(255)
                         ->disabled(),
-                    Forms\Components\TextInput::make('longitude')->required()
+                    Forms\Components\TextInput::make('longitude')->required()->maxLength(255)
                         ->disabled(),
                     Forms\Components\DateTimePicker::make('captured_at')
                         ->disabled(),

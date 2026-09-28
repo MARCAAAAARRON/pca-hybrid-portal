@@ -28,7 +28,7 @@ class HarvestVarietiesRelationManager extends RelationManager
                         'OPV' => 'OPV',
                         'Hybrid' => 'Hybrid',
                     ]),
-                Forms\Components\TextInput::make('seednuts_count')
+                Forms\Components\TextInput::make('seednuts_count')->integer()->minValue(0)
                     ->label('Seednuts Count')
                     ->numeric()
                     ->default(0)

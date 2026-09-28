@@ -64,11 +64,11 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                 ->label('Farm Brgy.')->maxLength(100),
             Forms\Components\TextInput::make('variety')->required()
                 ->label('Variety')->maxLength(100),
-            Forms\Components\TextInput::make('seedlings_received')->required()
+            Forms\Components\TextInput::make('seedlings_received')->required()->numeric()->integer()->minValue(0)
                 ->label('Received')->maxLength(50),
             Forms\Components\DatePicker::make('date_received')->required()
                 ->label('Date Recvd'),
-            Forms\Components\TextInput::make('seedlings_planted')->required()
+            Forms\Components\TextInput::make('seedlings_planted')->required()->integer()->minValue(0)
                 ->label('Qty Plntd')->numeric()->default(0),
             Forms\Components\DatePicker::make('date_planted')->required()
                 ->label('Date Planted'),
@@ -97,7 +97,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ->description('Enter hybrid seedling distribution data')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')->required()
+                            Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
