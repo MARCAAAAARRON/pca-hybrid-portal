@@ -47,7 +47,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')
+                            Forms\Components\TextInput::make('field_site_display')->required()
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -168,11 +168,11 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                 };
                             }),
 
-                        Forms\Components\TextInput::make('region_province_district')
+                        Forms\Components\TextInput::make('region_province_district')->required()
                             ->label('Region / Province / District')
                             ->placeholder('e.g. VII-Bohol/III')
                             ->maxLength(100),
-                        Forms\Components\TextInput::make('barangay_municipality')
+                        Forms\Components\TextInput::make('barangay_municipality')->required()
                             ->label('Barangay / Municipality')
                             ->placeholder('e.g. Ballihan')
                             ->maxLength(200),
@@ -187,15 +187,15 @@ class TerminalResource extends Resource implements HasShieldPermissions
                 Forms\Components\Section::make('Proponent')
                     ->icon('heroicon-o-users')
                     ->schema([
-                        Forms\Components\TextInput::make('proponent_entity')
+                        Forms\Components\TextInput::make('proponent_entity')->required()
                             ->label('Entity Name')
                             ->placeholder('e.g. Ballihan On-Farm')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('proponent_representative')
+                        Forms\Components\TextInput::make('proponent_representative')->required()
                             ->label('Representative')
                             ->placeholder('e.g. Epigenio M. Mahinay')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('target_seednuts')
+                        Forms\Components\TextInput::make('target_seednuts')->required()
                             ->label('Target No. of Seednuts')
                             ->numeric()
                             ->default(0),
@@ -204,7 +204,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                 Forms\Components\Section::make('Terminal Report Information')
                     ->icon('heroicon-o-calendar-days')
                     ->schema([
-                        Forms\Components\DatePicker::make('nursery_start_date')
+                        Forms\Components\DatePicker::make('nursery_start_date')->required()
                             ->label('Nursery Start Date')
                             ->helperText('When seednuts were first sown')
                             ->displayFormat('m / d / Y')
@@ -215,7 +215,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                     $set('seedling_age', \Carbon\Carbon::parse($state)->diffInMonths(\Carbon\Carbon::parse($end)) . ' months');
                                 }
                             }),
-                        Forms\Components\DatePicker::make('date_ready_for_distribution')
+                        Forms\Components\DatePicker::make('date_ready_for_distribution')->required()
                             ->label('Date Ready for Distribution')
                             ->helperText('When seedlings became ready')
                             ->displayFormat('m / d / Y')
@@ -226,7 +226,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                     $set('seedling_age', \Carbon\Carbon::parse($start)->diffInMonths(\Carbon\Carbon::parse($state)) . ' months');
                                 }
                             }),
-                        Forms\Components\TextInput::make('seedling_age')
+                        Forms\Components\TextInput::make('seedling_age')->required()
                             ->label('Seedling Age')
                             ->helperText('Auto-calculated from dates')
                             ->placeholder('—')
@@ -250,24 +250,24 @@ class TerminalResource extends Resource implements HasShieldPermissions
                         Forms\Components\Repeater::make('batches')
                             ->relationship()
                             ->schema([
-                                Forms\Components\TextInput::make('seednuts_harvested')
+                                Forms\Components\TextInput::make('seednuts_harvested')->required()
                                     ->label('No. Harvested')->numeric()->default(0),
-                                Forms\Components\TextInput::make('date_harvested')
+                                Forms\Components\TextInput::make('date_harvested')->required()
                                     ->label('Date Harvested')->placeholder('e.g. August 27, 2025')->maxLength(50),
-                                Forms\Components\TextInput::make('date_received')
+                                Forms\Components\TextInput::make('date_received')->required()
                                     ->label('Date Received')->placeholder('e.g. August 28, 2025')->maxLength(50),
-                                Forms\Components\TextInput::make('source_of_seednuts')
+                                Forms\Components\TextInput::make('source_of_seednuts')->required()
                                     ->label('Source of Seednuts')->maxLength(200),
 
                                 Forms\Components\Repeater::make('varieties')
                                     ->relationship()
                                     ->label('Varieties within this batch')
                                     ->schema([
-                                        Forms\Components\TextInput::make('variety')
+                                        Forms\Components\TextInput::make('variety')->required()
                                             ->label('Variety / Type')->placeholder('e.g. PCA 15-10')->maxLength(100),
                                         Forms\Components\TextInput::make('seednuts_sown')
                                             ->label('No. Sown')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('date_sown')
+                                        Forms\Components\TextInput::make('date_sown')->required()
                                             ->label('Date Sown')->placeholder('e.g. Sept 11, 2025')->maxLength(50),
                                         Forms\Components\TextInput::make('seedlings_germinated')
                                             ->label('No. Germinated')->numeric()->required()->minValue(0)->default(0),
@@ -281,7 +281,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                             ->label('Ready to Plant (Polybagged)')->numeric()->required()->minValue(0)->default(0),
                                         Forms\Components\TextInput::make('seedlings_dispatched')
                                             ->label('Seedlings Dispatched')->numeric()->required()->minValue(0)->default(0),
-                                        Forms\Components\TextInput::make('remarks')
+                                        Forms\Components\TextInput::make('remarks')->required()
                                             ->label('Remarks')->maxLength(255),
                                     ])
                                     ->columns(4)
@@ -344,7 +344,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
                     ->options(NurseryOperation::REPORT_TYPES),
                 Tables\Filters\Filter::make('report_year')
                     ->form([
-                        Forms\Components\Select::make('year')
+                        Forms\Components\Select::make('year')->required()
                             ->options(fn () => collect(range(now()->year, 2024, -1))
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year),

@@ -52,7 +52,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')
+                            Forms\Components\TextInput::make('field_site_display')->required()
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -174,12 +174,12 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                             })
                             ->columnSpan(1),
 
-                        Forms\Components\TextInput::make('location')
+                        Forms\Components\TextInput::make('location')->required()
                             ->label('Farm Location')
                             ->placeholder('e.g. Brgy. Boctol, Ballihan, Bohol')
                             ->maxLength(200)
                             ->columnSpan(1),
-                        Forms\Components\TextInput::make('farm_name')
+                        Forms\Components\TextInput::make('farm_name')->required()
                             ->label('Name of Partner / Farm')
                             ->placeholder('e.g. Violo Llorente, Sr.')
                             ->maxLength(200)
@@ -189,15 +189,15 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                 Forms\Components\Section::make('Farm Details')
                     ->icon('heroicon-o-map')
                     ->schema([
-                        Forms\Components\TextInput::make('area_ha')
+                        Forms\Components\TextInput::make('area_ha')->required()
                             ->label('Area (Ha.)')
                             ->placeholder('e.g. 3.62')
                             ->maxLength(20),
-                        Forms\Components\TextInput::make('age_of_palms')
+                        Forms\Components\TextInput::make('age_of_palms')->required()
                             ->label('Age of Palms (Years)')
                             ->placeholder('e.g. 16')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('num_hybridized_palms')
+                        Forms\Components\TextInput::make('num_hybridized_palms')->required()
                             ->label('No. of Hybridized Palms')
                             ->numeric()
                             ->default(0),
@@ -215,7 +215,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                     ->placeholder('e.g. Catigan Green Dwarf')
                                     ->required()
                                     ->maxLength(200),
-                                Forms\Components\Select::make('seednuts_type')
+                                Forms\Components\Select::make('seednuts_type')->required()
                                     ->label('Seednuts Produced')
                                     ->options([
                                         'OPV' => 'OPV',
@@ -228,7 +228,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                     ->numeric()
                                     ->default(0)
                                     ->required(),
-                                Forms\Components\TextInput::make('remarks')
+                                Forms\Components\TextInput::make('remarks')->required()
                                     ->label('Remarks')
                                     ->placeholder('Optional remarks')
                                     ->maxLength(500),
@@ -298,7 +298,7 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                     ->relationship('fieldSite', 'name'),
                 Tables\Filters\Filter::make('report_year')
                     ->form([
-                        Forms\Components\Select::make('year')
+                        Forms\Components\Select::make('year')->required()
                             ->options(fn () => collect(range(now()->year, 2024, -1))
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year),

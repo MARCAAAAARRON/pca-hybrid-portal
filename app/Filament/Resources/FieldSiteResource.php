@@ -42,7 +42,7 @@ class FieldSiteResource extends Resource implements HasShieldPermissions
                             ->required()
                             ->maxLength(100)
                             ->unique(ignoreRecord: true),
-                        Forms\Components\Textarea::make('description')
+                        Forms\Components\Textarea::make('description')->required()
                             ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(1),
@@ -61,11 +61,11 @@ class FieldSiteResource extends Resource implements HasShieldPermissions
                                             ->default('Prepared by:')
                                             ->required()
                                             ->maxLength(50),
-                                        Forms\Components\TextInput::make('prepared_by_name')
+                                        Forms\Components\TextInput::make('prepared_by_name')->required()
                                             ->label('Full Name')
                                             ->placeholder('e.g. Juan Dela Cruz')
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('prepared_by_title')
+                                        Forms\Components\TextInput::make('prepared_by_title')->required()
                                             ->label('Title/Designation')
                                             ->default('COS / Agriculturist')
                                             ->placeholder('e.g. COS / Agriculturist')
@@ -80,11 +80,11 @@ class FieldSiteResource extends Resource implements HasShieldPermissions
                                             ->default('Reviewed by:')
                                             ->required()
                                             ->maxLength(50),
-                                        Forms\Components\TextInput::make('reviewed_by_name')
+                                        Forms\Components\TextInput::make('reviewed_by_name')->required()
                                             ->label('Full Name')
                                             ->placeholder('e.g. Maria Santos')
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('reviewed_by_title')
+                                        Forms\Components\TextInput::make('reviewed_by_title')->required()
                                             ->label('Title/Designation')
                                             ->default('Senior Agriculturist')
                                             ->placeholder('e.g. Senior Agriculturist')
@@ -99,11 +99,11 @@ class FieldSiteResource extends Resource implements HasShieldPermissions
                                             ->default('Noted by:')
                                             ->required()
                                             ->maxLength(50),
-                                        Forms\Components\TextInput::make('noted_by_name')
+                                        Forms\Components\TextInput::make('noted_by_name')->required()
                                             ->label('Full Name')
                                             ->placeholder('e.g. Engr. Pedro Penduko')
                                             ->maxLength(255),
-                                        Forms\Components\TextInput::make('noted_by_title')
+                                        Forms\Components\TextInput::make('noted_by_title')->required()
                                             ->label('Title/Designation')
                                             ->default('PCDM / Division Chief I')
                                             ->placeholder('e.g. PCDM / Division Chief I')

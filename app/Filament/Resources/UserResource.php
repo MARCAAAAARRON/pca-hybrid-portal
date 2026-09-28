@@ -48,7 +48,7 @@ class UserResource extends Resource
                             ->label('First Name')
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('middle_initial')
+                        TextInput::make('middle_initial')->required()
                             ->label('Middle Initial')
                             ->maxLength(10)
                             ->placeholder('e.g. D'),
@@ -87,7 +87,7 @@ class UserResource extends Resource
                         ->validationMessages([
                             'required' => 'A field site is required for COS/Agriculturist and Sub-Supervisor roles.',
                         ]),
-                    \Filament\Forms\Components\Toggle::make('is_approved')
+                    \Filament\Forms\Components\Toggle::make('is_approved')->required()
                         ->label('Approved for Access')
                         ->default(false)
                         ->inline(false),

@@ -22,7 +22,7 @@ class HarvestVarietiesRelationManager extends RelationManager
                     ->label('Variety / Hybrid Crosses')
                     ->required()
                     ->maxLength(200),
-                Forms\Components\Select::make('seednuts_type')
+                Forms\Components\Select::make('seednuts_type')->required()
                     ->label('Seednuts Type')
                     ->options([
                         'OPV' => 'OPV',
@@ -33,7 +33,7 @@ class HarvestVarietiesRelationManager extends RelationManager
                     ->numeric()
                     ->default(0)
                     ->required(),
-                Forms\Components\TextInput::make('remarks')
+                Forms\Components\TextInput::make('remarks')->required()
                     ->maxLength(255),
             ]);
     }

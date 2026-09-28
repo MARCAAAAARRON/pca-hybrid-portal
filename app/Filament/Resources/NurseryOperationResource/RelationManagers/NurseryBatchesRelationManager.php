@@ -20,52 +20,52 @@ class NurseryBatchesRelationManager extends RelationManager
             ->schema([
                 Forms\Components\Section::make('Seednut Details')
                     ->schema([
-                        Forms\Components\TextInput::make('seednuts_harvested')
+                        Forms\Components\TextInput::make('seednuts_harvested')->required()
                             ->label('No. Harvested')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('date_harvested')
+                        Forms\Components\TextInput::make('date_harvested')->required()
                             ->label('Date Harvested')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('date_received')
+                        Forms\Components\TextInput::make('date_received')->required()
                             ->label('Date Received')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('source_of_seednuts')
+                        Forms\Components\TextInput::make('source_of_seednuts')->required()
                             ->label('Source of Seednuts')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('variety')
+                        Forms\Components\TextInput::make('variety')->required()
                             ->label('Type / Variety')
                             ->maxLength(100),
                     ])->columns(3),
 
                 Forms\Components\Section::make('Nursery Progress')
                     ->schema([
-                        Forms\Components\TextInput::make('seednuts_sown')
+                        Forms\Components\TextInput::make('seednuts_sown')->required()
                             ->label('No. Sown')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('date_sown')
+                        Forms\Components\TextInput::make('date_sown')->required()
                             ->label('Date Sown')
                             ->maxLength(50),
-                        Forms\Components\TextInput::make('seedlings_germinated')
+                        Forms\Components\TextInput::make('seedlings_germinated')->required()
                             ->label('Germinated')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('ungerminated_seednuts')
+                        Forms\Components\TextInput::make('ungerminated_seednuts')->required()
                             ->label('Ungerminated')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('culled_seedlings')
+                        Forms\Components\TextInput::make('culled_seedlings')->required()
                             ->label('Culled')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('good_seedlings')
+                        Forms\Components\TextInput::make('good_seedlings')->required()
                             ->label('Good @ 1ft')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('ready_to_plant')
+                        Forms\Components\TextInput::make('ready_to_plant')->required()
                             ->label('Ready (Polybagged)')
                             ->numeric()->default(0),
-                        Forms\Components\TextInput::make('seedlings_dispatched')
+                        Forms\Components\TextInput::make('seedlings_dispatched')->required()
                             ->label('Dispatched')
                             ->numeric()->default(0),
                     ])->columns(4),
 
-                Forms\Components\TextInput::make('remarks')
+                Forms\Components\TextInput::make('remarks')->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
             ]);

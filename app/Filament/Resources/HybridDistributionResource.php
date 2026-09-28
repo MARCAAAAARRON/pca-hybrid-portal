@@ -39,40 +39,40 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
     public static function getFarmerFields(): array
     {
         return [
-            Forms\Components\TextInput::make('region')
+            Forms\Components\TextInput::make('region')->required()
                 ->label('Region')->default('VII')->maxLength(20),
-            Forms\Components\TextInput::make('province')
+            Forms\Components\TextInput::make('province')->required()
                 ->label('Province')->default('BOHOL')->maxLength(100),
-            Forms\Components\TextInput::make('district')
+            Forms\Components\TextInput::make('district')->required()
                 ->label('District')->maxLength(20),
-            Forms\Components\TextInput::make('municipality')
+            Forms\Components\TextInput::make('municipality')->required()
                 ->label('Municipality')->maxLength(100),
-            Forms\Components\TextInput::make('barangay')
+            Forms\Components\TextInput::make('barangay')->required()
                 ->label('Barangay')->maxLength(100),
             Forms\Components\TextInput::make('farmer_last_name')
                 ->label('Family Name')->required()->maxLength(100),
-            Forms\Components\TextInput::make('farmer_first_name')
+            Forms\Components\TextInput::make('farmer_first_name')->required()
                 ->label('Given Name')->maxLength(100),
-            Forms\Components\TextInput::make('farmer_middle_initial')
+            Forms\Components\TextInput::make('farmer_middle_initial')->required()
                 ->label('M.I.')->maxLength(10),
-            Forms\Components\Select::make('gender')
+            Forms\Components\Select::make('gender')->required()
                 ->label('Gender')
                 ->options(['M' => 'Male', 'F' => 'Female']),
-            Forms\Components\TextInput::make('farm_municipality')
+            Forms\Components\TextInput::make('farm_municipality')->required()
                 ->label('Farm Mun.')->maxLength(100),
-            Forms\Components\TextInput::make('farm_barangay')
+            Forms\Components\TextInput::make('farm_barangay')->required()
                 ->label('Farm Brgy.')->maxLength(100),
-            Forms\Components\TextInput::make('variety')
+            Forms\Components\TextInput::make('variety')->required()
                 ->label('Variety')->maxLength(100),
-            Forms\Components\TextInput::make('seedlings_received')
+            Forms\Components\TextInput::make('seedlings_received')->required()
                 ->label('Received')->maxLength(50),
-            Forms\Components\DatePicker::make('date_received')
+            Forms\Components\DatePicker::make('date_received')->required()
                 ->label('Date Recvd'),
-            Forms\Components\TextInput::make('seedlings_planted')
+            Forms\Components\TextInput::make('seedlings_planted')->required()
                 ->label('Qty Plntd')->numeric()->default(0),
-            Forms\Components\DatePicker::make('date_planted')
+            Forms\Components\DatePicker::make('date_planted')->required()
                 ->label('Date Planted'),
-            Forms\Components\Textarea::make('remarks')
+            Forms\Components\Textarea::make('remarks')->required()
                 ->placeholder('Remarks')->rows(2)->columnSpanFull(),
         ];
     }
@@ -97,7 +97,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ->description('Enter hybrid seedling distribution data')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')
+                            Forms\Components\TextInput::make('field_site_display')->required()
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -276,7 +276,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ->relationship('fieldSite', 'name'),
                 Tables\Filters\Filter::make('report_year')
                     ->form([
-                        Forms\Components\Select::make('year')
+                        Forms\Components\Select::make('year')->required()
                             ->options(fn () => collect(range(now()->year, 2024, -1))
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year),
@@ -288,7 +288,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ),
                 Tables\Filters\Filter::make('report_month_filter')
                     ->form([
-                        Forms\Components\Select::make('month')
+                        Forms\Components\Select::make('month')->required()
                             ->options([
                                 1 => 'January', 2 => 'February', 3 => 'March',
                                 4 => 'April', 5 => 'May', 6 => 'June',

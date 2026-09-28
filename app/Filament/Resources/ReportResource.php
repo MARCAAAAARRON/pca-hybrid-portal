@@ -35,7 +35,7 @@ class ReportResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('report_type')
                     ->required(),
-                Forms\Components\Select::make('field_site_id')
+                Forms\Components\Select::make('field_site_id')->required()
                     ->relationship('fieldSite', 'name')
                     ->searchable()
                     ->preload()

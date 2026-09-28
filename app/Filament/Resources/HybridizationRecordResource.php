@@ -185,10 +185,10 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                 Forms\Components\Section::make('Notes & Remarks')
                     ->icon('heroicon-o-pencil-square')
                     ->schema([
-                        Forms\Components\Textarea::make('notes')
+                        Forms\Components\Textarea::make('notes')->required()
                             ->rows(3)
                             ->columnSpanFull(),
-                        Forms\Components\Textarea::make('admin_remarks')
+                        Forms\Components\Textarea::make('admin_remarks')->required()
                             ->label('Admin Remarks')
                             ->rows(3)
                             ->visible(fn () => !auth()->user()?->isSupervisor())
@@ -197,7 +197,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
 
                 Forms\Components\Section::make('Field Images')
                     ->schema([
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('field_images')
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('field_images')->required()
                             ->collection('field_images')
                             ->multiple()
                             ->image()
@@ -294,7 +294,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                     ->options(HybridizationRecord::GROWTH_STATUS_CHOICES),
                 Tables\Filters\Filter::make('harvest_readiness')
                     ->form([
-                        Forms\Components\Select::make('readiness')
+                        Forms\Components\Select::make('readiness')->required()
                             ->label('Harvest Readiness')
                             ->options([
                                 'ready' => '🔴 Ready Now (overdue / ≤7 days)',
@@ -359,7 +359,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year)
                             ->required(),
-                        Forms\Components\Select::make('month')
+                        Forms\Components\Select::make('month')->required()
                             ->options([
                                 1 => 'January', 2 => 'February', 3 => 'March',
                                 4 => 'April', 5 => 'May', 6 => 'June',
@@ -367,7 +367,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                                 10 => 'October', 11 => 'November', 12 => 'December',
                             ])
                             ->nullable(),
-                        Forms\Components\Select::make('field_site_id')
+                        Forms\Components\Select::make('field_site_id')->required()
                             ->label('Field Site')
                             ->relationship('fieldSite', 'name')
                             ->nullable()

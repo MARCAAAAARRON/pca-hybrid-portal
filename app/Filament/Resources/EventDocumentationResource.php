@@ -56,12 +56,12 @@ class EventDocumentationResource extends Resource
                         ->maxLength(255),
                     Forms\Components\DatePicker::make('event_date')
                         ->required(),
-                    Forms\Components\TextInput::make('location')
+                    Forms\Components\TextInput::make('location')->required()
                         ->maxLength(255),
-                    Forms\Components\Textarea::make('description')
+                    Forms\Components\Textarea::make('description')->required()
                         ->maxLength(65535)
                         ->columnSpanFull(),
-                    Forms\Components\FileUpload::make('image_path')
+                    Forms\Components\FileUpload::make('image_path')->required()
                         ->label('Event Photo')
                         ->image()
                         ->directory('event-photos')
@@ -71,9 +71,9 @@ class EventDocumentationResource extends Resource
                 ])->columns(2),
                 
                 Forms\Components\Section::make('EXIF Data (Auto-extracted)')->schema([
-                    Forms\Components\TextInput::make('latitude')
+                    Forms\Components\TextInput::make('latitude')->required()
                         ->disabled(),
-                    Forms\Components\TextInput::make('longitude')
+                    Forms\Components\TextInput::make('longitude')->required()
                         ->disabled(),
                     Forms\Components\DateTimePicker::make('captured_at')
                         ->disabled(),

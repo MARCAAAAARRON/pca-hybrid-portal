@@ -56,7 +56,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')
+                            Forms\Components\TextInput::make('field_site_display')->required()
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
@@ -195,12 +195,12 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                             })
                             ->columnSpan(1),
 
-                        Forms\Components\TextInput::make('region_province_district')
+                        Forms\Components\TextInput::make('region_province_district')->required()
                             ->label('Region / Province / District')
                             ->placeholder('e.g. VII-Bohol/III')
                             ->maxLength(100),
 
-                        Forms\Components\TextInput::make('barangay_municipality')
+                        Forms\Components\TextInput::make('barangay_municipality')->required()
                             ->label('Barangay / Municipality')
                             ->placeholder('e.g. Ballihan')
                             ->maxLength(200),
@@ -216,15 +216,15 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                 Forms\Components\Section::make('Proponent')
                     ->icon('heroicon-o-users')
                     ->schema([
-                        Forms\Components\TextInput::make('proponent_entity')
+                        Forms\Components\TextInput::make('proponent_entity')->required()
                             ->label('Entity Name')
                             ->placeholder('e.g. Ballihan On-Farm')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('proponent_representative')
+                        Forms\Components\TextInput::make('proponent_representative')->required()
                             ->label('Representative')
                             ->placeholder('e.g. Epigenio M. Mahinay')
                             ->maxLength(200),
-                        Forms\Components\TextInput::make('target_seednuts')
+                        Forms\Components\TextInput::make('target_seednuts')->required()
                             ->label('Target No. of Seednuts')
                             ->numeric()
                             ->default(0),
@@ -237,19 +237,19 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                         Forms\Components\Repeater::make('batches')
                             ->relationship()
                             ->schema([
-                                Forms\Components\TextInput::make('seednuts_harvested')
+                                Forms\Components\TextInput::make('seednuts_harvested')->required()
                                     ->label('No. Harvested')
                                     ->numeric()
                                     ->default(0),
-                                Forms\Components\TextInput::make('date_harvested')
+                                Forms\Components\TextInput::make('date_harvested')->required()
                                     ->label('Date Harvested')
                                     ->placeholder('e.g. August 27, 2025')
                                     ->maxLength(50),
-                                Forms\Components\TextInput::make('date_received')
+                                Forms\Components\TextInput::make('date_received')->required()
                                     ->label('Date Received')
                                     ->placeholder('e.g. August 28, 2025')
                                     ->maxLength(50),
-                                Forms\Components\TextInput::make('source_of_seednuts')
+                                Forms\Components\TextInput::make('source_of_seednuts')->required()
                                     ->label('Source of Seednuts')
                                     ->maxLength(200),
 
@@ -258,7 +258,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                     ->relationship()
                                     ->label('Varieties within this batch')
                                     ->schema([
-                                        Forms\Components\TextInput::make('variety')
+                                        Forms\Components\TextInput::make('variety')->required()
                                             ->label('Variety / Type')
                                             ->placeholder('e.g. PCA 15-10')
                                             ->maxLength(100),
@@ -268,7 +268,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                             ->required()
                                             ->minValue(0)
                                             ->default(0),
-                                        Forms\Components\TextInput::make('date_sown')
+                                        Forms\Components\TextInput::make('date_sown')->required()
                                             ->label('Date Sown')
                                             ->placeholder('e.g. Sept 11, 2025')
                                             ->maxLength(50),
@@ -308,7 +308,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                             ->required()
                                             ->minValue(0)
                                             ->default(0),
-                                        Forms\Components\TextInput::make('remarks')
+                                        Forms\Components\TextInput::make('remarks')->required()
                                             ->label('Remarks')
                                             ->maxLength(255),
                                     ])
@@ -373,7 +373,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                     ->options(NurseryOperation::REPORT_TYPES),
                 Tables\Filters\Filter::make('report_year')
                     ->form([
-                        Forms\Components\Select::make('year')
+                        Forms\Components\Select::make('year')->required()
                             ->options(fn () => collect(range(now()->year, 2024, -1))
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year),

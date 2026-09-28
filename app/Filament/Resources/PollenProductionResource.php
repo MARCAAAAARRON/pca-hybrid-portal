@@ -52,7 +52,7 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                     ->schema([
                         Forms\Components\Grid::make(4)->schema([
                             Forms\Components\Group::make([
-                                Forms\Components\TextInput::make('field_site_display')
+                                Forms\Components\TextInput::make('field_site_display')->required()
                                     ->label('Field Site')
                                     ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                     ->disabled()
@@ -158,7 +158,7 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                     };
                                 }),
 
-                            Forms\Components\Select::make('month_label')
+                            Forms\Components\Select::make('month_label')->required()
                                 ->label('Month Label')
                                 ->options([
                                     'January' => 'January', 'February' => 'February', 'March' => 'March',
@@ -167,11 +167,11 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                     'October' => 'October', 'November' => 'November', 'December' => 'December',
                                 ])
                                 ->placeholder('— Select Month —'),
-                            Forms\Components\TextInput::make('pollen_variety')
+                            Forms\Components\TextInput::make('pollen_variety')->required()
                                 ->label('Pollen Variety')
                                 ->placeholder('e.g. LAGUNA TALL POLLENS')
                                 ->maxLength(200),
-                            Forms\Components\TextInput::make('ending_balance_prev')
+                            Forms\Components\TextInput::make('ending_balance_prev')->required()
                                 ->label('Ending Balance (Last Month)')
                                 ->numeric()
                                 ->maxLength(50)
@@ -186,14 +186,14 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-truck')
                     ->schema([
                         Forms\Components\Grid::make(3)->schema([
-                            Forms\Components\TextInput::make('pollen_source')
+                            Forms\Components\TextInput::make('pollen_source')->required()
                                 ->label('Source')
                                 ->placeholder('e.g. CVSPC')
                                 ->maxLength(200),
-                            Forms\Components\DatePicker::make('date_received')
+                            Forms\Components\DatePicker::make('date_received')->required()
                                 ->label('Date Received')
                                 ->displayFormat('m / d / Y'),
-                            Forms\Components\TextInput::make('pollens_received')
+                            Forms\Components\TextInput::make('pollens_received')->required()
                                 ->label('Amount of Pollens')
                                 ->numeric()
                                 ->maxLength(50)
@@ -207,22 +207,22 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-chart-bar')
                     ->schema([
                         Forms\Components\Grid::make(6)->schema([
-                            Forms\Components\TextInput::make('week1')->label('Week 1')->numeric()->maxLength(20)
+                            Forms\Components\TextInput::make('week1')->label('Week 1')->numeric()->maxLength(20)->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set)),
-                            Forms\Components\TextInput::make('week2')->label('Week 2')->numeric()->maxLength(20)
+                            Forms\Components\TextInput::make('week2')->label('Week 2')->numeric()->maxLength(20)->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set)),
-                            Forms\Components\TextInput::make('week3')->label('Week 3')->numeric()->maxLength(20)
+                            Forms\Components\TextInput::make('week3')->label('Week 3')->numeric()->maxLength(20)->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set)),
-                            Forms\Components\TextInput::make('week4')->label('Week 4')->numeric()->maxLength(20)
+                            Forms\Components\TextInput::make('week4')->label('Week 4')->numeric()->maxLength(20)->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set)),
-                            Forms\Components\TextInput::make('week5')->label('Week 5')->numeric()->maxLength(20)
+                            Forms\Components\TextInput::make('week5')->label('Week 5')->numeric()->maxLength(20)->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set)),
-                            Forms\Components\TextInput::make('total_utilization')
+                            Forms\Components\TextInput::make('total_utilization')->required()
                                 ->label('Total Utilization')
                                 ->numeric()
                                 ->readOnly()
@@ -237,14 +237,14 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                     ->schema([
                         Forms\Components\Grid::make(3)->schema([
                             Forms\Components\Grid::make(1)->schema([
-                                Forms\Components\TextInput::make('ending_balance')
+                                Forms\Components\TextInput::make('ending_balance')->required()
                                     ->label('Ending Balance')
                                     ->numeric()
                                     ->readOnly()
                                     ->dehydrated()
                                     ->helperText('Auto-computed: Previous Balance + Received − Utilization'),
                             ])->columnSpan(1),
-                            Forms\Components\Textarea::make('remarks')
+                            Forms\Components\Textarea::make('remarks')->required()
                                 ->label('Remarks')
                                 ->rows(3)
                                 ->columnSpanFull(),
@@ -324,7 +324,7 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                 //         return match ($data['value']) {
                 Tables\Filters\Filter::make('report_year')
                     ->form([
-                        Forms\Components\Select::make('year')
+                        Forms\Components\Select::make('year')->required()
                             ->options(fn () => collect(range(now()->year, 2024, -1))
                                 ->mapWithKeys(fn ($y) => [$y => $y]))
                             ->default(now()->year),

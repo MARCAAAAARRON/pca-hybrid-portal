@@ -52,13 +52,13 @@ class RoleResource extends Resource implements HasShieldPermissions
                                     ->required()
                                     ->maxLength(255),
 
-                                Forms\Components\TextInput::make('guard_name')
+                                Forms\Components\TextInput::make('guard_name')->required()
                                     ->label(__('filament-shield::filament-shield.field.guard_name'))
                                     ->default(Utils::getFilamentAuthGuard())
                                     ->nullable()
                                     ->maxLength(255),
 
-                                Forms\Components\Select::make(config('permission.column_names.team_foreign_key'))
+                                Forms\Components\Select::make(config('permission.column_names.team_foreign_key'))->required()
                                     ->label(__('filament-shield::filament-shield.field.team'))
                                     ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
                                     /** @phpstan-ignore-next-line */
@@ -66,7 +66,7 @@ class RoleResource extends Resource implements HasShieldPermissions
                                     ->options(fn (): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
                                     ->hidden(fn (): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled()))
                                     ->dehydrated(fn (): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled())),
-                                ShieldSelectAllToggle::make('select_all')
+                                ShieldSelectAllToggle::make('select_all')->required()
                                     ->onIcon('heroicon-s-shield-check')
                                     ->offIcon('heroicon-s-shield-exclamation')
                                     ->label(__('filament-shield::filament-shield.field.select_all.name'))
