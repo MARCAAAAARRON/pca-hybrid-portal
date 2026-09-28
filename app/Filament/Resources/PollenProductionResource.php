@@ -140,7 +140,23 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                 ->label('Report Month')
                                 ->required()
                                 ->displayFormat('m / d / Y')
-                                ->default(now()->startOfMonth()),
+                                ->default(now()->startOfMonth())
+                                ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                    return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                        $fieldSiteId = $get('field_site_id');
+                                        if (! $fieldSiteId || ! $value) return;
+                                        $date = \Carbon\Carbon::parse($value);
+                                        $query = \App\Models\PollenProduction::where('field_site_id', $fieldSiteId)
+                                            ->whereYear('report_month', $date->year)
+                                            ->whereMonth('report_month', $date->month);
+                                        if ($record) {
+                                            $query->where('id', '!=', $record->id);
+                                        }
+                                        if ($query->exists()) {
+                                            $fail('A pollen production report for this field site already exists in ' . $date->format('F Y') . '.');
+                                        }
+                                    };
+                                }),
 
                             Forms\Components\Select::make('month_label')
                                 ->label('Month Label')

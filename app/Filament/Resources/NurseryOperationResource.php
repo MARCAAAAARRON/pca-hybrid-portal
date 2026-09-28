@@ -175,6 +175,24 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                             ->required()
                             ->displayFormat('m / d / Y')
                             ->default(now()->startOfMonth())
+                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    $fieldSiteId = $get('field_site_id');
+                                    $reportType = $get('report_type') ?? 'operation';
+                                    if (! $fieldSiteId || ! $value) return;
+                                    $date = \Carbon\Carbon::parse($value);
+                                    $query = \App\Models\NurseryOperation::where('field_site_id', $fieldSiteId)
+                                        ->where('report_type', $reportType)
+                                        ->whereYear('report_month', $date->year)
+                                        ->whereMonth('report_month', $date->month);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
+                                        $fail('A ' . str_replace('_', ' ', $reportType) . ' for this field site already exists in ' . $date->format('F Y') . '.');
+                                    }
+                                };
+                            })
                             ->columnSpan(1),
 
                         Forms\Components\TextInput::make('region_province_district')

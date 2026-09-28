@@ -148,7 +148,25 @@ class TerminalResource extends Resource implements HasShieldPermissions
                             ->label('Report Month')
                             ->required()
                             ->displayFormat('m / d / Y')
-                            ->default(now()->startOfMonth()),
+                            ->default(now()->startOfMonth())
+                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    $fieldSiteId = $get('field_site_id');
+                                    $reportType = $get('report_type') ?? 'terminal';
+                                    if (! $fieldSiteId || ! $value) return;
+                                    $date = \Carbon\Carbon::parse($value);
+                                    $query = \App\Models\NurseryOperation::where('field_site_id', $fieldSiteId)
+                                        ->where('report_type', $reportType)
+                                        ->whereYear('report_month', $date->year)
+                                        ->whereMonth('report_month', $date->month);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
+                                        $fail('A terminal report for this field site already exists in ' . $date->format('F Y') . '.');
+                                    }
+                                };
+                            }),
 
                         Forms\Components\TextInput::make('region_province_district')
                             ->label('Region / Province / District')
