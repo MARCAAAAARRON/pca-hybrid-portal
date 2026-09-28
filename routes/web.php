@@ -252,17 +252,17 @@ Route::get('/', function () {
 
     // ── Organizational Structure ───────────────────────────────────
     $orgAdmins = \App\Models\User::where('role', 'admin')
-        ->where('is_approved', 'true')
+        ->where('is_approved', \Illuminate\Support\Facades\DB::raw('true'))
         ->with('fieldSite')
         ->get();
 
     $orgManagers = \App\Models\User::where('role', 'manager')
-        ->where('is_approved', 'true')
+        ->where('is_approved', \Illuminate\Support\Facades\DB::raw('true'))
         ->with('fieldSite')
         ->get();
 
     $orgFieldStaff = \App\Models\User::whereIn('role', ['supervisor', 'sub_supervisor'])
-        ->where('is_approved', 'true')
+        ->where('is_approved', \Illuminate\Support\Facades\DB::raw('true'))
         ->with('fieldSite')
         ->orderBy('role') // supervisors first, then sub_supervisors
         ->get();
