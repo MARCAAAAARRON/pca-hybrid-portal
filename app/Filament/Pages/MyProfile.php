@@ -184,6 +184,9 @@ class MyProfile extends BreezyProfilePage
             ->success()
             ->title('Profile updated successfully.')
             ->send();
+
+        // Redirect to refresh the top-right navbar avatar which is outside Livewire's DOM
+        $this->redirect(request()->header('Referer') ?? static::getUrl());
     }
 
     public function logout(): void
