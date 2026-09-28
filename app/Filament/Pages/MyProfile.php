@@ -56,13 +56,10 @@ class MyProfile extends BreezyProfilePage
                                             ->disk('cloudinary')
                                             ->directory('avatars')
                                             ->avatar()
-                                            ->imageEditor()
-                                            ->imageEditorAspectRatios([
-                                                '1:1',
-                                            ])
-                                            ->circleCropper()
+                                            ->alignCenter()
                                             ->maxSize(2048)
-                                            ->helperText('Upload a profile photo (max 2MB). Use the editor to crop.')
+                                            ->helperText('Upload a profile photo (max 2MB).')
+                                            ->extraAttributes(['class' => 'flex justify-center mx-auto items-center flex-col'])
                                             ->columnSpanFull(),
                                     ])->collapsible(),
                                 Section::make('General Information')
