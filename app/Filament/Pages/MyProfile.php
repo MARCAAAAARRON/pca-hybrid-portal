@@ -99,17 +99,10 @@ class MyProfile extends BreezyProfilePage
                                             ->image()
                                             ->disk('cloudinary')
                                             ->directory('signatures')
-                                            ->imageEditor()
-                                            ->imageEditorAspectRatios([
-                                                null,
-                                                '16:9',
-                                                '4:3',
-                                                '1:1',
-                                            ])
                                             ->extraInputAttributes(['capture' => 'environment'])
                                             ->disabled(fn () => !auth()->user()->canUpdateSignature())
                                             ->helperText(fn () => auth()->user()->canUpdateSignature()
-                                                ? 'Snap/Upload your signature. IMPORTANT: Click the PENCIL icon on the image to CROP it before saving.'
+                                                ? 'Snap/Upload your digital signature.'
                                                 : 'You can only update your digital signature once every 3 months. Next update available: ' . auth()->user()->signature_updated_at->addMonths(3)->format('M d, Y')
                                             ),
                                     ]),
