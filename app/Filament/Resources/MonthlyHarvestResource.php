@@ -71,6 +71,41 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                 ->visible(fn () => !auth()->user()?->isSupervisor())
                                 ->columnSpanFull(),
 
+                        ])->columnSpan(1),
+
+                        Forms\Components\DatePicker::make('report_month')
+                            ->label('Report Month')
+                            ->required()
+                            ->displayFormat('m / d / Y')
+                            ->default(now()->startOfMonth())
+                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    $fieldSiteId = $get('field_site_id');
+                                    if (! $fieldSiteId || ! $value) return;
+                                    $date = \Carbon\Carbon::parse($value);
+                                    $query = \App\Models\MonthlyHarvest::where('field_site_id', $fieldSiteId)
+                                        ->whereYear('report_month', $date->year)
+                                        ->whereMonth('report_month', $date->month);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
+                                        $fail('A harvest report for this field site already exists in ' . $date->format('F Y') . '.');
+                                    }
+                                };
+                            })
+                            ->columnSpan(1),
+
+                        Forms\Components\TextInput::make('location')->required()
+                            ->label('Farm Location')
+                            ->placeholder('e.g. Brgy. Boctol, Ballihan, Bohol')
+                            ->maxLength(200)
+                            ->columnSpan(1),
+                        Forms\Components\TextInput::make('farm_name')->required()
+                            ->label('Name of Partner / Farm')
+                            ->placeholder('e.g. Violo Llorente, Sr.')
+                            ->maxLength(200)
+                            ->columnSpan(1),
                             Forms\Components\Grid::make(2)->schema([
                                 Forms\Components\Actions::make([
                                     Forms\Components\Actions\Action::make('loadPrevious')
@@ -149,41 +184,6 @@ class MonthlyHarvestResource extends Resource implements HasShieldPermissions
                                         );
                                     }),
                             ])->columnSpanFull(),
-                        ])->columnSpan(1),
-
-                        Forms\Components\DatePicker::make('report_month')
-                            ->label('Report Month')
-                            ->required()
-                            ->displayFormat('m / d / Y')
-                            ->default(now()->startOfMonth())
-                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
-                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
-                                    $fieldSiteId = $get('field_site_id');
-                                    if (! $fieldSiteId || ! $value) return;
-                                    $date = \Carbon\Carbon::parse($value);
-                                    $query = \App\Models\MonthlyHarvest::where('field_site_id', $fieldSiteId)
-                                        ->whereYear('report_month', $date->year)
-                                        ->whereMonth('report_month', $date->month);
-                                    if ($record) {
-                                        $query->where('id', '!=', $record->id);
-                                    }
-                                    if ($query->exists()) {
-                                        $fail('A harvest report for this field site already exists in ' . $date->format('F Y') . '.');
-                                    }
-                                };
-                            })
-                            ->columnSpan(1),
-
-                        Forms\Components\TextInput::make('location')->required()
-                            ->label('Farm Location')
-                            ->placeholder('e.g. Brgy. Boctol, Ballihan, Bohol')
-                            ->maxLength(200)
-                            ->columnSpan(1),
-                        Forms\Components\TextInput::make('farm_name')->required()
-                            ->label('Name of Partner / Farm')
-                            ->placeholder('e.g. Violo Llorente, Sr.')
-                            ->maxLength(200)
-                            ->columnSpan(1),
                     ])->columns(4),
 
                 Forms\Components\Section::make('Farm Details')

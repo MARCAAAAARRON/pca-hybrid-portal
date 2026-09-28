@@ -75,6 +75,49 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                 ->visible(fn () => !auth()->user()?->isSupervisor())
                                 ->columnSpanFull(),
 
+                        ])->columnSpan(1),
+
+                        Forms\Components\DatePicker::make('report_month')
+                            ->label('Report Month')
+                            ->required()
+                            ->displayFormat('m / d / Y')
+                            ->default(now()->startOfMonth())
+                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                    $fieldSiteId = $get('field_site_id');
+                                    $reportType = $get('report_type') ?? 'operation';
+                                    if (! $fieldSiteId || ! $value) return;
+                                    $date = \Carbon\Carbon::parse($value);
+                                    $query = \App\Models\NurseryOperation::where('field_site_id', $fieldSiteId)
+                                        ->where('report_type', $reportType)
+                                        ->whereYear('report_month', $date->year)
+                                        ->whereMonth('report_month', $date->month);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
+                                        $fail('A ' . str_replace('_', ' ', $reportType) . ' for this field site already exists in ' . $date->format('F Y') . '.');
+                                    }
+                                };
+                            })
+                            ->columnSpan(1),
+
+                        Forms\Components\TextInput::make('region_province_district')->required()
+                            ->label('Region / Province / District')
+                            ->placeholder('e.g. VII-Bohol/III')
+                            ->maxLength(100),
+
+                        Forms\Components\TextInput::make('barangay_municipality')->required()
+                            ->label('Barangay / Municipality')
+                            ->placeholder('e.g. Ballihan')
+                            ->maxLength(200),
+
+                        Forms\Components\Select::make('report_type')
+                            ->options(\App\Models\NurseryOperation::REPORT_TYPES)
+                            ->required()
+                            ->default('operation')
+                            ->disabled()
+                            ->visible(false),
                             Forms\Components\Grid::make(2)->schema([
                                 Forms\Components\Actions::make([
                                     Forms\Components\Actions\Action::make('loadPrevious')
@@ -168,49 +211,6 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                                         );
                                     }),
                             ])->columnSpanFull(),
-                        ])->columnSpan(1),
-
-                        Forms\Components\DatePicker::make('report_month')
-                            ->label('Report Month')
-                            ->required()
-                            ->displayFormat('m / d / Y')
-                            ->default(now()->startOfMonth())
-                            ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
-                                return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
-                                    $fieldSiteId = $get('field_site_id');
-                                    $reportType = $get('report_type') ?? 'operation';
-                                    if (! $fieldSiteId || ! $value) return;
-                                    $date = \Carbon\Carbon::parse($value);
-                                    $query = \App\Models\NurseryOperation::where('field_site_id', $fieldSiteId)
-                                        ->where('report_type', $reportType)
-                                        ->whereYear('report_month', $date->year)
-                                        ->whereMonth('report_month', $date->month);
-                                    if ($record) {
-                                        $query->where('id', '!=', $record->id);
-                                    }
-                                    if ($query->exists()) {
-                                        $fail('A ' . str_replace('_', ' ', $reportType) . ' for this field site already exists in ' . $date->format('F Y') . '.');
-                                    }
-                                };
-                            })
-                            ->columnSpan(1),
-
-                        Forms\Components\TextInput::make('region_province_district')->required()
-                            ->label('Region / Province / District')
-                            ->placeholder('e.g. VII-Bohol/III')
-                            ->maxLength(100),
-
-                        Forms\Components\TextInput::make('barangay_municipality')->required()
-                            ->label('Barangay / Municipality')
-                            ->placeholder('e.g. Ballihan')
-                            ->maxLength(200),
-
-                        Forms\Components\Select::make('report_type')
-                            ->options(\App\Models\NurseryOperation::REPORT_TYPES)
-                            ->required()
-                            ->default('operation')
-                            ->disabled()
-                            ->visible(false),
                     ])->columns(3),
 
                 Forms\Components\Section::make('Proponent')

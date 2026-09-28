@@ -71,6 +71,50 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                     ->visible(fn () => !auth()->user()?->isSupervisor())
                                     ->columnSpanFull(),
 
+                            ])->columnSpan(1),
+
+                            Forms\Components\DatePicker::make('report_month')
+                                ->label('Report Month')
+                                ->required()
+                                ->displayFormat('m / d / Y')
+                                ->default(now()->startOfMonth())
+                                ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
+                                    return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
+                                        $fieldSiteId = $get('field_site_id');
+                                        if (! $fieldSiteId || ! $value) return;
+                                        $date = \Carbon\Carbon::parse($value);
+                                        $query = \App\Models\PollenProduction::where('field_site_id', $fieldSiteId)
+                                            ->whereYear('report_month', $date->year)
+                                            ->whereMonth('report_month', $date->month);
+                                        if ($record) {
+                                            $query->where('id', '!=', $record->id);
+                                        }
+                                        if ($query->exists()) {
+                                            $fail('A pollen production report for this field site already exists in ' . $date->format('F Y') . '.');
+                                        }
+                                    };
+                                }),
+
+                            Forms\Components\Select::make('month_label')->required()
+                                ->label('Month Label')
+                                ->options([
+                                    'January' => 'January', 'February' => 'February', 'March' => 'March',
+                                    'April' => 'April', 'May' => 'May', 'June' => 'June',
+                                    'July' => 'July', 'August' => 'August', 'September' => 'September',
+                                    'October' => 'October', 'November' => 'November', 'December' => 'December',
+                                ])
+                                ->placeholder('— Select Month —'),
+                            Forms\Components\TextInput::make('pollen_variety')->required()
+                                ->label('Pollen Variety')
+                                ->placeholder('e.g. LAGUNA TALL POLLENS')
+                                ->maxLength(200),
+                            Forms\Components\TextInput::make('ending_balance_prev')->required()->integer()->minValue(0)
+                                ->label('Ending Balance (Last Month)')
+                                ->numeric()
+                                ->maxLength(50)
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set))
+                                ->columnSpan(1),
                                 Forms\Components\Grid::make(2)->schema([
                                     Forms\Components\Actions::make([
                                         Forms\Components\Actions\Action::make('loadPrevious')
@@ -134,50 +178,6 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                                             );
                                         }),
                                 ])->columnSpanFull(),
-                            ])->columnSpan(1),
-
-                            Forms\Components\DatePicker::make('report_month')
-                                ->label('Report Month')
-                                ->required()
-                                ->displayFormat('m / d / Y')
-                                ->default(now()->startOfMonth())
-                                ->rule(function (\Filament\Forms\Get $get, ?\Illuminate\Database\Eloquent\Model $record) {
-                                    return function (string $attribute, $value, \Closure $fail) use ($get, $record) {
-                                        $fieldSiteId = $get('field_site_id');
-                                        if (! $fieldSiteId || ! $value) return;
-                                        $date = \Carbon\Carbon::parse($value);
-                                        $query = \App\Models\PollenProduction::where('field_site_id', $fieldSiteId)
-                                            ->whereYear('report_month', $date->year)
-                                            ->whereMonth('report_month', $date->month);
-                                        if ($record) {
-                                            $query->where('id', '!=', $record->id);
-                                        }
-                                        if ($query->exists()) {
-                                            $fail('A pollen production report for this field site already exists in ' . $date->format('F Y') . '.');
-                                        }
-                                    };
-                                }),
-
-                            Forms\Components\Select::make('month_label')->required()
-                                ->label('Month Label')
-                                ->options([
-                                    'January' => 'January', 'February' => 'February', 'March' => 'March',
-                                    'April' => 'April', 'May' => 'May', 'June' => 'June',
-                                    'July' => 'July', 'August' => 'August', 'September' => 'September',
-                                    'October' => 'October', 'November' => 'November', 'December' => 'December',
-                                ])
-                                ->placeholder('— Select Month —'),
-                            Forms\Components\TextInput::make('pollen_variety')->required()
-                                ->label('Pollen Variety')
-                                ->placeholder('e.g. LAGUNA TALL POLLENS')
-                                ->maxLength(200),
-                            Forms\Components\TextInput::make('ending_balance_prev')->required()->integer()->minValue(0)
-                                ->label('Ending Balance (Last Month)')
-                                ->numeric()
-                                ->maxLength(50)
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => self::recalculatePollen($get, $set))
-                                ->columnSpan(1),
                         ]),
                     ])
                     ->columns(1),
