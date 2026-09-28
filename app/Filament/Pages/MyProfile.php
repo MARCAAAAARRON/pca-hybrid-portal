@@ -48,6 +48,23 @@ class MyProfile extends BreezyProfilePage
                         \Filament\Forms\Components\Tabs\Tab::make('Profile Info')
                             ->icon('heroicon-o-user-circle')
                             ->schema([
+                                Section::make('Profile Picture')
+                                    ->schema([
+                                        FileUpload::make('avatar_url')
+                                            ->label('Profile Picture')
+                                            ->image()
+                                            ->disk('cloudinary')
+                                            ->directory('avatars')
+                                            ->avatar()
+                                            ->imageEditor()
+                                            ->imageEditorAspectRatios([
+                                                '1:1',
+                                            ])
+                                            ->circleCropper()
+                                            ->maxSize(2048)
+                                            ->helperText('Upload a profile photo (max 2MB). Use the editor to crop.')
+                                            ->columnSpanFull(),
+                                    ])->collapsible(),
                                 Section::make('General Information')
                                     ->schema([
                                         Grid::make(3)
@@ -144,6 +161,7 @@ class MyProfile extends BreezyProfilePage
             'middle_initial' => $data['middle_initial'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
+            'avatar_url' => $data['avatar_url'] ?? $user->avatar_url,
         ];
 
         if (array_key_exists('signature_image', $data)) {

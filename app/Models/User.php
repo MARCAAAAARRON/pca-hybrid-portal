@@ -163,16 +163,25 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     protected static function booted(): void
     {
         static::saving(function (User $user) {
-            // If first_name or last_name are dirty, update name
-            if ($user->isDirty(['first_name', 'last_name'])) {
-                $user->name = trim("{$user->first_name} {$user->last_name}");
+            // If first_name, middle_initial, or last_name are dirty, update name
+            if ($user->isDirty(['first_name', 'middle_initial', 'last_name'])) {
+                $mi = $user->middle_initial ? strtoupper($user->middle_initial) . '.' : '';
+                $user->name = trim(collect([$user->first_name, $mi, $user->last_name])->filter()->implode(' '));
             }
             
             // Reverse: If name is present but first/last are empty, split name
             if ($user->name && empty($user->first_name) && empty($user->last_name)) {
-                $parts = explode(' ', $user->name, 2);
-                $user->first_name = $parts[0];
-                $user->last_name = $parts[1] ?? '';
+                $parts = preg_split('/\s+/', $user->name);
+                if (count($parts) >= 3) {
+                    $user->first_name = $parts[0];
+                    $user->middle_initial = rtrim($parts[1], '.');
+                    $user->last_name = implode(' ', array_slice($parts, 2));
+                } elseif (count($parts) === 2) {
+                    $user->first_name = $parts[0];
+                    $user->last_name = $parts[1];
+                } else {
+                    $user->first_name = $parts[0];
+                }
             }
         });
 
@@ -208,7 +217,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
+        return $this->avatar_url ? Storage::disk('cloudinary')->url($this->avatar_url) : null;
     }
 
     public function canAccessPanel(Panel $panel): bool

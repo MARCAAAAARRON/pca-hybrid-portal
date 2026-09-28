@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use App\Filament\Exports\UserExporter;
 use App\Filament\Imports\UserImporter;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Grid;
 use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ExportAction;
@@ -42,8 +43,20 @@ class UserResource extends Resource
                 Section::make(
                     'User Information'
                 )->schema([
-                    TextInput::make('name')
-                        ->required(),
+                    Grid::make(3)->schema([
+                        TextInput::make('first_name')
+                            ->label('First Name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('middle_initial')
+                            ->label('Middle Initial')
+                            ->maxLength(10)
+                            ->placeholder('e.g. D'),
+                        TextInput::make('last_name')
+                            ->label('Last Name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
                     TextInput::make('email')
                         ->required()
                         ->email()
@@ -60,6 +73,7 @@ class UserResource extends Resource
                         ->options(User::ROLE_CHOICES)
                         ->required()
                         ->native(false)
+                        ->live()
                         ->disabled(fn (?User $record): bool => $record !== null && $record->id === auth()->id()),
                     Select::make('field_site_id')
                         ->relationship('fieldSite', 'name')
@@ -68,9 +82,10 @@ class UserResource extends Resource
                         ->searchable()
                         ->preload()
                         ->native(false)
-                        ->required(fn(callable $get) => $get('role') === 'supervisor')
+                        ->visible(fn(callable $get) => in_array($get('role'), ['supervisor', 'sub_supervisor']))
+                        ->required(fn(callable $get) => in_array($get('role'), ['supervisor', 'sub_supervisor']))
                         ->validationMessages([
-                            'required' => 'A field site is required for supervisors.',
+                            'required' => 'A field site is required for COS/Agriculturist and Sub-Supervisor roles.',
                         ]),
                     \Filament\Forms\Components\Toggle::make('is_approved')
                         ->label('Approved for Access')
@@ -100,8 +115,8 @@ class UserResource extends Resource
                         ->circular()
                         ->grow(false)
                         ->getStateUsing(fn($record) => $record->avatar_url
-                            ? $record->avatar_url
-                            : "https://ui-avatars.com/api/?name=" . urlencode($record->name)),
+                            ? \Illuminate\Support\Facades\Storage::disk('cloudinary')->url($record->avatar_url)
+                            : "https://ui-avatars.com/api/?name=" . urlencode($record->name) . "&color=FFFFFF&background=0b9e4f"),
                     Tables\Columns\TextColumn::make('name')
                         ->searchable()
                         ->weight(FontWeight::Bold),
@@ -238,7 +253,13 @@ class UserResource extends Resource
         return $infolist
             ->schema([
                 InfolistSection::make('User Information')->schema([
-                    TextEntry::make('name'),
+                    TextEntry::make('first_name')
+                        ->label('First Name'),
+                    TextEntry::make('middle_initial')
+                        ->label('Middle Initial')
+                        ->placeholder('—'),
+                    TextEntry::make('last_name')
+                        ->label('Last Name'),
                     TextEntry::make('email'),
                     TextEntry::make('role_display')
                         ->label('Role')
@@ -251,8 +272,9 @@ class UserResource extends Resource
                         }),
                     TextEntry::make('fieldSite.name')
                         ->label('Assigned Field Site')
-                        ->placeholder('No Site Assigned'),
-                ])->columns(2),
+                        ->placeholder('No Site Assigned')
+                        ->visible(fn ($record) => in_array($record->role, ['supervisor', 'sub_supervisor'])),
+                ])->columns(3),
             ]);
     }
 }

@@ -2513,89 +2513,94 @@
             </div>
 
             <div class="org-tree">
-                <!-- Top: Provincial Manager -->
-                <div class="org-level reveal">
-                    <div class="org-card org-head">
-                        <div class="org-avatar">👤</div>
-                        <h4>Juan Dela Cruz</h4>
-                        <div class="org-role">Provincial Manager</div>
-                        <div class="org-desc">Oversees all PCA Bohol operations, programs, and field activities.</div>
-                        <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                    </div>
-                </div>
-
-                <!-- Connector line -->
-                <div class="org-connector"></div>
-
-                <!-- Horizontal branch line -->
-                <div class="org-h-line" style="width:100%;height:2rem;"></div>
-
-                <!-- Second tier -->
-                <div class="org-level reveal" style="gap:3rem;">
-                    <div style="display:flex;flex-direction:column;align-items:center;">
-                        <div class="org-branch-line"></div>
-                        <div class="org-card">
-                            <div class="org-avatar">👤</div>
-                            <h4>Maria Santos</h4>
-                            <div class="org-role">Section Head – Hybridization</div>
-                            <div class="org-desc">Leads the hybridization research and seednut production programs.
+                {{-- ── Tier 1: PCDM / Division Chief I (admin) ── --}}
+                @if($orgAdmins->isNotEmpty())
+                    <div class="org-level reveal">
+                        @foreach($orgAdmins as $admin)
+                            <div class="org-card org-head">
+                                <div class="org-avatar">
+                                    @if($admin->avatar_url)
+                                        <img src="{{ Storage::disk('cloudinary')->url($admin->avatar_url) }}" alt="{{ $admin->name }}">
+                                    @else
+                                        <span style="font-size:1.2rem;font-weight:800;letter-spacing:-1px;">{{ strtoupper(substr($admin->first_name ?? 'U', 0, 1) . substr($admin->last_name ?? '', 0, 1)) }}</span>
+                                    @endif
+                                </div>
+                                <h4>{{ $admin->name }}</h4>
+                                <div class="org-role">{{ $admin->role_display }}</div>
+                                <div class="org-desc">Oversees all PCA Bohol operations, programs, and field activities.</div>
                             </div>
-                            <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                        </div>
+                        @endforeach
                     </div>
 
-                    <div style="display:flex;flex-direction:column;align-items:center;">
-                        <div class="org-branch-line"></div>
-                        <div class="org-card">
-                            <div class="org-avatar">👤</div>
-                            <h4>Pedro Reyes</h4>
-                            <div class="org-role">Section Head – Operations</div>
-                            <div class="org-desc">Manages nursery operations, pollen production, and distribution
-                                logistics.</div>
-                            <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                        </div>
-                    </div>
-                </div>
+                    {{-- Connector to next tier --}}
+                    @if($orgManagers->isNotEmpty() || $orgFieldStaff->isNotEmpty())
+                        <div class="org-connector"></div>
+                        <div class="org-h-line" style="width:100%;height:2rem;"></div>
+                    @endif
+                @endif
 
-                <!-- Connector line -->
-                <div class="org-connector"></div>
-                <div class="org-h-line" style="width:100%;height:2rem;"></div>
-
-                <!-- Third tier: Field Supervisors -->
-                <div class="org-level reveal">
-                    <div style="display:flex;flex-direction:column;align-items:center;">
-                        <div class="org-branch-line"></div>
-                        <div class="org-card">
-                            <div class="org-avatar" style="background:var(--green-600);">👤</div>
-                            <h4>Ana Lim</h4>
-                            <div class="org-role">Field Supervisor</div>
-                            <div class="org-desc">Loay Farm</div>
-                            <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;flex-direction:column;align-items:center;">
-                        <div class="org-branch-line"></div>
-                        <div class="org-card">
-                            <div class="org-avatar" style="background:var(--green-600);">👤</div>
-                            <h4>Carlos Manalo</h4>
-                            <div class="org-role">Field Supervisor</div>
-                            <div class="org-desc">Balilihan Farm</div>
-                            <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                        </div>
+                {{-- ── Tier 2: Senior Agriculturist (manager) ── --}}
+                @if($orgManagers->isNotEmpty())
+                    <div class="org-level reveal" style="gap:3rem;">
+                        @foreach($orgManagers as $manager)
+                            <div style="display:flex;flex-direction:column;align-items:center;">
+                                @if($orgAdmins->isNotEmpty())
+                                    <div class="org-branch-line"></div>
+                                @endif
+                                <div class="org-card">
+                                    <div class="org-avatar">
+                                        @if($manager->avatar_url)
+                                            <img src="{{ Storage::disk('cloudinary')->url($manager->avatar_url) }}" alt="{{ $manager->name }}">
+                                        @else
+                                            <span style="font-size:1.1rem;font-weight:800;letter-spacing:-1px;">{{ strtoupper(substr($manager->first_name ?? 'U', 0, 1) . substr($manager->last_name ?? '', 0, 1)) }}</span>
+                                        @endif
+                                    </div>
+                                    <h4>{{ $manager->name }}</h4>
+                                    <div class="org-role">{{ $manager->role_display }}</div>
+                                    <div class="org-desc">Leads hybridization research and program coordination.</div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
 
-                    <div style="display:flex;flex-direction:column;align-items:center;">
-                        <div class="org-branch-line"></div>
-                        <div class="org-card">
-                            <div class="org-avatar" style="background:var(--green-600);">👤</div>
-                            <h4>Rosa Tan</h4>
-                            <div class="org-role">Field Supervisor</div>
-                            <div class="org-desc">Additional Site</div>
-                            <div class="org-placeholder-badge">📷 Photo placeholder</div>
-                        </div>
+                    {{-- Connector to next tier --}}
+                    @if($orgFieldStaff->isNotEmpty())
+                        <div class="org-connector"></div>
+                        <div class="org-h-line" style="width:100%;height:2rem;"></div>
+                    @endif
+                @endif
+
+                {{-- ── Tier 3: COS / Agriculturist & Sub-Supervisor (field staff) ── --}}
+                @if($orgFieldStaff->isNotEmpty())
+                    <div class="org-level reveal">
+                        @foreach($orgFieldStaff as $staff)
+                            <div style="display:flex;flex-direction:column;align-items:center;">
+                                @if($orgAdmins->isNotEmpty() || $orgManagers->isNotEmpty())
+                                    <div class="org-branch-line"></div>
+                                @endif
+                                <div class="org-card">
+                                    <div class="org-avatar" style="background:var(--green-600);">
+                                        @if($staff->avatar_url)
+                                            <img src="{{ Storage::disk('cloudinary')->url($staff->avatar_url) }}" alt="{{ $staff->name }}">
+                                        @else
+                                            <span style="font-size:1.1rem;font-weight:800;letter-spacing:-1px;">{{ strtoupper(substr($staff->first_name ?? 'U', 0, 1) . substr($staff->last_name ?? '', 0, 1)) }}</span>
+                                        @endif
+                                    </div>
+                                    <h4>{{ $staff->name }}</h4>
+                                    <div class="org-role">{{ $staff->role_display }}</div>
+                                    <div class="org-desc">{{ $staff->fieldSite?->name ?? 'No Site Assigned' }}</div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                </div>
+                @endif
+
+                {{-- ── Empty State ── --}}
+                @if($orgAdmins->isEmpty() && $orgManagers->isEmpty() && $orgFieldStaff->isEmpty())
+                    <div class="reveal" style="text-align:center;padding:3rem;color:var(--text-muted);">
+                        <p style="font-size:1.1rem;">No team members have been added yet.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </section>

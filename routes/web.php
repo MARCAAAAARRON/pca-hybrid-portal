@@ -250,6 +250,23 @@ Route::get('/', function () {
         ];
     })->filter(fn($s) => $s['available'] > 0 || $s['distributed'] > 0 || $s['farmers'] > 0);
 
+    // ── Organizational Structure ───────────────────────────────────
+    $orgAdmins = \App\Models\User::where('role', 'admin')
+        ->where('is_approved', true)
+        ->with('fieldSite')
+        ->get();
+
+    $orgManagers = \App\Models\User::where('role', 'manager')
+        ->where('is_approved', true)
+        ->with('fieldSite')
+        ->get();
+
+    $orgFieldStaff = \App\Models\User::whereIn('role', ['supervisor', 'sub_supervisor'])
+        ->where('is_approved', true)
+        ->with('fieldSite')
+        ->orderBy('role') // supervisors first, then sub_supervisors
+        ->get();
+
     return view('welcome', compact(
         'sites', 'year', 'siteCount',
         'totalHarvests', 'totalPollen', 'totalDistribution',
@@ -258,7 +275,8 @@ Route::get('/', function () {
         'totalAvailable', 'totalDistributed', 'totalFarmers',
         'totalRemaining', 'varietyBreakdown', 'cumulativeAvailable',
         'distSiteData',
-        'nurseryTargetMonth', 'isNurseryCarried'
+        'nurseryTargetMonth', 'isNurseryCarried',
+        'orgAdmins', 'orgManagers', 'orgFieldStaff'
     ));
 });
 

@@ -9,9 +9,12 @@
                 <div class="flex flex-col items-center p-6">
                     <div class="relative mb-4">
                         @if(auth()->user()->avatar_url)
-                            <img src="{{ Storage::url(auth()->user()->avatar_url) }}" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-primary-50">
+                            <img src="{{ Storage::disk('cloudinary')->url(auth()->user()->avatar_url) }}" 
+                                 alt="Avatar" 
+                                 class="rounded-full object-cover border-8 border-white dark:border-gray-800 shadow-2xl transition-all hover:scale-105"
+                                 style="width: 160px; height: 160px; min-width: 160px; min-height: 160px;">
                         @else
-                            <div class="rounded-full flex items-center justify-center border-8 border-white dark:border-gray-800 shadow-2xl transition-all hover:scale-105 active:scale-95 mb-8" 
+                            <div class="rounded-full flex items-center justify-center border-8 border-white dark:border-gray-800 shadow-2xl transition-all hover:scale-105 active:scale-95" 
                                  style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); width: 160px; height: 160px; min-width: 160px; min-height: 160px;">
                                 <span class="font-black text-white tracking-tighter drop-shadow-md" style="font-size: 4rem;">
                                     {{ strtoupper(substr(auth()->user()->first_name ?? 'U', 0, 1) . substr(auth()->user()->last_name ?? '', 0, 1)) }}
