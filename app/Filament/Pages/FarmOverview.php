@@ -18,8 +18,8 @@ class FarmOverview extends Page
     {
         $user = auth()->user();
         if (!$user) return false;
-        // Not for sub_supervisors or superadmins
-        if ($user->isSubSupervisor() || $user->isSuperAdmin()) return false;
+        // Not for superadmins
+        if ($user->isSuperAdmin()) return false;
         return true;
     }
 
