@@ -66,7 +66,6 @@ class MyProfile extends BreezyProfilePage
                                             ->alignCenter()
                                             ->maxSize(2048)
                                             ->helperText('Upload a profile photo (max 2MB). Use the pencil icon to crop.')
-                                            ->extraAttributes(['class' => 'flex justify-center mx-auto items-center flex-col'])
                                             ->columnSpanFull(),
                                     ])->collapsible(),
                                 Section::make('General Information')
