@@ -30,7 +30,13 @@ class OrganizationCalendarWidget extends FullCalendarWidget
     {
         return \Filament\Actions\Action::make('view')
             ->modalHeading(fn (array $arguments) => $arguments['event']['title'] ?? 'Event Details')
-            ->modalContent(fn (array $arguments) => view('filament.widgets.calendar-event-modal', ['event' => $arguments['event'] ?? []]))
+            ->modalContent(function (array $arguments) {
+                $event = $arguments['event'] ?? [];
+                if (isset($event['extendedProps'])) {
+                    $event = array_merge($event, $event['extendedProps']);
+                }
+                return view('filament.widgets.calendar-event-modal', ['event' => $event]);
+            })
             ->modalSubmitAction(false)
             ->modalCancelAction(fn ($action) => $action->label('Close'));
     }
