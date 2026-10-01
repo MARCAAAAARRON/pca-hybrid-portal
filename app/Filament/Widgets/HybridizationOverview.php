@@ -11,7 +11,7 @@ class HybridizationOverview extends BaseWidget
     protected function getStats(): array
     {
         $user = auth()->user();
-        $isSupervisor = $user?->isSupervisor();
+        $isSupervisor = $user?->isSupervisor() || $user?->isSubSupervisor();
         $siteId = $user?->field_site_id;
 
         $query = HybridizationRecord::query();

@@ -26,12 +26,12 @@ class ReportsDashboard extends Page implements HasForms, HasActions
 
     public static function canAccess(): bool
     {
-        return in_array(auth()->user()?->role, ['supervisor', 'manager', 'admin']);
+        return in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor', 'manager', 'admin']);
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return in_array(auth()->user()?->role, ['supervisor', 'manager', 'admin']);
+        return in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor', 'manager', 'admin']);
     }
 
     public ?array $data = [];
@@ -46,7 +46,6 @@ class ReportsDashboard extends Page implements HasForms, HasActions
     public $reportFarms = null; // For aggregated data
     public bool $showModal = false; // Controls floating report modal
     public int $currentPage = 0; // Current page index for multi-site navigation
-    public bool $batchMode = false; // Batch generation: fetch all field sites
     public array $siteNames = []; // Maps site_id => site_name for tab labels
     public array $siteIds = []; // Ordered list of site IDs for tab navigation
 
@@ -145,11 +144,12 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             }
         }
 
-        if (auth()->user()?->isSupervisor()) {
+        if (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()) {
             $query->where('field_site_id', auth()->user()->field_site_id);
-        } elseif (!$this->batchMode && !empty($data['field_site_id'])) {
+        } elseif (!empty($data['field_site_id'])) {
             $query->where('field_site_id', $data['field_site_id']);
         }
+        // If no field site selected and not a supervisor, all sites are included automatically
 
         return $query;
     }
@@ -175,8 +175,8 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             if ($modelClass) {
                 $query = $modelClass::query()->whereYear('report_month', now()->year);
 
-                // Scope to user's field site if supervisor
-                if (auth()->user()?->isSupervisor()) {
+                // Scope to user's field site if supervisor or sub_supervisor
+                if (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()) {
                     $query->where('field_site_id', auth()->user()->field_site_id);
                 }
 
@@ -209,7 +209,7 @@ class ReportsDashboard extends Page implements HasForms, HasActions
             'year' => $reqYear ?? now()->year,
             'month' => $reqMonth ?? $latestMonth,
             'export_range' => (($reqMonth ?? $latestMonth) && ($reqMonth ?? $latestMonth) > 1) ? 'cumulative' : 'single',
-            'field_site_id' => $reqSiteId ?? (auth()->user()?->isSupervisor() ? auth()->user()->field_site_id : null),
+            'field_site_id' => $reqSiteId ?? ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()) ? auth()->user()->field_site_id : null),
         ]);
 
         if ($this->category) {
@@ -285,19 +285,8 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                         ->searchable()
                         ->preload()
                         ->columnSpanFull()
-                        ->hidden(fn(\Filament\Forms\Get $get) => auth()->user()?->isSupervisor() || $get('batch_mode')),
-                    Components\Toggle::make('batch_mode')
-                        ->label('Include All Field Sites')
-                        ->helperText('Fetches records from every field site for the selected categories.')
-                        ->columnSpanFull()
-                        ->live()
-                        ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                            if ($state) {
-                                $set('field_site_id', null);
-                            }
-                            $this->batchMode = (bool) $state;
-                        })
-                        ->visible(fn(\Filament\Forms\Get $get) => !auth()->user()?->isSupervisor()),
+                        ->helperText('Leave empty to include all field sites.')
+                        ->hidden(fn() => auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()),
                 ])->columns(2),
         ])->statePath('data');
     }

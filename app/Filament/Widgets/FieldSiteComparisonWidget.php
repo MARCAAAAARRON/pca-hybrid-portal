@@ -102,7 +102,7 @@ class FieldSiteComparisonWidget extends Widget
     protected function getViewData(): array
     {
         $user = auth()->user();
-        $isSupervisor = $user?->isSupervisor();
+        $isSupervisor = $user?->isSupervisor() || $user?->isSubSupervisor();
         $siteId = $user?->field_site_id;
 
         $monthA = $this->monthA ?? now()->subMonth()->month;

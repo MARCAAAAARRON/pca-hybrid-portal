@@ -18,13 +18,13 @@ class RecentActivityWidget extends Widget
     public static function canView(): bool
     {
         // sub supervisor allowed
-        return auth()->user()?->isSupervisor();
+        return auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor();
     }
 
     public function getActivities(): Collection
     {
         $user = auth()->user();
-        $isSupervisor = $user?->isSupervisor();
+        $isSupervisor = $user?->isSupervisor() || $user?->isSubSupervisor();
         $siteId = $user?->field_site_id;
 
         $activities = collect();
