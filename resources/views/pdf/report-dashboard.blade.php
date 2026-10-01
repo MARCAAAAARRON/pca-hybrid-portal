@@ -67,6 +67,10 @@
             width: 100%;
             margin-top: 40px;
             border: none;
+            page-break-inside: avoid;
+        }
+        tr {
+            page-break-inside: avoid;
         }
         .signature-table td {
             border: none;

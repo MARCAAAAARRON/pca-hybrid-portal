@@ -46,25 +46,25 @@
             @endphp
             <tr>
                 <td style="border: 1px solid #000; padding: 2px 4px; text-align: center;">{{ $rec->month_label }}</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->ending_balance_prev, 2) }} g</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->ending_balance_prev, 2) }}</td>
                 <td style="border: 1px solid #000; padding: 2px 4px;">{{ $rec->pollen_source }}</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: center;">{{ $rec->date_received ? \Carbon\Carbon::parse($rec->date_received)->format('m/d/Y') : '' }}</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->pollens_received, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->week1, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->week2, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->week3, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->week4, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($rec->week5, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; font-weight: 600;">{{ number_format($utilTotal, 2) }} g</td>
-                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; font-weight: bold;">{{ number_format($endBalance, 2) }} g</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: center; white-space: nowrap;">{{ $rec->date_received ? \Carbon\Carbon::parse($rec->date_received)->format('m/d/Y') : '' }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->pollens_received, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->week1, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->week2, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->week3, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->week4, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($rec->week5, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; font-weight: 600; white-space: nowrap;">{{ number_format($utilTotal, 2) }}</td>
+                <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; font-weight: bold; white-space: nowrap;">{{ number_format($endBalance, 2) }}</td>
             </tr>
         @endforeach
         
         <tr style="font-weight: bold; background-color: #f3f4f6;">
             <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;" colspan="4">TOTAL:</td>
-            <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($totalReceived, 2) }} g</td>
+            <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($totalReceived, 2) }}</td>
             <td style="border: 1px solid #000; padding: 2px 4px;" colspan="5"></td>
-            <td style="border: 1px solid #000; padding: 2px 4px; text-align: right;">{{ number_format($totalUtil, 2) }} g</td>
+            <td style="border: 1px solid #000; padding: 2px 4px; text-align: right; white-space: nowrap;">{{ number_format($totalUtil, 2) }}</td>
             <td style="border: 1px solid #000; padding: 2px 4px;"></td>
         </tr>
     </tbody>
