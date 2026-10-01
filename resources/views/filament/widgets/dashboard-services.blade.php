@@ -346,6 +346,7 @@
                                 style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Track yields</span></span>
                     </a>
                 </li>
+                @can('view_any_nursery::operation')
                 <li>
                     <a href="{{ App\Filament\Resources\NurseryOperationResource::getUrl('index') ?? '#' }}"
                         class="quicklinks-item"
@@ -361,6 +362,8 @@
                                 style="font-size: 0.75rem; font-weight: 400; opacity: 0.8;">Manage batches</span></span>
                     </a>
                 </li>
+                @endcan
+                @can('view_any_pollen::production')
                 <li>
                     <a href="{{ App\Filament\Resources\PollenProductionResource::getUrl('index') ?? '#' }}"
                         class="quicklinks-item"
@@ -377,6 +380,7 @@
                                 stocks</span></span>
                     </a>
                 </li>
+                @endcan
                 <li>
                     <a href="{{ App\Filament\Resources\HybridDistributionResource::getUrl('index') ?? '#' }}"
                         class="quicklinks-item"
