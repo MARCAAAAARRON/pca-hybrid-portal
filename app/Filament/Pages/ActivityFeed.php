@@ -26,7 +26,7 @@ class ActivityFeed extends Page
     public function getActivitiesProperty(): Collection
     {
         $user = auth()->user();
-        $isSupervisor = $user?->isSupervisor();
+        $isSupervisor = ($user?->isSupervisor() || $user?->isSubSupervisor());
         $siteId = $user?->field_site_id;
 
         $activities = collect();

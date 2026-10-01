@@ -102,7 +102,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                             ->columnSpanFull(),
                         \Filament\Infolists\Components\TextEntry::make('admin_remarks')
                             ->placeholder('No admin remarks.')
-                            ->visible(fn () => !auth()->user()?->isSupervisor())
+                            ->visible(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                             ->columnSpanFull(),
                     ]),
 
@@ -140,7 +140,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                             ->preload()
                             ->native(false)
                             ->default(fn () => auth()->user()->field_site_id)
-                            ->disabled(fn () => auth()->user()?->isSupervisor())
+                            ->disabled(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                             ->dehydrated(),
                         Forms\Components\Hidden::make('created_by')
                             ->default(fn () => auth()->id()),
@@ -179,7 +179,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                             ->options(HybridizationRecord::STATUS_CHOICES)
                             ->required()
                             ->default('draft')
-                            ->disabled(fn () => auth()->user()?->isSupervisor()),
+                            ->disabled(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())),
                     ])->columns(3),
 
                 Forms\Components\Section::make('Notes & Remarks')
@@ -191,7 +191,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                         Forms\Components\Textarea::make('admin_remarks')->required()
                             ->label('Admin Remarks')
                             ->rows(3)
-                            ->visible(fn () => !auth()->user()?->isSupervisor())
+                            ->visible(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                             ->columnSpanFull(),
                     ]),
 
@@ -373,8 +373,8 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                             ->nullable()
                             ->searchable()
                             ->preload()
-                            ->hidden(fn () => auth()->user()?->isSupervisor())
-                            ->default(fn () => auth()->user()?->isSupervisor() ? auth()->user()->field_site_id : null),
+                            ->hidden(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
+                            ->default(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()) ? auth()->user()->field_site_id : null),
                     ])
                     ->modifyQueryUsing(function (\Illuminate\Database\Eloquent\Builder $query, array $data) {
                         if ($data['year']) {
@@ -383,7 +383,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
                         if ($data['month']) {
                             $query->whereMonth('report_month', $data['month']);
                         }
-                        if (auth()->user()?->isSupervisor()) {
+                        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
                             $query->where('field_site_id', auth()->user()->field_site_id);
                         } elseif ($data['field_site_id']) {
                             $query->where('field_site_id', $data['field_site_id']);
@@ -399,7 +399,7 @@ class HybridizationRecordResource extends Resource implements HasShieldPermissio
             ->withoutGlobalScopes([
                 \Illuminate\Database\Eloquent\SoftDeletingScope::class,
             ]);
-        if (auth()->user()?->isSupervisor()) {
+        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $query->where('field_site_id', auth()->user()->field_site_id);
         }
         return $query;

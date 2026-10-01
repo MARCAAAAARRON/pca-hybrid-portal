@@ -2729,7 +2729,29 @@
         }, { threshold: 0.12 });
         revealEls.forEach(el => revealObserver.observe(el));
     </script>
-
+    <style>
+        @keyframes spinner-spin { 100% { transform: rotate(360deg); } }
+        .is-loading { cursor: progress !important; pointer-events: none; opacity: 0.8; }
+    </style>
+    <script>
+        document.querySelectorAll('a[href="/portal/login"], .btn-primary, .btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.getAttribute('target') === '_blank' || this.getAttribute('href').startsWith('#')) return;
+                
+                if (this.classList.contains('is-loading')) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                this.classList.add('is-loading');
+                document.documentElement.style.cursor = 'progress';
+                
+                if (this.innerText.includes('Login') || this.innerText.includes('Register')) {
+                    this.innerHTML = 'Loading <span style="display:inline-block; margin-left: 5px; animation:spinner-spin 1s linear infinite;">↻</span>';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

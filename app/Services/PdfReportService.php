@@ -23,7 +23,7 @@ class PdfReportService
     public function generate(string $module, array $filters = []): Report
     {
         $user = auth()->user();
-        $isSupervisor = $user?->isSupervisor() ?? false;
+        $isSupervisor = ($user?->isSupervisor() || $user?->isSubSupervisor()) ?? false;
         $canBypassSiteScope = $user && ($user->isManager() || $user->isAdmin() || $user->isSuperAdmin());
         $effectiveFieldSiteId = $isSupervisor
             ? $user->field_site_id

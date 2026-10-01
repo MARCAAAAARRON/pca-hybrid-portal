@@ -27,7 +27,7 @@ class CreateHybridDistribution extends CreateRecord
     {
         parent::mount();
 
-        if (auth()->user()?->isSupervisor()) {
+        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $this->loadLatestRecordData();
         }
     }

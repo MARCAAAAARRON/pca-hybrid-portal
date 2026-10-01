@@ -30,7 +30,7 @@ class CreateMonthlyHarvest extends CreateRecord
             ]);
         }
 
-        if (auth()->user()?->isSupervisor()) {
+        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $this->loadLatestRecordData();
         }
     }

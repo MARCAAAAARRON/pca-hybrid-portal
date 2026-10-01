@@ -52,17 +52,17 @@ class TerminalResource extends Resource implements HasShieldPermissions
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
                                 ->dehydrated(false)
-                                ->visible(fn () => auth()->user()?->isSupervisor())
+                                ->visible(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->columnSpanFull(),
 
                             Forms\Components\Select::make('field_site_id')
                                 ->label('Field Site')
                                 ->relationship('fieldSite', 'name')
-                                ->required(fn () => !auth()->user()?->isSupervisor())
+                                ->required(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->searchable()
                                 ->preload()
                                 ->native(false)
-                                ->visible(fn () => !auth()->user()?->isSupervisor())
+                                ->visible(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->columnSpanFull(),
 
                             Forms\Components\Actions::make([
@@ -360,10 +360,10 @@ class TerminalResource extends Resource implements HasShieldPermissions
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()
-                    ->visible(fn (Model $record) => $record->isDraft() && auth()->user()?->isSupervisor()),
+                    ->visible(fn (Model $record) => $record->isDraft() && (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())),
                 Tables\Actions\DeleteAction::make()
                     ->visible(fn (Model $record) => 
-                        ($record->isDraft() && auth()->user()?->isSupervisor()) ||
+                        ($record->isDraft() && (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) ||
                         ($record->isNoted() && in_array(auth()->user()?->role, ['admin', 'superadmin']))
                     ),
                 ...self::getApprovalActions(),
@@ -414,7 +414,7 @@ class TerminalResource extends Resource implements HasShieldPermissions
     {
         $query = parent::getEloquentQuery()->where('report_type', 'terminal');
         
-        if (auth()->user()?->isSupervisor()) {
+        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $query->where('field_site_id', auth()->user()->field_site_id);
         }
         return $query;

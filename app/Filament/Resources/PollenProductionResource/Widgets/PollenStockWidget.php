@@ -24,7 +24,7 @@ class PollenStockWidget extends BaseWidget
                     ->where('ending_balance', '>', 0);
 
                 // Supervisors only see their site
-                if ($user?->isSupervisor() && $user->field_site_id) {
+                if (($user?->isSupervisor() || $user?->isSubSupervisor()) && $user->field_site_id) {
                     $query->where('field_site_id', $user->field_site_id);
                 }
 

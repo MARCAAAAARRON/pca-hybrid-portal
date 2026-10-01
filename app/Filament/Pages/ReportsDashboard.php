@@ -937,7 +937,7 @@ class ReportsDashboard extends Page implements HasForms, HasActions
         $fieldSiteId = null;
         if (!$this->fullPackageMode && count($this->reportData) === 1) {
             $fieldSiteId = array_key_first($this->reportData);
-        } elseif (auth()->user()?->isSupervisor()) {
+        } elseif ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $fieldSiteId = auth()->user()->field_site_id;
         }
 

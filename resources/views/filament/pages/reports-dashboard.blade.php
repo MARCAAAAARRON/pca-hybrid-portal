@@ -177,7 +177,7 @@
                                     <x-heroicon-o-map-pin class="w-3 h-3 shrink-0" /> {{ $currentSiteName }}
                                     @if($siteCount > 1)
                                         <span class="mx-1 text-gray-300 dark:text-gray-600">|</span>
-                                        @if($batchMode || $fullPackageMode)
+                                        @if($fullPackageMode)
                                             <span class="inline-flex items-center gap-0.5 font-semibold" style="color: #0b9e4f;">
                                                 <x-heroicon-m-squares-2x2 class="w-3 h-3" /> {{ $fullPackageMode ? 'Multi-Category' : 'Batch' }} &mdash; {{ $siteCount }} Sites
                                             </span>

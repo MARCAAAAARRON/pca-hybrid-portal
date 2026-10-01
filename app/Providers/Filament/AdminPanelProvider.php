@@ -375,6 +375,31 @@ class AdminPanelProvider extends PanelProvider
         text-transform: capitalize !important;
     }
 </style>
+<script>
+    document.addEventListener('livewire:navigating', () => {
+        document.documentElement.style.cursor = 'progress';
+        document.body.style.pointerEvents = 'none';
+        document.body.style.opacity = '0.7';
+    });
+    
+    document.addEventListener('livewire:navigated', () => {
+        document.documentElement.style.cursor = '';
+        document.body.style.pointerEvents = '';
+        document.body.style.opacity = '1';
+    });
+
+    document.addEventListener('livewire:init', () => {
+        Livewire.hook('commit', ({ component, commit, respond, succeed, fail }) => {
+            document.documentElement.style.cursor = 'progress';
+            succeed(() => {
+                document.documentElement.style.cursor = '';
+            });
+            fail(() => {
+                document.documentElement.style.cursor = '';
+            });
+        });
+    });
+</script>
 HTML;
 
                     return $html;

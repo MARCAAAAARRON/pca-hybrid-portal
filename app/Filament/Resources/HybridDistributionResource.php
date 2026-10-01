@@ -102,18 +102,18 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()
                                 ->dehydrated(false)
-                                ->visible(fn () => auth()->user()?->isSupervisor())
+                                ->visible(fn () => (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->columnSpanFull(),
 
                             Forms\Components\Select::make('field_site_id')
                                 ->label('Field Site')
                                 ->relationship('fieldSite', 'name')
-                                ->required(fn () => !auth()->user()?->isSupervisor())
+                                ->required(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->searchable()
                                 ->preload()
                                 ->native(false)
                                 ->live()
-                                ->visible(fn () => !auth()->user()?->isSupervisor())
+                                ->visible(fn () => !(auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor()))
                                 ->columnSpanFull(),
 
                             Forms\Components\Grid::make(2)->schema([
@@ -307,12 +307,12 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()
-                    ->visible(fn (Model $record) => $record->isDraft() && auth()->user()?->isSupervisor()),
+                    ->visible(fn (Model $record) => $record->isDraft() && (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())),
                 Tables\Actions\DeleteAction::make()
                     ->label('Archive')
                     ->icon('heroicon-m-archive-box')
                     ->visible(fn (Model $record) => 
-                        ($record->isDraft() && auth()->user()?->isSupervisor()) ||
+                        ($record->isDraft() && (auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) ||
                         ($record->isNoted() && in_array(auth()->user()?->role, ['admin', 'superadmin']))
                     ),
                 Tables\Actions\RestoreAction::make()
@@ -378,7 +378,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
             ]);
 
         // Supervisors only see their field site data
-        if (auth()->user()?->isSupervisor()) {
+        if ((auth()->user()?->isSupervisor() || auth()->user()?->isSubSupervisor())) {
             $query->where('field_site_id', auth()->user()->field_site_id);
         }
 
