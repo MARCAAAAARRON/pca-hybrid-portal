@@ -74,38 +74,49 @@ class StatsOverviewWidget extends BaseWidget
 
         $readyCount = $readyQuery->count();
 
-        $stats = [
-            Stat::make('Ready for Harvest', $readyCount)
-                ->description($readyCount > 0 ? 'Need attention now' : 'All on track')
-                ->icon('heroicon-o-calendar-days')
-                ->color($readyCount > 0 ? 'danger' : 'success')
-                ->extraAttributes(['class' => 'stat-gradient-6']),
+        $stats = [];
 
-            Stat::make('Hybrid Dist.', $distributionQuery->count())
+        // Base record usually accessible if they have access to the dashboard
+        $stats[] = Stat::make('Ready for Harvest', $readyCount)
+            ->description($readyCount > 0 ? 'Need attention now' : 'All on track')
+            ->icon('heroicon-o-calendar-days')
+            ->color($readyCount > 0 ? 'danger' : 'success')
+            ->extraAttributes(['class' => 'stat-gradient-6']);
+
+        if (\App\Filament\Resources\HybridDistributionResource::canViewAny()) {
+            $stats[] = Stat::make('Hybrid Dist.', $distributionQuery->count())
                 ->description('Farmer distribution records')
                 ->icon('heroicon-o-truck')
-                ->extraAttributes(['class' => 'stat-gradient-1']),
+                ->extraAttributes(['class' => 'stat-gradient-1']);
+        }
 
-            Stat::make('Harvest', $harvestQuery->count())
+        if (\App\Filament\Resources\MonthlyHarvestResource::canViewAny()) {
+            $stats[] = Stat::make('Harvest', $harvestQuery->count())
                 ->description('Seednut production records')
                 ->icon('heroicon-o-academic-cap')
-                ->extraAttributes(['class' => 'stat-gradient-2']),
+                ->extraAttributes(['class' => 'stat-gradient-2']);
+        }
 
-            Stat::make('Nursery', $nurseryQuery->count())
+        if (\App\Filament\Resources\NurseryOperationResource::canViewAny()) {
+            $stats[] = Stat::make('Nursery', $nurseryQuery->count())
                 ->description('Nursery reports')
                 ->icon('heroicon-o-sun')
-                ->extraAttributes(['class' => 'stat-gradient-3']),
+                ->extraAttributes(['class' => 'stat-gradient-3']);
+        }
 
-            Stat::make('Terminal Rep.', $terminalQuery->count())
+        if (\App\Filament\Resources\TerminalResource::canViewAny()) {
+            $stats[] = Stat::make('Terminal Rep.', $terminalQuery->count())
                 ->description('Terminal reports')
                 ->icon('heroicon-o-clipboard-document-check')
-                ->extraAttributes(['class' => 'stat-gradient-4']),
+                ->extraAttributes(['class' => 'stat-gradient-4']);
+        }
 
-            Stat::make('Pollen', $pollenQuery->count())
+        if (\App\Filament\Resources\PollenProductionResource::canViewAny()) {
+            $stats[] = Stat::make('Pollen', $pollenQuery->count())
                 ->description('Pollen production')
                 ->icon('heroicon-o-beaker')
-                ->extraAttributes(['class' => 'stat-gradient-5']),
-        ];
+                ->extraAttributes(['class' => 'stat-gradient-5']);
+        }
 
         return $stats;
     }

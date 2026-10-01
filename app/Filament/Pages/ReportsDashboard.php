@@ -226,20 +226,64 @@ class ReportsDashboard extends Page implements HasForms, HasActions
                 ->schema([
                     Components\CheckboxList::make('categories')
                         ->label('Report Categories')
-                        ->options([
-                            'monthly_harvest' => 'Monthly Harvest',
-                            'pollen_production' => 'Pollen Production',
-                            'hybrid_distribution' => 'Hybrid Distribution',
-                            'nursery_operation' => 'Nursery Operations',
-                            'terminal_report' => 'Terminal Reports',
-                        ])
-                        ->descriptions([
-                            'monthly_harvest' => 'Seednut production by farm partner',
-                            'pollen_production' => 'Pollen utilization & stock levels',
-                            'hybrid_distribution' => 'Seedling distribution to farmers',
-                            'nursery_operation' => 'Monthly nursery batch operations',
-                            'terminal_report' => 'Terminal nursery operation reports',
-                        ])
+                        ->options(function () {
+                            $user = auth()->user();
+                            $allOptions = [
+                                'monthly_harvest' => 'Monthly Harvest',
+                                'pollen_production' => 'Pollen Production',
+                                'hybrid_distribution' => 'Hybrid Distribution',
+                                'nursery_operation' => 'Nursery Operations',
+                                'terminal_report' => 'Terminal Reports',
+                            ];
+
+                            // Map categories to their resource classes for permission checking
+                            $resourceMap = [
+                                'monthly_harvest' => \App\Filament\Resources\MonthlyHarvestResource::class,
+                                'pollen_production' => \App\Filament\Resources\PollenProductionResource::class,
+                                'hybrid_distribution' => \App\Filament\Resources\HybridDistributionResource::class,
+                                'nursery_operation' => \App\Filament\Resources\NurseryOperationResource::class,
+                                'terminal_report' => \App\Filament\Resources\TerminalResource::class,
+                            ];
+
+                            // Managers and admins see everything
+                            if ($user?->isManager() || $user?->isAdmin()) {
+                                return $allOptions;
+                            }
+
+                            // For supervisors and sub_supervisors, filter by permission
+                            return collect($allOptions)->filter(function ($label, $key) use ($resourceMap, $user) {
+                                if (!isset($resourceMap[$key])) return true;
+                                $resource = $resourceMap[$key];
+                                return $resource::canViewAny();
+                            })->toArray();
+                        })
+                        ->descriptions(function () {
+                            $user = auth()->user();
+                            $allDescriptions = [
+                                'monthly_harvest' => 'Seednut production by farm partner',
+                                'pollen_production' => 'Pollen utilization & stock levels',
+                                'hybrid_distribution' => 'Seedling distribution to farmers',
+                                'nursery_operation' => 'Monthly nursery batch operations',
+                                'terminal_report' => 'Terminal nursery operation reports',
+                            ];
+
+                            $resourceMap = [
+                                'monthly_harvest' => \App\Filament\Resources\MonthlyHarvestResource::class,
+                                'pollen_production' => \App\Filament\Resources\PollenProductionResource::class,
+                                'hybrid_distribution' => \App\Filament\Resources\HybridDistributionResource::class,
+                                'nursery_operation' => \App\Filament\Resources\NurseryOperationResource::class,
+                                'terminal_report' => \App\Filament\Resources\TerminalResource::class,
+                            ];
+
+                            if ($user?->isManager() || $user?->isAdmin()) {
+                                return $allDescriptions;
+                            }
+
+                            return collect($allDescriptions)->filter(function ($desc, $key) use ($resourceMap) {
+                                if (!isset($resourceMap[$key])) return true;
+                                return $resourceMap[$key]::canViewAny();
+                            })->toArray();
+                        })
                         ->columns(3)
                         ->bulkToggleable()
                         ->live()
