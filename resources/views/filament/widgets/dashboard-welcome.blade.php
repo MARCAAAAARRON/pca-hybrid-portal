@@ -239,7 +239,7 @@
                     <div class="welcome-avatar-border"
                         style="height: 4rem; width: 4rem; border-radius: 9999px; background-color: #10b981; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem; font-weight: bold; overflow: hidden; flex-shrink: 0;">
                         @if($user?->avatar_url)
-                            <img src="{{ Storage::url($user->avatar_url) }}" alt="{{ $user->name }}"
+                            <img src="{{ $user->getFilamentAvatarUrl() }}" alt="{{ $user->name }}"
                                 style="object-fit: cover; width: 100%; height: 100%;" />
                         @else
                             {{ substr($user?->name ?? 'U', 0, 1) }}
