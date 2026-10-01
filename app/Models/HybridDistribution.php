@@ -27,7 +27,7 @@ class HybridDistribution extends Model
         static::addGlobalScope(new FieldSiteScope);
 
         static::saving(function ($model) {
-            if (auth()->check() && auth()->user()->isSupervisor()) {
+            if (auth()->check() && (auth()->user()->isSupervisor() || auth()->user()->isSubSupervisor())) {
                 $model->field_site_id = auth()->user()->field_site_id;
             }
         });

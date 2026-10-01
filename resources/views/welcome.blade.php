@@ -2624,21 +2624,17 @@
                     Register →</a>
             </div>
             <div class="cta-contact-cards">
-                <a href="mailto:PCAbohol@gmail.com" class="contact-card reveal">
+                <a href="mailto:pcabohol@gmail.com" class="contact-card reveal">
                     <div class="contact-card-icon">✉️</div>
-                    <div><strong>PCAbohol@gmail.com</strong><span>Email Support</span></div>
+                    <div><strong>pcabohol@gmail.com</strong><span>Email Support</span></div>
                 </a>
                 <a href="https://facebook.com/PCABohol" target="_blank" class="contact-card reveal">
                     <div class="contact-card-icon">📘</div>
                     <div><strong>PCA Bohol</strong><span>Facebook Page</span></div>
                 </a>
-                <a href="tel:0384111234" class="contact-card reveal">
-                    <div class="contact-card-icon">📞</div>
-                    <div><strong>(038) 411-1234</strong><span>Office Line</span></div>
-                </a>
                 <div class="contact-card reveal">
                     <div class="contact-card-icon">📍</div>
-                    <div><strong>Tagbilaran City, Bohol</strong><span>PCA Bohol Office, 6300</span></div>
+                    <div><strong>Enerio St., Poblacion III, Tagbilaran City, Bohol, Philippines, 6300</strong><span>PCA Bohol Office</span></div>
                 </div>
             </div>
         </div>
@@ -2677,8 +2673,7 @@
                 <div class="footer-col">
                     <h5>Contact</h5>
                     <ul>
-                        <li><a href="mailto:bohol@pca.gov.ph">bohol@pca.gov.ph</a></li>
-                        <li><a href="tel:0384111234">(038) 411-1234</a></li>
+                        <li><a href="mailto:pcabohol@gmail.com">pcabohol@gmail.com</a></li>
                         <li><a href="#">Tagbilaran City, Bohol 6300</a></li>
                         <li><a href="#">pca.gov.ph</a></li>
                     </ul>

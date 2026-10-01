@@ -16,7 +16,7 @@ class FieldSiteScope implements Scope
     {
         $user = auth()->user();
 
-        if ($user && $user->isSupervisor() && $user->field_site_id) {
+        if ($user && ($user->isSupervisor() || $user->isSubSupervisor()) && $user->field_site_id) {
             $builder->where($model->getTable() . '.field_site_id', $user->field_site_id);
         }
     }
