@@ -53,6 +53,6 @@ class HybridizationOverview extends BaseWidget
 
     public static function canView(): bool
     {
-        return !auth()->user()?->isSubSupervisor();
+        return true;
     }
 }

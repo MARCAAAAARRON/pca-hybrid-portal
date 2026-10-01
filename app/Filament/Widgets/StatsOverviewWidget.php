@@ -32,7 +32,7 @@ class StatsOverviewWidget extends BaseWidget
 
     public static function canView(): bool
     {
-        if (auth()->user()?->isSubSupervisor()) return false;
+        // sub supervisor allowed
         return !auth()->user()?->isSuperAdmin();
     }
 

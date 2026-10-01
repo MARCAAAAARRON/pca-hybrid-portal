@@ -17,7 +17,7 @@
         </div>
     @else
         <!-- Vertical connecting line -->
-        <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-gray-200 dark:bg-gray-800"></div>
+        <div class="absolute top-6 bottom-6 w-0.5 bg-gray-200 dark:bg-gray-800" style="left: 1.625rem;"></div>
 
         <div class="space-y-6">
             @foreach ($logs as $log)
@@ -77,9 +77,9 @@
                     }
                 @endphp
 
-                <div class="relative flex items-start pl-14 group">
+                <div class="relative flex items-start group" style="padding-left: 3.5rem;">
                     <!-- Circular Icon Center Node -->
-                    <div class="absolute left-3 w-7 h-7 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-110 {{ $iconBgClass }}">
+                    <div class="absolute w-7 h-7 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 shadow-sm ring-1 ring-black/5 transition-transform duration-200 group-hover:scale-110 {{ $iconBgClass }}" style="left: 0.75rem;">
                         {!! $iconSvg !!}
                     </div>
 
