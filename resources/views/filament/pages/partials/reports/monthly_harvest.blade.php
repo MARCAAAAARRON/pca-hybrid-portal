@@ -1,6 +1,11 @@
 <table class="w-full border-collapse border border-black">
     <thead>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="pca-header-row" style="border: none !important; background: transparent !important;">
+            <th colspan="21" class="pca-header-cell" style="border: none !important; background: transparent !important; padding: 0 0 16px 0; font-weight: normal; text-align: center;">
+                @include('filament.pages.partials.reports.pca_header')
+            </th>
+        </tr>
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold" rowspan="2">Farm Location</th>
             <th class="border border-black px-1 py-0.5 font-semibold" rowspan="2">Name of Partner</th>
             <th class="border border-black px-1 py-0.5 font-semibold" rowspan="2">Area (Ha.)</th>
@@ -12,7 +17,7 @@
             <th class="border border-black px-1 py-0.5 font-semibold" rowspan="2">TOTAL</th>
             <th class="border border-black px-1 py-0.5 font-semibold" rowspan="2">Remarks</th>
         </tr>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold w-12 text-center">Jan</th>
             <th class="border border-black px-1 py-0.5 font-semibold w-12 text-center">Feb</th>
             <th class="border border-black px-1 py-0.5 font-semibold w-12 text-center">Mar</th>

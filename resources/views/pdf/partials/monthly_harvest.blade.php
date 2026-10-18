@@ -1,6 +1,11 @@
 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 8px; line-height: 1.2;">
     <thead>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="border: none !important;">
+            <th colspan="21" style="border: none !important; font-weight: normal; padding: 0 0 10px 0; background: transparent !important; text-align: center;">
+                @include('pdf.partials.pca_header')
+            </th>
+        </tr>
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600;" rowspan="2">Farm Location</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600;" rowspan="2">Name of Partner</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600;" rowspan="2">Area (Ha.)</th>
@@ -12,7 +17,7 @@
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600;" rowspan="2">TOTAL</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600;" rowspan="2">Remarks</th>
         </tr>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center; width: 30px;">Jan</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center; width: 30px;">Feb</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center; width: 30px;">Mar</th>

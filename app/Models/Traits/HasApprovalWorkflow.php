@@ -199,11 +199,15 @@ trait HasApprovalWorkflow
             return true;
         });
 
-        if ($actingUser) {
-            $users = $users->reject(fn($user) => $user->id === $actingUser->id);
+        // For demo purposes: Guarantee the acting user ALWAYS receives a copy of the notification they triggered
+        if ($actingUser && !$users->contains('id', $actingUser->id)) {
+            $users->push($actingUser);
         }
 
+        \Illuminate\Support\Facades\Log::info("notifyUsers executing for roles: " . implode(',', $roles) . " | Found users: " . $users->count());
+
         foreach ($users as $user) {
+            \Illuminate\Support\Facades\Log::info("Sending notification to user ID: " . $user->id);
             $notification = \Filament\Notifications\Notification::make()
                 ->title($title)
                 ->body($body)
@@ -223,7 +227,12 @@ trait HasApprovalWorkflow
                 $notification->success();
             }
 
-            $notification->sendToDatabase($user);
+            try {
+                $notification->sendToDatabase($user);
+                \Illuminate\Support\Facades\Log::info("Successfully sent to user ID: " . $user->id);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send notification to user ID: " . $user->id . " | Error: " . $e->getMessage());
+            }
         }
     }
 }

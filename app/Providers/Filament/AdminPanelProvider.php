@@ -452,7 +452,8 @@ HTML;
             ->plugins(
                 $this->getPlugins()
             )
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('5s');
     }
 
     private function getPlugins(): array

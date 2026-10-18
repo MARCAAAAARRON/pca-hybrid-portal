@@ -1,6 +1,11 @@
 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 7px; line-height: 1.2;">
     <thead>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="border: none !important;">
+            <th colspan="19" style="border: none !important; font-weight: normal; padding: 0 0 10px 0; background: transparent !important; text-align: center;">
+                @include('pdf.partials.pca_header')
+            </th>
+        </tr>
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="3">Region</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="3">Province</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="3">District</th>
@@ -15,7 +20,7 @@
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="3">Date Planted</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center; font-size: 6px;" rowspan="3">REMARKS</th>
         </tr>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="2">Family Name</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="2">Given Name</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="2">M.I.</th>
@@ -24,7 +29,7 @@
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="2">Municipality</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;" rowspan="2">Province</th>
         </tr>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;">Male</th>
             <th style="border: 1px solid #000; padding: 2px 3px; font-weight: 600; text-align: center;">Female</th>
         </tr>

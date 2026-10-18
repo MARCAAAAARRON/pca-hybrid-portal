@@ -1,6 +1,11 @@
 <table class="w-full border-collapse border border-black text-xs">
     <thead>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="pca-header-row" style="border: none !important; background: transparent !important;">
+            <th colspan="19" class="pca-header-cell" style="border: none !important; background: transparent !important; padding: 0 0 16px 0; font-weight: normal; text-align: center;">
+                @include('filament.pages.partials.reports.pca_header')
+            </th>
+        </tr>
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="3">Region</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="3">Province</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="3">District</th>
@@ -15,7 +20,7 @@
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="3">Date Planted</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="3" style="max-width: 80px; font-size: 7px;">REMARKS</th>
         </tr>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Family Name</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Given Name</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">M.I.</th>
@@ -24,7 +29,7 @@
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Municipality</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Province</th>
         </tr>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold text-center">Male</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center">Female</th>
         </tr>

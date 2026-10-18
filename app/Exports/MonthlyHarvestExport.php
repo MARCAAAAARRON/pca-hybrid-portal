@@ -167,7 +167,7 @@ class MonthlyHarvestExport
         $styleArray = [
             'font' => [
                 'bold' => true,
-                'color' => ['rgb' => 'FFFFFF'],
+                'color' => ['rgb' => '000000'],
             ],
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -176,7 +176,7 @@ class MonthlyHarvestExport
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['rgb' => '0B9E4F'],
+                'startColor' => ['rgb' => 'F2F4F7'],
             ],
             'borders' => [
                 'allBorders' => [

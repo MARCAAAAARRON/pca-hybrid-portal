@@ -6,19 +6,25 @@
     }
     $pollenVar = count($reportData) > 0 ? $reportData->first()->pollen_variety : '';
 @endphp
-<p style="font-weight: bold; font-size: 9px; margin-bottom: 2px;">CENTER/UNIT: {{ $centerText }}</p>
-<p style="font-weight: bold; font-size: 9px; margin-bottom: 10px;">POLLEN VARIETY: {{ $pollenVar }}</p>
-
 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 8px; line-height: 1.2;">
     <thead>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="border: none !important;">
+            <th colspan="12" style="border: none !important; font-weight: normal; padding: 0 0 10px 0; background: transparent !important; text-align: left;">
+                @include('pdf.partials.pca_header')
+                <div style="font-weight: bold; font-size: 9px; margin-top: 5px; text-align: left;">
+                    <p style="margin: 0;">CENTER/UNIT: {{ $centerText }}</p>
+                    <p style="margin: 2px 0 0 0;">POLLEN VARIETY: {{ $pollenVar }}</p>
+                </div>
+            </th>
+        </tr>
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;" rowspan="2">MONTH</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;" rowspan="2">Ending Balance<br>Last Month<br>(g Pollens)</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;" colspan="3">POLLENS RECEIVED FROM OTHER CENTER</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;" colspan="6">POLLEN UTILIZATION (grams of Pollen) per Week</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;" rowspan="2">Ending Balance<br>(g Pollens)</th>
         </tr>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;">Source</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;">Date Received<br>mm/dd/yyyy</th>
             <th style="border: 1px solid #000; padding: 2px 4px; font-weight: 600; text-align: center;">Grams of<br>Pollens</th>

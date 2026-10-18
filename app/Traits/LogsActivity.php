@@ -53,6 +53,10 @@ trait LogsActivity
                 'revision' => 'Record returned to draft for revision.',
                 default => '',
             };
+            
+            if ($action === 'revision' && !empty($model->return_remarks)) {
+                $details['remarks'] = $model->return_remarks;
+            }
         }
 
         if ($action === 'update') {

@@ -150,26 +150,8 @@
             $site = $pageSiteRecords->first()->fieldSite ?? null;
         @endphp
 
-        {{-- ═══ PCA HEADER ═══ --}}
-        <table class="pca-header-table">
-            <tr>
-                <td style="width: 65px; text-align: right; padding-right: 8px;">
-                    @if($logoBase64)
-                        <img src="{{ $logoBase64 }}" class="pca-logo" alt="PCA Logo">
-                    @endif
-                </td>
-                <td style="text-align: center;">
-                    <p class="pca-title">PHILIPPINE COCONUT AUTHORITY</p>
-                    <p class="pca-subtitle">COCONUT HYBRIDIZATION PROJECT-CFIDP</p>
-                    <p class="pca-category">{{ $categoryLabels[$pageCategory] ?? strtoupper($pageCategory) }}</p>
-                    <p class="pca-period">{{ $periodStr }}</p>
-                </td>
-                <td style="width: 65px;"></td>
-            </tr>
-        </table>
-
-        {{-- ═══ DATA TABLE ═══ --}}
-        <div style="margin-top: 20px;">
+        {{-- ═══ DATA TABLE (with repeating PCA header in thead) ═══ --}}
+        <div>
             @if($pageCategory === 'monthly_harvest')
                 @include('pdf.partials.monthly_harvest', ['reportData' => $pageSiteRecords, 'reportFarms' => $pageReportFarms])
             @elseif($pageCategory === 'pollen_production')

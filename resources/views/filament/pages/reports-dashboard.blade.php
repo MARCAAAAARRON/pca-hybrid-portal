@@ -7,8 +7,9 @@
     <style>
         /* ── Report Table Borders ── */
         .report-page-container table:not(.signature-table),
-        .report-page-container table:not(.signature-table) th,
+        .report-page-container table:not(.signature-table) th:not(.pca-header-cell),
         .report-page-container table:not(.signature-table) td { border: 1px solid black !important; }
+        .pca-header-cell, .pca-header-row { border: none !important; background: transparent !important; }
         .rotated-header { white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); padding: 4px 2px !important; vertical-align: middle; text-align: left; height: 120px; }
         .signature-table, .signature-table td { border: none !important; }
 
@@ -16,11 +17,11 @@
         .report-page-container { background-color: white !important; color: black !important; }
         .report-page-container, .report-page-container *, .report-page-container p,
         .report-page-container h2, .report-page-container h3, .report-page-container td,
-        .report-page-container th, .report-page-container span { color: black !important; border-color: black !important; }
+        .report-page-container th:not(.pca-header-cell), .report-page-container span { color: black !important; border-color: black !important; }
         .report-page-container .bg-gray-100 { background-color: #f3f4f6 !important; }
-        .report-page-container .bg-gray-50 { background-color: #f9fafb !important; }
-        .report-page-container thead tr, .report-page-container .bg-\[\#0B9E4F\] { background-color: #0B9E4F !important; }
-        .report-page-container thead tr th, .report-page-container thead tr td, .report-page-container .text-white { color: white !important; }
+        .report-page-container thead tr:not(.pca-header-row), .report-page-container thead tr th:not(.pca-header-cell) { background-color: #f3f4f6 !important; color: black !important; }
+        .report-page-container thead tr td, .report-page-container th:not(.pca-header-cell) { color: black !important; }
+        .report-page-container thead { display: table-header-group !important; }
 
 
 
@@ -271,43 +272,21 @@
                                     <div class="flex w-full">
                                         <div class="w-5 shrink-0 no-print"></div>
                                         <div class="flex-1 px-4">
-                                            {{-- PCA Header --}}
-                                            <div class="flex justify-center items-center gap-4 mb-3">
-                                                <img src="{{ asset('images/PCA_DA_Logo.png') }}" class="h-16 w-16 object-contain" alt="PCA Logo">
-                                                <div class="text-center">
-                                                    <h2 class="font-bold text-sm leading-tight">PHILIPPINE COCONUT AUTHORITY</h2>
-                                                    <p class="font-bold text-xs uppercase">COCONUT HYBRIDIZATION PROJECT-CFIDP</p>
-                                                    @php
-                                                        $currentCategory = $activeCategory;
-                                                    @endphp
-                                                    @if($currentCategory === 'monthly_harvest')
-                                                        <p class="uppercase text-xs mt-0.5">ON-FARM HYBRID SEEDNUT PRODUCTION</p>
-                                                    @elseif($currentCategory === 'pollen_production')
-                                                        <p class="uppercase text-xs mt-0.5">POLLEN PRODUCTION AND PROCESSING</p>
-                                                    @elseif($currentCategory === 'hybrid_distribution')
-                                                        <p class="uppercase text-xs mt-0.5">DISTRIBUTION OF HYBRID SEEDLINGS</p>
-                                                    @elseif($currentCategory === 'nursery_operation')
-                                                        <p class="uppercase text-xs mt-0.5">MONTHLY NURSERY OPERATION REPORT</p>
-                                                    @elseif($currentCategory === 'terminal_report')
-                                                        <p class="uppercase text-xs mt-0.5">TERMINAL REPORT FOR NURSERY OPERATIONS</p>
-                                                    @endif
-                                                    @php
-                                                        $asOfDate = \Carbon\Carbon::create($data['year'], $data['month'] ?: 1, 1);
-                                                        $isCumulative = ($data['export_range'] ?? 'single') === 'cumulative';
-                                                        if ($data['year'] && empty($data['month'])) {
-                                                            $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'as of end of ' . $data['year'] : 'For the year ' . $data['year'];
-                                                        } elseif ($isCumulative) {
-                                                            $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'Cumulative as of ' . $asOfDate->endOfMonth()->format('F d, Y') : 'For the months of January to ' . $asOfDate->format('F Y');
-                                                        } else {
-                                                            $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'as of ' . $asOfDate->endOfMonth()->format('F d, Y') : 'For the month of ' . $asOfDate->format('F Y');
-                                                        }
-                                                    @endphp
-                                                    <p class="text-xs font-semibold underline mt-1">{{ $asOfStr }}</p>
-                                                </div>
-                                            </div>
+                                            @php
+                                                $currentCategory = $activeCategory;
+                                                $asOfDate = \Carbon\Carbon::create($data['year'], $data['month'] ?: 1, 1);
+                                                $isCumulative = ($data['export_range'] ?? 'single') === 'cumulative';
+                                                if ($data['year'] && empty($data['month'])) {
+                                                    $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'as of end of ' . $data['year'] : 'For the year ' . $data['year'];
+                                                } elseif ($isCumulative) {
+                                                    $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'Cumulative as of ' . $asOfDate->endOfMonth()->format('F d, Y') : 'For the months of January to ' . $asOfDate->format('F Y');
+                                                } else {
+                                                    $asOfStr = in_array($currentCategory, ['hybrid_distribution', 'nursery_operation', 'terminal_report']) ? 'as of ' . $asOfDate->endOfMonth()->format('F d, Y') : 'For the month of ' . $asOfDate->format('F Y');
+                                                }
+                                            @endphp
 
                                             {{-- Dynamic Table --}}
-                                            <div class="mb-4 w-full overflow-x-auto" style="margin-top: 50px !important;">
+                                            <div class="mb-4 w-full overflow-x-auto">
                                                 @if($currentCategory === 'monthly_harvest')
                                                     @include('filament.pages.partials.reports.monthly_harvest', ['reportData' => $pageSiteRecords, 'reportFarms' => $pageReportFarms])
                                                 @elseif($currentCategory === 'pollen_production')
@@ -344,48 +323,53 @@
                                                 $notedTitle = $site->noted_by_title ?? $notedUser?->role_title ?? 'PCDM/Division Chief I';
                                                 $notedSig = $showNoted && $notedUser?->signature_image ? \App\Helpers\SignatureHelper::getSignatureUrl($notedUser->signature_image) : null;
                                             @endphp
-                                            <table class="w-full mt-12 text-center text-[11px] signature-table" style="table-layout: fixed;">
-                                                <tr>
-                                                    <td class="text-left align-top pl-8">{{ $site->prepared_by_label ?? 'Prepared by:' }}</td>
-                                                    <td class="text-left align-top pl-8">{{ $site->reviewed_by_label ?? 'Reviewed by:' }}</td>
-                                                    <td class="text-left align-top pl-8">{{ $site->noted_by_label ?? 'Noted by:' }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="px-8 align-bottom" style="height: 80px;">
-                                                        <div class="flex flex-col items-center justify-end h-full">
-                                                            @if($prepSig)
-                                                                <img src="{{ $prepSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
-                                                            @elseif($showPrepared && $prepUser?->signature_image)
-                                                                <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
-                                                            @endif
-                                                            <p class="font-bold uppercase">{{ $prepName }}</p>
-                                                            <div class="border-t border-black mt-1 pt-1 w-full">{{ $prepTitle }}</div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-8 align-bottom" style="height: 80px;">
-                                                        <div class="flex flex-col items-center justify-end h-full">
-                                                            @if($revSig)
-                                                                <img src="{{ $revSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
-                                                            @elseif($showReviewed && $revUser?->signature_image)
-                                                                <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
-                                                            @endif
-                                                            <p class="font-bold uppercase">{{ $revName }}</p>
-                                                            <div class="border-t border-black mt-1 pt-1 w-full">{{ $revTitle }}</div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-8 align-bottom" style="height: 80px;">
-                                                        <div class="flex flex-col items-center justify-end h-full">
-                                                            @if($notedSig)
-                                                                <img src="{{ $notedSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
-                                                            @elseif($showNoted && $notedUser?->signature_image)
-                                                                <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
-                                                            @endif
-                                                            <p class="font-bold uppercase">{{ $notedName }}</p>
-                                                            <div class="border-t border-black mt-1 pt-1 w-full">{{ $notedTitle }}</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                            <div class="signature-container mt-4" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                                <div class="end-of-report-marker mb-3 text-center text-[10px] text-gray-500 font-semibold tracking-wider uppercase border-t border-b border-gray-300 py-1" style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                                                    *** END OF REPORT &mdash; {{ $site?->name ? strtoupper($site->name) : 'ALL RECORDS INCLUDED' }} &mdash; NOTHING FOLLOWS ***
+                                                </div>
+                                                <table class="w-full text-center text-[11px] signature-table" style="table-layout: fixed; page-break-inside: avoid !important; break-inside: avoid !important;">
+                                                    <tr>
+                                                        <td class="text-left align-top pl-8">{{ $site->prepared_by_label ?? 'Prepared by:' }}</td>
+                                                        <td class="text-left align-top pl-8">{{ $site->reviewed_by_label ?? 'Reviewed by:' }}</td>
+                                                        <td class="text-left align-top pl-8">{{ $site->noted_by_label ?? 'Noted by:' }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="px-8 align-bottom" style="height: 80px;">
+                                                            <div class="flex flex-col items-center justify-end h-full">
+                                                                @if($prepSig)
+                                                                    <img src="{{ $prepSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
+                                                                @elseif($showPrepared && $prepUser?->signature_image)
+                                                                    <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
+                                                                @endif
+                                                                <p class="font-bold uppercase">{{ $prepName }}</p>
+                                                                <div class="border-t border-black mt-1 pt-1 w-full">{{ $prepTitle }}</div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-8 align-bottom" style="height: 80px;">
+                                                            <div class="flex flex-col items-center justify-end h-full">
+                                                                @if($revSig)
+                                                                    <img src="{{ $revSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
+                                                                @elseif($showReviewed && $revUser?->signature_image)
+                                                                    <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
+                                                                @endif
+                                                                <p class="font-bold uppercase">{{ $revName }}</p>
+                                                                <div class="border-t border-black mt-1 pt-1 w-full">{{ $revTitle }}</div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-8 align-bottom" style="height: 80px;">
+                                                            <div class="flex flex-col items-center justify-end h-full">
+                                                                @if($notedSig)
+                                                                    <img src="{{ $notedSig }}" style="height: 50px; object-fit: contain; margin-bottom: -8px;" alt="Signature">
+                                                                @elseif($showNoted && $notedUser?->signature_image)
+                                                                    <span style="font-style: italic; font-size: 10px; color: #666; margin-bottom: 4px;">Digitally Signed</span>
+                                                                @endif
+                                                                <p class="font-bold uppercase">{{ $notedName }}</p>
+                                                                <div class="border-t border-black mt-1 pt-1 w-full">{{ $notedTitle }}</div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                             </div>
                                             <div class="w-5 shrink-0 no-print"></div>
                                         </div>
@@ -424,7 +408,7 @@
             let pagesHtml = '';
             pages.forEach((page, idx) => {
                 const pageBreak = idx > 0 ? 'page-break-before: always;' : '';
-                pagesHtml += '<div style="' + pageBreak + ' padding: 0.25in;">' + page.innerHTML + '</div>';
+                pagesHtml += '<div style="' + pageBreak + ' padding: 8px 12px;">' + page.innerHTML + '</div>';
             });
 
             let iframe = document.getElementById('report-print-iframe');
@@ -478,10 +462,86 @@
                     border: none !important; 
                 }
                 
-                /* Force black borders for printing clarity */
-                table:not(.signature-table) th, 
+                /* Compact printable area */
+                .printable-area {
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                
+                /* Compact header in print */
+                .pca-header-cell {
+                    padding-bottom: 4px !important;
+                }
+                .pca-header-cell img {
+                    height: 48px !important;
+                    width: 48px !important;
+                }
+
+                /* Repeating Table Headers across all printed pages */
+                thead {
+                    display: table-header-group !important;
+                }
+                tbody {
+                    display: table-row-group !important;
+                }
+                tr {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                
+                /* Force black borders on table content, exclude PCA header cell */
+                table:not(.signature-table) th:not(.pca-header-cell), 
                 table:not(.signature-table) td { 
-                    border-color: black !important; 
+                    border: 1px solid black !important; 
+                }
+                
+                .pca-header-cell, .pca-header-row {
+                    border: none !important;
+                    background: transparent !important;
+                }
+                
+                thead tr:not(.pca-header-row), thead th:not(.pca-header-cell), thead td, th:not(.pca-header-cell) {
+                    background-color: #f3f4f6 !important;
+                    color: black !important;
+                }
+                .bg-\[\#0B9E4F\], .text-white {
+                    background-color: transparent !important;
+                    background: none !important;
+                    color: black !important;
+                }
+
+                /* Compact table cell padding */
+                table td {
+                    padding-top: 1px !important;
+                    padding-bottom: 1px !important;
+                }
+
+                /* End of report marker */
+                .end-of-report-marker {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                    margin-top: 8px !important;
+                    margin-bottom: 6px !important;
+                }
+                
+                /* Signatures must never split across pages and fit compactly */
+                .signature-container, .signature-table {
+                    margin-top: 6px !important;
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                .signature-table td {
+                    height: 52px !important;
+                    padding: 0 10px !important;
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                .signature-table img {
+                    height: 38px !important;
+                }
+                .signature-table tr {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
                 }
                 
                 .no-print { display: none !important; }

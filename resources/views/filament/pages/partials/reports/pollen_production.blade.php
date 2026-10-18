@@ -1,26 +1,31 @@
-<div class="mb-4">
-    @php
-        $site = $reportData->first()->fieldSite ?? null;
-        $centerText = $site?->name ?? 'Unknown';
-        if (str_contains(strtolower($centerText), 'loay')) {
-            $centerText = 'LOAY CODE FARM, LAS SALINAS SUR, LOAY, BOHOL';
-        }
-        $pollenVar = count($reportData) > 0 ? $reportData->first()->pollen_variety : '';
-    @endphp
-    <p class="font-bold">CENTER/UNIT: {{ $centerText }}</p>
-    <p class="font-bold mt-1">POLLEN VARIETY: {{ $pollenVar }}</p>
-</div>
+@php
+    $site = $reportData->first()->fieldSite ?? null;
+    $centerText = $site?->name ?? 'Unknown';
+    if (str_contains(strtolower($centerText), 'loay')) {
+        $centerText = 'LOAY CODE FARM, LAS SALINAS SUR, LOAY, BOHOL';
+    }
+    $pollenVar = count($reportData) > 0 ? $reportData->first()->pollen_variety : '';
+@endphp
 
 <table class="w-full border-collapse border border-black">
     <thead>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="pca-header-row" style="border: none !important; background: transparent !important;">
+            <th colspan="12" class="pca-header-cell" style="border: none !important; background: transparent !important; padding: 0 0 10px 0; font-weight: normal; text-align: left;">
+                @include('filament.pages.partials.reports.pca_header')
+                <div class="mt-2 text-left text-xs font-bold text-black">
+                    <p>CENTER/UNIT: {{ $centerText }}</p>
+                    <p class="mt-0.5">POLLEN VARIETY: {{ $pollenVar }}</p>
+                </div>
+            </th>
+        </tr>
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">MONTH</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Ending Balance<br>Last Month<br>(g Pollens)</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" colspan="3">POLLENS RECEIVED FROM OTHER CENTER</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" colspan="6">POLLEN UTILIZATION (grams of Pollen) per Week</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center" rowspan="2">Ending Balance<br>(g Pollens)</th>
         </tr>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
+        <tr class="bg-gray-100 text-black">
             <th class="border border-black px-1 py-0.5 font-semibold text-center w-24">Source</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center w-24">Date Received<br>mm/dd/yyyy</th>
             <th class="border border-black px-1 py-0.5 font-semibold text-center w-20">Grams of<br>Pollens</th>

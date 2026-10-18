@@ -97,7 +97,7 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
                     ->description('Enter hybrid seedling distribution data')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
+                            Forms\Components\TextInput::make('field_site_display')->maxLength(255)
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()

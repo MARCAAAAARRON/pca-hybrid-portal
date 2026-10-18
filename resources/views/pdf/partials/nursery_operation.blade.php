@@ -1,6 +1,11 @@
 <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-size: 6.5px; line-height: 1.1;">
     <thead>
-        <tr style="background-color: #0B9E4F; color: white;">
+        <tr style="border: none !important;">
+            <th colspan="18" style="border: none !important; font-weight: normal; padding: 0 0 10px 0; background: transparent !important; text-align: center;">
+                @include('pdf.partials.pca_header')
+            </th>
+        </tr>
+        <tr style="background-color: #f3f4f6; color: black;">
             <th style="border: 1px solid #000; padding: 1px 3px; font-weight: 600; text-align: center;">Region/Prov/Dist</th>
             <th style="border: 1px solid #000; padding: 1px 3px; font-weight: 600; text-align: center;">Barangay/Muni</th>
             <th style="border: 1px solid #000; padding: 1px 3px; font-weight: 600; text-align: center;">Entity Name</th>

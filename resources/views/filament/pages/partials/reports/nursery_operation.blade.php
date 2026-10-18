@@ -1,16 +1,21 @@
 <table class="w-full border-collapse border border-black text-[7.5px] leading-tight">
     <thead>
-        <tr class="bg-[#0B9E4F] text-white" style="background-color: #0B9E4F !important; color: white !important;">
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20">Region/Prov/Dist</th>
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20">Barangay/Muni</th>
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20">Entity Name</th>
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20">Rep</th>
+        <tr class="pca-header-row" style="border: none !important; background: transparent !important;">
+            <th colspan="18" class="pca-header-cell" style="border: none !important; background: transparent !important; padding: 0 0 16px 0; font-weight: normal; text-align: center;">
+                @include('filament.pages.partials.reports.pca_header')
+            </th>
+        </tr>
+        <tr class="bg-gray-100 text-black">
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20 rotated-header">Region/Prov/Dist</th>
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20 rotated-header">Barangay/Muni</th>
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20 rotated-header">Entity Name</th>
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-16 rotated-header">Rep</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-9 rotated-header">Target Seednuts</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-9 rotated-header">Seednuts Harvested</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-14 rotated-header">Date Harvested</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-14 rotated-header">Date Received</th>
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20">Source</th>
-            <th class="border border-black px-0.5 py-0 font-semibold text-center w-16">Variety</th>
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-20 rotated-header">Source</th>
+            <th class="border border-black px-0.5 py-0 font-semibold text-center w-16 rotated-header">Variety</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-9 rotated-header">Seednuts Sown</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-14 rotated-header">Date Sown</th>
             <th class="border border-black px-0.5 py-0 font-semibold text-center w-9 rotated-header">Germinated</th>

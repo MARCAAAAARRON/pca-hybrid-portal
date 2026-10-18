@@ -56,7 +56,7 @@ class NurseryOperationResource extends Resource implements HasShieldPermissions
                     ->icon('heroicon-o-clipboard-document-list')
                     ->schema([
                         Forms\Components\Group::make([
-                            Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
+                            Forms\Components\TextInput::make('field_site_display')->maxLength(255)
                                 ->label('Field Site')
                                 ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                 ->disabled()

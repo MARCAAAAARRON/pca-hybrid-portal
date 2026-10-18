@@ -33,3 +33,6 @@ generate_pdf.py
 
 .rune/
 .runeignore
+.agents/
+scratch_*.php
+skills-lock.json

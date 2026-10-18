@@ -174,9 +174,9 @@ class NurseryOperationExport
         }
 
         $styleArray = [
-            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'font' => ['bold' => true, 'color' => ['rgb' => '000000']],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => true],
-            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '0B9E4F']],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'F2F4F7']],
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
         ];
 

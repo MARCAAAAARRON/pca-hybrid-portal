@@ -116,6 +116,11 @@
                             @endphp
                             <div class="mt-1 text-xs italic p-2.5 rounded-lg border {{ $msgBgClass }}">
                                 "{{ $log->details['msg'] }}"
+                                @if (isset($log->details['remarks']) && !empty($log->details['remarks']))
+                                    <div class="mt-2 pt-2 border-t border-rose-200/50 dark:border-rose-800/30 font-semibold not-italic">
+                                        Remarks: <span class="font-normal">{{ $log->details['remarks'] }}</span>
+                                    </div>
+                                @endif
                             </div>
                         @endif
 

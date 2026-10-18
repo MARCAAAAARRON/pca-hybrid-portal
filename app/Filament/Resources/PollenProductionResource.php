@@ -52,7 +52,7 @@ class PollenProductionResource extends Resource implements HasShieldPermissions
                     ->schema([
                         Forms\Components\Grid::make(4)->schema([
                             Forms\Components\Group::make([
-                                Forms\Components\TextInput::make('field_site_display')->required()->maxLength(255)
+                                Forms\Components\TextInput::make('field_site_display')->maxLength(255)
                                     ->label('Field Site')
                                     ->default(fn () => auth()->user()->fieldSite?->name ?? 'None Assigned')
                                     ->disabled()
