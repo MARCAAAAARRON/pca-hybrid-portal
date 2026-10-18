@@ -323,10 +323,7 @@
                                                 $notedTitle = $site->noted_by_title ?? $notedUser?->role_title ?? 'PCDM/Division Chief I';
                                                 $notedSig = $showNoted && $notedUser?->signature_image ? \App\Helpers\SignatureHelper::getSignatureUrl($notedUser->signature_image) : null;
                                             @endphp
-                                            <div class="signature-container mt-4" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                                <div class="end-of-report-marker mb-3 text-center text-[10px] text-gray-500 font-semibold tracking-wider uppercase border-t border-b border-gray-300 py-1" style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                                                    *** END OF REPORT &mdash; {{ $site?->name ? strtoupper($site->name) : 'ALL RECORDS INCLUDED' }} &mdash; NOTHING FOLLOWS ***
-                                                </div>
+                                            <div class="signature-container mt-6" style="page-break-inside: avoid !important; break-inside: avoid !important;">
                                                 <table class="w-full text-center text-[11px] signature-table" style="table-layout: fixed; page-break-inside: avoid !important; break-inside: avoid !important;">
                                                     <tr>
                                                         <td class="text-left align-top pl-8">{{ $site->prepared_by_label ?? 'Prepared by:' }}</td>
@@ -516,17 +513,9 @@
                     padding-bottom: 1px !important;
                 }
 
-                /* End of report marker */
-                .end-of-report-marker {
-                    page-break-inside: avoid !important;
-                    break-inside: avoid !important;
-                    margin-top: 8px !important;
-                    margin-bottom: 6px !important;
-                }
-                
                 /* Signatures must never split across pages and fit compactly */
                 .signature-container, .signature-table {
-                    margin-top: 6px !important;
+                    margin-top: 12px !important;
                     page-break-inside: avoid !important;
                     break-inside: avoid !important;
                 }
