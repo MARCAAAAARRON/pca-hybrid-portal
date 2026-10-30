@@ -400,6 +400,22 @@ class HybridDistributionResource extends Resource implements HasShieldPermission
         ];
     }
 
+    public static function canViewAny(): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canViewAny();
+    }
+
+    public static function canView(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canView($record);
+    }
+
     public static function canCreate(): bool
     {
         if (auth()->user()?->isSuperAdmin()) {

@@ -28,22 +28,22 @@ class EventDocumentationResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        return in_array(auth()->user()?->role, ['manager', 'admin']);
     }
 
     public static function canCreate(): bool
     {
-        return in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        return in_array(auth()->user()?->role, ['manager', 'admin']);
     }
 
     public static function canEdit(Model $record): bool
     {
-        return in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        return in_array(auth()->user()?->role, ['manager', 'admin']);
     }
 
     public static function canDelete(Model $record): bool
     {
-        return in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        return in_array(auth()->user()?->role, ['manager', 'admin']);
     }
 
     public static function form(Form $form): Form

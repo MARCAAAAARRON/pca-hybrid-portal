@@ -26,6 +26,22 @@ class ReportResource extends Resource
         return false;
     }
 
+    public static function canViewAny(): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canViewAny();
+    }
+
+    public static function canView(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        if (auth()->user()?->isSuperAdmin()) {
+            return false;
+        }
+        return parent::canView($record);
+    }
+
     public static function form(Form $form): Form
     {
         return $form

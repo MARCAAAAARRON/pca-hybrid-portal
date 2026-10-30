@@ -19,13 +19,13 @@ class OrganizationCalendarPage extends Page
     
     public static function canAccess(): bool
     {
-        // Accessible by all roles except superadmin (who has a separate admin panel)
-        return in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor', 'manager', 'admin', 'superadmin']);
+        // Accessible by operational roles only (not superadmin)
+        return in_array(auth()->user()?->role, ['supervisor', 'sub_supervisor', 'manager', 'admin']);
     }
 
     protected function getHeaderActions(): array
     {
-        $canCreateOrgReminder = in_array(auth()->user()?->role, ['manager', 'admin', 'superadmin']);
+        $canCreateOrgReminder = in_array(auth()->user()?->role, ['manager', 'admin']);
 
         return [
             \Filament\Actions\Action::make('create_reminder')
@@ -33,7 +33,7 @@ class OrganizationCalendarPage extends Page
                 ->icon('heroicon-o-bell')
                 ->form([
                     // Supervisor & sub-supervisor: forced to personal, type selector hidden
-                    // Manager/admin/superadmin: can choose personal or organizational
+                    // Manager & admin: can choose personal or organizational
                     \Filament\Forms\Components\Select::make('type')
                         ->label('Reminder Type')
                         ->options([
@@ -42,9 +42,7 @@ class OrganizationCalendarPage extends Page
                         ])
                         ->default('personal')
                         ->required()
-                        ->visible($canCreateOrgReminder)
-                        ->disableOptionWhen(fn (string $value): bool => $value === 'organizational' && !(auth()->user()?->isSuperAdmin() ?? false))
-                        ->helperText(fn () => !(auth()->user()?->isSuperAdmin() ?? false) ? 'Only Superadmins can create organizational reminders.' : ''),
+                        ->visible($canCreateOrgReminder),
                     \Filament\Forms\Components\TextInput::make('title')
                         ->required()
                         ->maxLength(255),

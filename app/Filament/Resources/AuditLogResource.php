@@ -20,7 +20,7 @@ class AuditLogResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
 
-    protected static ?string $navigationGroup = 'Field Data';
+    protected static ?string $navigationGroup = 'Activity';
 
     protected static ?string $navigationLabel = 'Activity Logs';
 

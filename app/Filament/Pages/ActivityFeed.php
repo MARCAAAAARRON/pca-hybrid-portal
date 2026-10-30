@@ -18,6 +18,11 @@ class ActivityFeed extends Page
     
     // Hide from the main sidebar
     protected static bool $shouldRegisterNavigation = false;
+
+    public static function canAccess(): bool
+    {
+        return !auth()->user()?->isSuperAdmin();
+    }
     
     protected static ?string $title = 'All Recent Activity';
 

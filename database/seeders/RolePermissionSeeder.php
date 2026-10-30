@@ -30,9 +30,28 @@ class RolePermissionSeeder extends Seeder
         // 2. Generate permissions via Filament Shield FIRST
         Artisan::call('shield:generate', ['--all' => true, '--panel' => 'admin']);
 
-        // 3. Superadmin gets EVERYTHING unconditionally
-        $allPermissions = Permission::all();
-        $superadminRole->syncPermissions($allPermissions);
+        // 3. Superadmin gets administrative permissions only (Roles, Users, Field Sites, Audit Logs, Profile)
+        $superadminModules = [
+            'role',
+            'user',
+            'field::site',
+            'audit::log',
+        ];
+
+        $superadminPermissions = $allPermissions->filter(function ($permission) use ($superadminModules) {
+            $name = $permission->name;
+            foreach ($superadminModules as $module) {
+                if (str_ends_with($name, "_{$module}") || str_ends_with($name, "::{$module}")) {
+                    return true;
+                }
+            }
+            return in_array($name, [
+                'page_MyProfilePage',
+                'widget_SysAdminStats',
+                'widget_SysAdminQuickActions',
+            ]);
+        });
+        $superadminRole->syncPermissions($superadminPermissions);
 
         // 3. Define module groups
         $adminOnlyModules = ['audit::log']; // Admin: audit logs only
