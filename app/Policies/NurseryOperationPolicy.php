@@ -26,7 +26,7 @@ class NurseryOperationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_terminal');
+        return $user->can('view_any_nursery::operation');
     }
 
     /**
@@ -34,7 +34,7 @@ class NurseryOperationPolicy
      */
     public function view(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('view_terminal');
+        return $user->can('view_nursery::operation');
     }
 
     /**
@@ -42,7 +42,7 @@ class NurseryOperationPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_terminal');
+        return $user->can('create_nursery::operation');
     }
 
     /**
@@ -54,7 +54,7 @@ class NurseryOperationPolicy
             return true;
         }
         
-        return $user->can('update_terminal');
+        return $user->can('update_nursery::operation');
     }
 
     /**
@@ -62,7 +62,7 @@ class NurseryOperationPolicy
      */
     public function delete(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('delete_terminal');
+        return $user->can('delete_nursery::operation');
     }
 
     /**
@@ -70,7 +70,7 @@ class NurseryOperationPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_terminal');
+        return $user->can('delete_any_nursery::operation');
     }
 
     /**
@@ -78,7 +78,7 @@ class NurseryOperationPolicy
      */
     public function forceDelete(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $user->can('force_delete_nursery::operation');
     }
 
     /**
@@ -86,7 +86,7 @@ class NurseryOperationPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $user->can('force_delete_any_nursery::operation');
     }
 
     /**
@@ -94,7 +94,7 @@ class NurseryOperationPolicy
      */
     public function restore(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('{{ Restore }}');
+        return $user->can('restore_nursery::operation');
     }
 
     /**
@@ -102,7 +102,7 @@ class NurseryOperationPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $user->can('restore_any_nursery::operation');
     }
 
     /**
@@ -110,7 +110,7 @@ class NurseryOperationPolicy
      */
     public function replicate(User $user, NurseryOperation $nurseryOperation): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $user->can('replicate_nursery::operation');
     }
 
     /**
@@ -118,6 +118,6 @@ class NurseryOperationPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('{{ Reorder }}');
+        return $user->can('reorder_nursery::operation');
     }
 }

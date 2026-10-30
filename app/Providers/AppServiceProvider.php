@@ -37,7 +37,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('viewApiDocs', function (User $user) {
             return true;
         });
-        // Gate::policy()
+        Gate::policy(\App\Models\TerminalReport::class, \App\Policies\TerminalReportPolicy::class);
+        Gate::policy(\App\Models\NurseryOperation::class, \App\Policies\NurseryOperationPolicy::class);
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Google\Provider::class);
         });

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TerminalResource\Pages;
 use App\Filament\Resources\NurseryOperationResource\RelationManagers;
+use App\Models\TerminalReport;
 use App\Models\NurseryOperation;
 use App\Filament\Traits\HasApprovalActions;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class TerminalResource extends Resource implements HasShieldPermissions
 {
     use HasApprovalActions;
-    protected static ?string $model = NurseryOperation::class;
+    protected static ?string $model = TerminalReport::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
