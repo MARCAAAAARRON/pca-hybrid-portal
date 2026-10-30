@@ -38,6 +38,8 @@ class RolePermissionSeeder extends Seeder
             'audit::log',
         ];
 
+        $allPermissions = Permission::all();
+
         $superadminPermissions = $allPermissions->filter(function ($permission) use ($superadminModules) {
             $name = $permission->name;
             foreach ($superadminModules as $module) {

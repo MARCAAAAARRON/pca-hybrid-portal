@@ -78,7 +78,7 @@ class PollenProductionPolicy
      */
     public function forceDelete(User $user, PollenProduction $pollenProduction): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $user->can('force_delete_pollen::production');
     }
 
     /**
@@ -86,7 +86,7 @@ class PollenProductionPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $user->can('force_delete_any_pollen::production');
     }
 
     /**
@@ -94,7 +94,7 @@ class PollenProductionPolicy
      */
     public function restore(User $user, PollenProduction $pollenProduction): bool
     {
-        return $user->can('{{ Restore }}');
+        return $user->can('restore_pollen::production');
     }
 
     /**
@@ -102,7 +102,7 @@ class PollenProductionPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $user->can('restore_any_pollen::production');
     }
 
     /**
@@ -110,7 +110,7 @@ class PollenProductionPolicy
      */
     public function replicate(User $user, PollenProduction $pollenProduction): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $user->can('replicate_pollen::production');
     }
 
     /**
@@ -118,6 +118,6 @@ class PollenProductionPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('{{ Reorder }}');
+        return $user->can('reorder_pollen::production');
     }
 }

@@ -78,7 +78,7 @@ class MonthlyHarvestPolicy
      */
     public function forceDelete(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $user->can('force_delete_monthly::harvest');
     }
 
     /**
@@ -86,7 +86,7 @@ class MonthlyHarvestPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $user->can('force_delete_any_monthly::harvest');
     }
 
     /**
@@ -94,7 +94,7 @@ class MonthlyHarvestPolicy
      */
     public function restore(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
-        return $user->can('{{ Restore }}');
+        return $user->can('restore_monthly::harvest');
     }
 
     /**
@@ -102,7 +102,7 @@ class MonthlyHarvestPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $user->can('restore_any_monthly::harvest');
     }
 
     /**
@@ -110,7 +110,7 @@ class MonthlyHarvestPolicy
      */
     public function replicate(User $user, MonthlyHarvest $monthlyHarvest): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $user->can('replicate_monthly::harvest');
     }
 
     /**
@@ -118,6 +118,6 @@ class MonthlyHarvestPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('{{ Reorder }}');
+        return $user->can('reorder_monthly::harvest');
     }
 }
