@@ -64,10 +64,10 @@ class EventDocumentationResource extends Resource
                     Forms\Components\FileUpload::make('image_path')->required()
                         ->label('Event Photo')
                         ->image()
+                        ->maxSize(10240)
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                         ->directory('event-photos')
                         ->columnSpanFull(),
-                    Forms\Components\Hidden::make('uploaded_by')
-                        ->default(fn() => auth()->id()),
                 ])->columns(2),
                 
                 Forms\Components\Section::make('EXIF Data (Auto-extracted)')->schema([

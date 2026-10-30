@@ -34,8 +34,8 @@ class AppServiceProvider extends ServiceProvider
         // Register Auth event subscriber
         Event::subscribe(\App\Listeners\AuthEventSubscriber::class);
 
-        Gate::define('viewApiDocs', function (User $user) {
-            return true;
+        Gate::define('viewApiDocs', function (?User $user) {
+            return $user !== null && in_array($user->role, ['admin', 'superadmin']);
         });
         Gate::policy(\App\Models\TerminalReport::class, \App\Policies\TerminalReportPolicy::class);
         Gate::policy(\App\Models\NurseryOperation::class, \App\Policies\NurseryOperationPolicy::class);
