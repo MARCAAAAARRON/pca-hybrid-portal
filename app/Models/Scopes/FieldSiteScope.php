@@ -16,8 +16,13 @@ class FieldSiteScope implements Scope
     {
         $user = auth()->user();
 
-        if ($user && ($user->isSupervisor() || $user->isSubSupervisor()) && $user->field_site_id) {
-            $builder->where($model->getTable() . '.field_site_id', $user->field_site_id);
+        if ($user && ($user->isSupervisor() || $user->isSubSupervisor())) {
+            if (!empty($user->field_site_id)) {
+                $builder->where($model->getTable() . '.field_site_id', $user->field_site_id);
+            } else {
+                // Fail closed: an operational field staff member with no assigned site sees zero records
+                $builder->whereRaw('1 = 0');
+            }
         }
     }
 }

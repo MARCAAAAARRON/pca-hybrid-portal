@@ -27,6 +27,7 @@ use Filament\Infolists\Components\Section as InfolistSection;
 use Illuminate\Validation\Rules\Password;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class UserResource extends Resource
 {
@@ -95,9 +96,29 @@ class UserResource extends Resource
             ]);
     }
 
+    public static function canViewAny(): bool
+    {
+        return (bool) auth()->user()?->isSuperAdmin();
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return (bool) auth()->user()?->isSuperAdmin();
+    }
+
     public static function canCreate(): bool
     {
-        return true;
+        return (bool) auth()->user()?->isSuperAdmin();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->isSuperAdmin();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) auth()->user()?->isSuperAdmin() && $record->id !== auth()->id();
     }
 
     public static function shouldRegisterNavigation(): bool
