@@ -72,14 +72,6 @@ class GenerateAndEmailReportJob implements ShouldQueue
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(600);
-
-        // Bypass SSL verification for local Windows development without cURL CA certs
-        stream_context_set_default([
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-            ],
-        ]);
         
         try {
             $isCumulative = ($this->formData['export_range'] ?? 'single') === 'cumulative';
@@ -204,8 +196,9 @@ class GenerateAndEmailReportJob implements ShouldQueue
             }
         }
 
-        if (in_array($this->authUserRole, ['supervisor', 'staff'])) {
-            $query->where('field_site_id', $this->authUserFieldSiteId);
+        if (in_array($this->authUserRole, ['supervisor', 'sub_supervisor'])) {
+            $siteId = $this->authUserFieldSiteId ?: 0;
+            $query->where('field_site_id', $siteId);
         } elseif (!empty($this->formData['field_site_id'])) {
             $query->where('field_site_id', $this->formData['field_site_id']);
         }

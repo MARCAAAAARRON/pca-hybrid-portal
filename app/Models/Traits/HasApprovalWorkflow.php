@@ -50,25 +50,12 @@ trait HasApprovalWorkflow
     // ───── Workflow Actions ─────
 
     /**
-     * Mark as Prepared. Implements signatory attribution:
-     * If the acting user is NOT a supervisor, attribute to the site's supervisor.
+     * Mark as Prepared. Records the authenticated acting user.
      */
     public function markAsPrepared(User $actingUser): string
     {
-        $sigUser = $actingUser;
-
-        // Attribution: If not a supervisor, try to find the site's supervisor
-        if ($actingUser->role !== 'supervisor' && $this->field_site_id) {
-            $supervisor = User::where('field_site_id', $this->field_site_id)
-                ->where('role', 'supervisor')
-                ->first();
-            if ($supervisor) {
-                $sigUser = $supervisor;
-            }
-        }
-
         $this->status = 'prepared';
-        $this->prepared_by = $sigUser->id;
+        $this->prepared_by = $actingUser->id;
         $this->date_prepared = now();
         $this->save();
 
@@ -76,13 +63,12 @@ trait HasApprovalWorkflow
         $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
         $this->notifyUsers(['manager'], "Record Prepared", "A {$tableTitle} record for {$siteName} is waiting for your review.", $actingUser);
 
-        return "Record prepared (attributed to {$sigUser->name}).";
+        return "Record prepared by {$actingUser->name}.";
     }
 
     /**
      * Mark as Reviewed. Implements:
      * - Maker-checker: cannot review if you prepared it.
-     * - Attribution: If a chief/admin, attribute to site's manager.
      */
     public function markAsReviewed(User $actingUser): string|false
     {
@@ -91,20 +77,8 @@ trait HasApprovalWorkflow
             return false;
         }
 
-        $sigUser = $actingUser;
-
-        // Attribution: If a chief, try to find the site's admin
-        if (in_array($actingUser->role, ['admin', 'superadmin']) && $this->field_site_id) {
-            $managerUser = User::where('field_site_id', $this->field_site_id)
-                ->where('role', 'manager')
-                ->first();
-            if ($managerUser) {
-                $sigUser = $managerUser;
-            }
-        }
-
         $this->status = 'reviewed';
-        $this->reviewed_by = $sigUser->id;
+        $this->reviewed_by = $actingUser->id;
         $this->date_reviewed = now();
         $this->save();
 
@@ -112,7 +86,7 @@ trait HasApprovalWorkflow
         $siteName = $this->fieldSite ? $this->fieldSite->name : 'Global';
         $this->notifyUsers(['admin', 'superadmin'], "Record Reviewed", "A {$tableTitle} record for {$siteName} has been reviewed and requires noting.", $actingUser);
 
-        return "Record reviewed (attributed to {$sigUser->name}).";
+        return "Record reviewed by {$actingUser->name}.";
     }
 
     /**
